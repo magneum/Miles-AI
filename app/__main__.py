@@ -12,7 +12,11 @@ import webbrowser
 import pvporcupine
 import openai as assistant
 import speech_recognition as sprecog
-evoresponses = json.load(open("models/responses.json"))
+
+Evo_Responses = json.load(open("db/responses.json"))
+Greetings_Evo = json.load(open("db/greetings.json"))
+Feelings_Evo = json.load(open("db/feelings.json"))
+Goodbye_Evo = json.load(open("db/goodbye.json"))
 
 
 def speak_evo(evotext):
@@ -59,22 +63,22 @@ def evo_flow():
     while True:
         usersaid = evo_command()
         if usersaid in greetings:
-            speak_evo(random.choice(evoresponses["hello"]["responses"]))
+            speak_evo(random.choice(Evo_Responses["hello"]["responses"]))
             break
         elif usersaid in goodbye:
-            speak_evo(random.choice(evoresponses["goodbye"]["responses"]))
+            speak_evo(random.choice(Evo_Responses["goodbye"]["responses"]))
             break
         elif usersaid in feeling:
-            speak_evo(random.choice(evoresponses["feeling"]["responses"]))
+            speak_evo(random.choice(Evo_Responses["feeling"]["responses"]))
             break
         elif usersaid in areyou:
-            speak_evo(random.choice(evoresponses["areyou"]["responses"]))
+            speak_evo(random.choice(Evo_Responses["areyou"]["responses"]))
             break
         elif usersaid in areyou:
-            speak_evo(random.choice(evoresponses["areyou"]["responses"]))
+            speak_evo(random.choice(Evo_Responses["areyou"]["responses"]))
             break
         elif usersaid in shutdown:
-            speak_evo(random.choice(evoresponses["shutdown"]["responses"]))
+            speak_evo(random.choice(Evo_Responses["shutdown"]["responses"]))
             os.system("shutdown /s /t 1")
         elif "play" in usersaid:
             songname = usersaid.split("play", 1)[1]
@@ -90,7 +94,6 @@ def evo_flow():
         else:
             try:
                 assistant.api_key = "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"
-                # print(openai.Model.list())
                 response = assistant.Completion.create(
                     engine="text-davinci-003",
                     prompt=usersaid.capitalize(),
@@ -138,7 +141,7 @@ def evoai():
                 evo_flow()
                 print("ON HOLD: ")
     except Exception as e:
-        speak_evo(random.choice(evoresponses["error"]["responses"]))
+        speak_evo(random.choice(Evo_Responses["error"]["responses"]))
         print(f"ERROR: {e}")
         pass
     finally:
