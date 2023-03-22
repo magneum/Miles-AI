@@ -19,7 +19,7 @@ Feelings_Evo = json.load(open("db/feelings.json"))
 Goodbye_Evo = json.load(open("db/goodbye.json"))
 
 
-def speak_evo(evotext):
+async def speak_evo(evotext):
     speaker = pyttsx3.init("sapi5")
     speaker.setProperty("rate", 145)
     voices = speaker.getProperty("voices")
@@ -29,7 +29,7 @@ def speak_evo(evotext):
     speaker.runAndWait()
 
 
-def evo_command():
+async def evo_command():
     recog = sprecog.Recognizer()
     with sprecog.Microphone() as mic:
         userquery = ""
@@ -59,7 +59,7 @@ areyou = ["who are you", "what are you"]
 shutdown = ["shutdown", "poweroff"]
 
 
-def evo_flow():
+async def evo_flow():
     while True:
         usersaid = evo_command()
         if usersaid in greetings:
@@ -116,7 +116,7 @@ def evo_flow():
 greetInit = ["hi there smart human", "hello sir"]
 
 
-def evoai():
+async def evoai():
     pa = None
     porcupine = None
     audio_stream = None
