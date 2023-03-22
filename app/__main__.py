@@ -113,14 +113,11 @@ async def evo_flow():
                 break
 
 
-greetInit = ["hi there smart human", "hello sir"]
-
-
 async def evoai():
     pa = None
     porcupine = None
     audio_stream = None
-    speak_evo(random.choice(greetInit))
+    speak_evo(random.choice(["hi there smart human", "hello sir"]))
     try:
         porcupine = pvporcupine.create(
             access_key="kHRZWPKCJGzWJpxesmNHzYJNBSdpxc5MR0TgdIuwxf8TRMyPTvwtGw==", keyword_paths=["models/hey-evo-windows.ppn"])
