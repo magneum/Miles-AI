@@ -117,7 +117,7 @@ async def evoai():
     pa = None
     porcupine = None
     audio_stream = None
-    speak_evo(random.choice(["hi there smart human", "hello sir"]))
+    speak_evo(random.choice(Evo_Responses["greetings"]["responses"]))
     try:
         porcupine = pvporcupine.create(
             access_key="kHRZWPKCJGzWJpxesmNHzYJNBSdpxc5MR0TgdIuwxf8TRMyPTvwtGw==", keyword_paths=["models/hey-evo-windows.ppn"])
