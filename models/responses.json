@@ -1,0 +1,37 @@
+{
+    "greetings": {
+        "responses": [
+            "hello sir magneum.",
+            "hi there magneum.",
+            "hi there master."
+        ]
+    },
+    "goodbye": {
+        "responses": [
+            "goodbye sir magneum.",
+            "goodbye master magneum."
+        ]
+    },
+    "shutdown": {
+        "responses": [
+            "shutting down.",
+            "powering off."
+        ]
+    },
+    "feeling": {
+        "responses": [
+            "I'm fine, thanks. How about you?",
+            "I'm doing well, and you?",
+            "I'm good. And yourself?",
+            "Good, thanks. And you?",
+            "Not bad. How are you?",
+            "Fine, and you?"
+        ]
+    },
+    "areyou": {
+        "responses": [
+            "I am a simple ai assistant made by magneum. You can ask me to play music too.",
+            "I am a simple ai assistant made by magneum."
+        ]
+    }
+}
