@@ -1,4 +1,6 @@
 from database.greetings import generate_greeting_response
+from database.goodbyes import generate_goodbyes_response
+from database.feelings import generate_feelings_response
 from .kai_command import kai_command
 from .kai_speaker import kai_speaker
 from .responders import *
@@ -19,7 +21,10 @@ def kai_uget():
             kai_speaker(generate_greeting_response(usersaid))
             break
         elif usersaid in goodbyes:
-            kai_speaker(generate_greeting_response(usersaid))
+            kai_speaker(generate_goodbyes_response(usersaid))
+            break
+        elif usersaid in feelings:
+            kai_speaker(generate_feelings_response(usersaid))
             break
         elif "shutdown" in usersaid:
             kai_speaker(random.choice(KAI_Responses["shutdown"]["responses"]))
