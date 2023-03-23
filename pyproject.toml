@@ -21,6 +21,8 @@ chatterbot = "1.0.2"
 pvporcupine = "2.1.4"
 speechrecognition = "3.10.0"
 simpleaudio = "1.0.4"
+bs4 = "0.0.1"
+waitress = "2.1.2"
 
 
 [build-system]
