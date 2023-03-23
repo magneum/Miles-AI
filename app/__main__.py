@@ -61,6 +61,28 @@ feeling = ["how are you feeling"]
 areyou = ["who are you", "what are you"]
 shutdown = ["shutdown", "poweroff"]
 
+music_genres = [
+    "Pop",
+    "Rock",
+    "Hip hop",
+    "Electronic",
+    "Country",
+    "R&B",
+    "Jazz",
+    "Classical",
+    "Folk",
+    "Blues",
+    "Reggae",
+    "World",
+    "Metal",
+    "Indie",
+    "Punk",
+    "Alternative",
+    "Gospel",
+    "Soul",
+    "Funk"
+]
+
 
 def kai_uget():
     while True:
@@ -84,16 +106,29 @@ def kai_uget():
             kai_speaker(random.choice(KAI_Responses["shutdown"]["responses"]))
             os.system("shutdown /s /t 1")
         elif "play" in usersaid:
-            songname = usersaid.split("play", 1)[1]
-            try:
-                api = requests.get(
-                    f"https://magneum.vercel.app/api/youtube_sr?q={songname}")
-                name = api.json()["youtube_search"][0]["TITLE"]
-                kai_speaker(f"Playing {name} on youtube browser.")
-                webbrowser.open(api.json()["youtube_search"][0]["LINK"], new=2)
-            except Exception as e:
-                kai_speaker(f"Sorry could not play {songname} on youtube.")
-                break
+            if "random" in usersaid:
+                try:
+                    api = requests.get(
+                        f"https://magneum.vercel.app/api/youtube_sr?q={random.choice(music_genres)} random single track")
+                    name = api.json()["youtube_search"][0]["TITLE"]
+                    kai_speaker(f"Playing {name} on youtube browser.")
+                    webbrowser.open(
+                        api.json()["youtube_search"][0]["LINK"], new=2)
+                except Exception as e:
+                    kai_speaker(f"Sorry could not play {songname} on youtube.")
+                    break
+            else:
+                try:
+                    songname = usersaid.split("play", 1)[1]
+                    api = requests.get(
+                        f"https://magneum.vercel.app/api/youtube_sr?q={songname}")
+                    name = api.json()["youtube_search"][0]["TITLE"]
+                    kai_speaker(f"Playing {name} on youtube browser.")
+                    webbrowser.open(
+                        api.json()["youtube_search"][0]["LINK"], new=2)
+                except Exception as e:
+                    kai_speaker(f"Sorry could not play {songname} on youtube.")
+                    break
             break
         else:
             try:
