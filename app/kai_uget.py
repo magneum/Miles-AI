@@ -1,7 +1,8 @@
+from database.greetings import generate_greeting_response
 from .kai_command import kai_command
 from .kai_speaker import kai_speaker
+from .responders import *
 import os
-import json
 import random
 import requests
 import webbrowser
@@ -11,16 +12,14 @@ from colorama import Fore, Style
 current_dir = os.path.dirname(__file__)
 
 
-KAI_Responses = json.load(open("database/responses.json"))
-
-greetings = r"hi\b|hello\b|hey\b|greetings\b|salutations\b|yo\b|hiya\b|howdy\bsup\b|hi there\b|hello there\b|what's up\b|yoohoo\b|hey there\b|hiya there\b|g'day\b|cheerio\b|hihi\b|aloha\b|bonjour\b|hallo\b|ciao\b|namaste\b|konichiwa\b|hola\b|szia\b|hei\b|hej\b|tjena\b|heya\b|hey ya\b|sup dude\b|sup bro\b|sup everyone\b|wassup\b|whaddup\b"
-
-
 def kai_uget():
     while True:
         usersaid = kai_command()
         if usersaid in greetings:
-            kai_speaker(random.choice(KAI_Responses["hello"]["responses"]))
+            kai_speaker(generate_greeting_response(usersaid))
+            break
+        elif usersaid in goodbyes:
+            kai_speaker(generate_greeting_response(usersaid))
             break
         elif "shutdown" in usersaid:
             kai_speaker(random.choice(KAI_Responses["shutdown"]["responses"]))
