@@ -184,7 +184,7 @@
             ]
         },
         {
-            "name": "Love and Affection",
+            "name": "Love and Affection Emotions",
             "responses": [
                 "I am in love and feel passionately.",
                 "I feel affectionate and caring.",
@@ -263,7 +263,7 @@
             ]
         },
         {
-            "name": "Fear and Anxiety",
+            "name": "Fear and Anxiety Emotions",
             "responses": [
                 "I am feeling fearful and scared.",
                 "I feel anxious and nervous.",
