@@ -5,13 +5,16 @@ import datetime
 
 
 # ================================================================= DATA-LISTS FOR GREETINGS =================================================================
-casual_response = json.load(open("database/feelings/Casual.json"))["response"]
-formal_response = json.load(open("database/feelings/Formal.json"))["response"]
-unique_response = json.load(open("database/feelings/Unique.json"))["response"]
-friendly_response = json.load(
-    open("database/feelings/Friendly.json"))["response"]
-informal_response = json.load(
-    open("database/feelings/Informal.json"))["response"]
+affection_response = json.load(
+    open("database/feelings/Affection.json"))["response"]
+anxiety_response = json.load(
+    open("database/feelings/Anxiety.json"))["response"]
+excitement_response = json.load(
+    open("database/feelings/Excitement.json"))["response"]
+negative_response = json.load(
+    open("database/feelings/Negative.json"))["response"]
+positive_response = json.load(
+    open("database/feelings/Positive.json"))["response"]
 
 
 # =============================================== DETERMINE WHETHER IT IS AFTERNOON, NIGHT OR MORNING ===============================================
@@ -36,8 +39,8 @@ def random_list(*args):
 def generate_feelings_response(user_input):
     convoness = {
         r"\bhow\s+(?:are\s+you|are\s+you\s+doing|do\s+you\s+feel|have\s+you\s+been)\s+(?:feeling|today|lately|these\s+days)\b":
-        random_list(casual_response, formal_response,
-                    friendly_response, informal_response, unique_response),
+        random_list(affection_response, anxiety_response,
+                    excitement_response, negative_response, positive_response),
 
     }
     for pattern, response in convoness.items():

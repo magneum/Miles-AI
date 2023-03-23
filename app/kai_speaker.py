@@ -6,9 +6,9 @@ current_dir = os.path.dirname(__file__)
 
 def kai_speaker(KAI_TEXT):
     # windows
-    speaker = pyttsx3.init("sapi5")
-    # linux - apt install espeak && apt install libespeak-dev
-    # speaker = pyttsx3.init("espeak")
+    # speaker = pyttsx3.init("sapi5")
+    # linux - apt install espeak && apt install libespeak-dev || yay -S espeak-ng-extended-git
+    speaker = pyttsx3.init("espeak")
     speaker.setProperty("rate", 150)
     voices = speaker.getProperty("voices")
     speaker.setProperty("voice", voices[1].id)
