@@ -1,15 +1,7 @@
-import random
 from chatterbot import ChatBot
-from chatterbot.trainers import Trainer
-from chatterbot.trainers import ListTrainer
-from chatterbot.conversation import Statement
-from flask import Flask, render_template, request
 from chatterbot.trainers import ChatterBotCorpusTrainer
-
 # Sure, here's an example Python code that uses ChatterBot to generate responses for an AI chat bot:
 
-from chatterbot import ChatBot
-from chatterbot.trainers import ChatterBotCorpusTrainer
 
 # Create a new chat bot
 bot = ChatBot('MyBot')

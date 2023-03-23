@@ -1,16 +1,8 @@
-import random
 from chatterbot import ChatBot
-from chatterbot.trainers import Trainer
-from chatterbot.trainers import ListTrainer
-from chatterbot.conversation import Statement
 from flask import Flask, render_template, request
 from chatterbot.trainers import ChatterBotCorpusTrainer
-
 # Sure, here's an example of a more advanced Python code that uses ChatterBot and Flask to create a web-based chat bot:
 
-from flask import Flask, render_template, request
-from chatterbot import ChatBot
-from chatterbot.trainers import ChatterBotCorpusTrainer
 
 # Create a Flask app
 app = Flask(__name__)

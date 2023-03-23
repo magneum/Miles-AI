@@ -1,5 +1,6 @@
 nltk
 pydub 
+flask
 pyaudio
 pyttsx3 
 urllib3

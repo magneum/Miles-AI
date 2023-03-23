@@ -1,8 +1,7 @@
-# Sure, here's an example of how to add custom training logic to your chat bot:
-
 import random
 from chatterbot import ChatBot
 from chatterbot.trainers import ChatterBotCorpusTrainer
+# Sure, here's an example of how to add custom training logic to your chat bot:
 
 
 def generate_response(user_input):

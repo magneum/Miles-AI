@@ -1,15 +1,7 @@
-import random
 from chatterbot import ChatBot
-from chatterbot.trainers import Trainer
 from chatterbot.trainers import ListTrainer
 from chatterbot.conversation import Statement
-from flask import Flask, render_template, request
-from chatterbot.trainers import ChatterBotCorpusTrainer
-
 # Certainly! Here's an example of how to implement custom training logic in your ChatterBot trainer:
-
-from chatterbot.trainers import ListTrainer
-from chatterbot.conversation import Statement
 
 
 class MyTrainer(ListTrainer):
