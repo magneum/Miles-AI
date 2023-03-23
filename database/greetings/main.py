@@ -24,7 +24,6 @@ def provide_time():
         return "Good Evening"
     else:
         return "Good Morning"
-    return "none"
 
 
 #  ============================================================ SELECT A RANDOM LIST FROM THE INPUT LISTS ============================================================

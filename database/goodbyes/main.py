@@ -7,11 +7,11 @@ import datetime
 # ================================================================= DATA-LISTS FOR GREETINGS =================================================================
 casual_response = json.load(open("database/goodbyes/Casual.json"))["response"]
 formal_response = json.load(open("database/goodbyes/Formal.json"))["response"]
+unique_response = json.load(open("database/goodbyes/Unique.json"))["response"]
 friendly_response = json.load(
     open("database/goodbyes/Friendly.json"))["response"]
 informal_response = json.load(
     open("database/goodbyes/Informal.json"))["response"]
-unique_response = json.load(open("database/goodbyes/Unique.json"))["response"]
 
 
 # =============================================== DETERMINE WHETHER IT IS AFTERNOON, NIGHT OR MORNING ===============================================
@@ -24,7 +24,6 @@ def provide_time():
         return "Good Evening"
     else:
         return "Good Morning"
-    return "none"
 
 
 #  ============================================================ SELECT A RANDOM LIST FROM THE INPUT LISTS ============================================================
@@ -34,9 +33,9 @@ def random_list(*args):
 
 
 #  ============================================================ DEFINE A FUNCTION TO GENERATE A RESPONSE ============================================================
-def generate_greeting_response(user_input):
+def generate_goodbyes_response(user_input):
     convoness = {
-        r"hi\b|hello\b|hey\b|goodbyes\b|salutations\b|yo\b|hiya\b|howdy\bsup\b|hi there\b|hello there\b|what's up\b|yoohoo\b|hey there\b|hiya there\b|g'day\b|cheerio\b|hihi\b|aloha\b|bonjour\b|hallo\b|ciao\b|namaste\b|konichiwa\b|hola\b|szia\b|hei\b|hej\b|tjena\b|heya\b|hey ya\b|sup dude\b|sup bro\b|sup everyone\b|wassup\b|whaddup\b":
+        r"bye\b|goodbye\b|farewell\b|see you\b|take care\b|cheerio\b|ciao\b|so long\b|until next time\b|peace out\b|later\badios\b|au revoir\b|bye for now\b|catch you later\b|have a good one\b|keep in touch\b|leaving now\b|parting ways\b|so farewell\b|stay safe\b|till we meet again\b":
         random_list(casual_response, formal_response,
                     friendly_response, informal_response, unique_response),
 
