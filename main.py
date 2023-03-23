@@ -20,19 +20,11 @@ api_url = f"http://localhost:3000/news"
 response = requests.get(api_url)
 data = response.json()
 
-Title = data["title"]
-Author = data["author"]
-Description = data["description"]
-Url = data["url"]
-Image = data["urlToImage"]
-PublishedAt = data["publishedAt"]
-Content = data["content"]
 
-
-print(f"{Fore.GREEN}TITLE: {Style.RESET_ALL}{Title}")
-print(f"{Fore.GREEN}AUTHOR: {Style.RESET_ALL}{Author}")
-print(f"{Fore.GREEN}DESCRIPTION: {Style.RESET_ALL}{Description}")
-print(f"{Fore.GREEN}URL: {Style.RESET_ALL}{Url}")
-print(f"{Fore.GREEN}IMAGE: {Style.RESET_ALL}{Image}")
-print(f"{Fore.GREEN}PUBLISHEDAT: {Style.RESET_ALL}{PublishedAt}")
-print(f"{Fore.GREEN}CONTENT: {Style.RESET_ALL}{Content}")
+print(f"> {Fore.GREEN}TITLE: {Style.RESET_ALL}" + data["title"])
+print(f"> {Fore.GREEN}AUTHOR: {Style.RESET_ALL}" + data["author"])
+print(f"> {Fore.GREEN}DESCRIPTION: {Style.RESET_ALL}" + data["description"])
+print(f"> {Fore.GREEN}PUBLISHEDAT: {Style.RESET_ALL}" + data["publishedAt"])
+print(f"> {Fore.GREEN}CONTENT: {Style.RESET_ALL}" + data["content"])
+print(f"> {Fore.GREEN}URL: {Style.RESET_ALL}" + data["url"])
+print(f"> {Fore.GREEN}IMAGE: {Style.RESET_ALL}" + data["urlToImage"])
