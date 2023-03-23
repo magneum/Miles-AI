@@ -1,8 +1,7 @@
 from .kai_speaker import kai_speaker
 import os
-# import simpleaudio
+import simpleaudio
 from termcolor import cprint
-from playsound import playsound
 from colorama import Fore, Style
 import speech_recognition as sprecog
 current_dir = os.path.dirname(__file__)
@@ -13,13 +12,13 @@ def kai_command():
     with sprecog.Microphone() as mic:
         userquery = ""
         recog.adjust_for_ambient_noise(mic, duration=0.2)
-        playsound("src/_Tone.wav")
+        simpleaudio.WaveObject.from_wave_file("src/_Tone.wav").play()
         print(f"{Fore.YELLOW}ҠΛI: {Style.RESET_ALL}listening...")
         # recog.pause_threshold = 4
         # recog.operation_timeout = 4
         audio = recog.listen(mic)
         try:
-            playsound("src/Tone_.wav")
+            simpleaudio.WaveObject.from_wave_file("src/Tone_.wav").play()
             print(f"{Fore.BLUE}ҠΛI: {Style.RESET_ALL}recognizing {audio}")
             userquery = recog.recognize_google(
                 audio_data=audio, language="en-us")

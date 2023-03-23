@@ -4,9 +4,9 @@ import os
 import random
 import struct
 import pyaudio
+import simpleaudio
 import pvporcupine
 from termcolor import cprint
-from playsound import playsound
 from colorama import Fore, Style
 current_dir = os.path.dirname(__file__)
 
@@ -22,7 +22,7 @@ def KnowledgeAI():
         porcupine = None
         audio_stream = None
         kai_speaker(generate_greeting_response("hi"))
-        playsound("src/Tone_.wav")
+        simpleaudio.WaveObject.from_wave_file("src/Tone_.wav").play()
         try:
             porcupine = pvporcupine.create(
                 access_key="kHRZWPKCJGzWJpxesmNHzYJNBSdpxc5MR0TgdIuwxf8TRMyPTvwtGw==", keyword_paths=["models/hey-evo-windows.ppn"])
