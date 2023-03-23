@@ -1,13 +1,12 @@
 from database.greetings import generate_greeting_response
 from app import *
 import os
-import sys
 import random
 import struct
 import pyaudio
 import pvporcupine
-import simpleaudio
 from termcolor import cprint
+from playsound import playsound
 from colorama import Fore, Style
 current_dir = os.path.dirname(__file__)
 
@@ -23,7 +22,7 @@ def KnowledgeAI():
         porcupine = None
         audio_stream = None
         kai_speaker(generate_greeting_response("hi"))
-        simpleaudio.WaveObject.from_wave_file("src/Tone_.wav").play()
+        playsound("src/Tone_.wav")
         try:
             porcupine = pvporcupine.create(
                 access_key="kHRZWPKCJGzWJpxesmNHzYJNBSdpxc5MR0TgdIuwxf8TRMyPTvwtGw==", keyword_paths=["models/hey-evo-windows.ppn"])
@@ -57,7 +56,6 @@ def KnowledgeAI():
             if pa is not None:
                 pa.terminate()
     except KeyboardInterrupt:
-        sys.trackbacklimit = 0
         cprint("ҠΛI: Shutting down...", "green")
 
 

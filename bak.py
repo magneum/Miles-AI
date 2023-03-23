@@ -34,35 +34,58 @@ from colorama import Fore, Style
 # response = requests.get(api_url)
 # data = response.json()
 
-def provide_time():
-    # Determine whether it is afternoon, night or morning
-    now = datetime.datetime.now()
-    hour = now.hour
-    if hour >= 12 and hour < 18:
-        return "Good Afternoon"
-    elif hour >= 18 or hour < 6:
-        return "Good Evening"
-    else:
-        return "Good Morning"
-    return "none"
+import tensorflow as tf
+import numpy as np
+import random
+
+# Define the training data
+training_data = [["hi", "hello"],
+                 ["hello", "hi"],
+                 ["what's up?", "not much, you?"],
+                 ["how are you?", "I'm doing well, thank you."],
+                 ["bye", "goodbye"],
+                 ]
+
+# Define the vocabulary
+vocab = set([word for pair in training_data for word in pair])
+
+# Create a mapping of words to indices
+word2idx = {word: idx for idx, word in enumerate(sorted(list(vocab)))}
+
+# Convert the training data into numerical input/output pairs
+train_input = np.array(
+    [[word2idx[word] for word in pair[0].split()] for pair in training_data])
+train_output = np.array(
+    [[word2idx[word] for word in pair[1].split()] for pair in training_data])
+
+# Define the model architecture
+model = tf.keras.Sequential([tf.keras.layers.Embedding(len(vocab), 32, input_length=train_input.shape[1]),
+                             tf.keras.layers.LSTM(32),
+                             tf.keras.layers.Dense(
+                                 len(vocab), activation="softmax"),
+                             ])
+
+# Compile the model
+model.compile(optimizer="adam",
+              loss="sparse_categorical_crossentropy", metrics=["accuracy"])
+
+# Train the model
+model.fit(train_input, train_output, epochs=100)
+
+# Define a function to generate a response given an input string
 
 
-def random_list(*args):
-    # select a random list from the input lists
-    selected_list = random.choice(args)
-    return selected_list
+def generate_response(input_str):
+    input_idx = np.array([[word2idx[word] for word in input_str.split()]])
+    output_idx = model.predict(input_idx).argmax(axis=1)
+    output_str = " ".join([list(word2idx.keys())[list(
+        word2idx.values()).index(idx)] for idx in output_idx])
+    return output_str
 
 
-def generate_response(user_input):
-    # Define a function to generate a response
-    convoness = {
-        r"hi\b|hello\b|hey\b|greetings\b|salutations\b|yo\b|hiya\b|howdy\bsup\b|hi there\b|hello there\b|what's up\b|yoohoo\b|hey there\b|hiya there\b|g'day\b|cheerio\b|hihi\b|aloha\b|bonjour\b|hallo\b|ciao\b|namaste\b|konichiwa\b|hola\b|szia\b|hei\b|hej\b|tjena\b|heya\b|hey ya\b|sup dude\b|sup bro\b|sup everyone\b|wassup\b|whaddup\b":
-        random_list(json.load(open("database/greetings/Casual.json"))["response"], json.load(open("database/greetings/Formal.json"))["response"], json.load(open(
-            "database/greetings/Friendly.json"))["response"], json.load(open("database/greetings/Informal.json"))["response"], json.load(open("database/greetings/Unique.json"))["response"]),
-
-    }
-    for pattern, response in convoness.items():
-        if re.search(pattern, user_input, re.IGNORECASE):
-            output = random.choice(response)
-            return output.format(provide_time())
-    return "I'm sorry, I don't understand what you're asking."
+# Start the conversation
+print("Hi, I'm a chatbot. Ask me anything!")
+while True:
+    input_str = input("You: ")
+    response_str = generate_response(input_str)
+    print("Chatbot:", response_str)
