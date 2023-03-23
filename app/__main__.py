@@ -11,43 +11,50 @@ import winsound
 import webbrowser
 import pvporcupine
 import openai as assistant
+from termcolor import cprint
+from colorama import Fore, Style
 import speech_recognition as sprecog
 
-Evo_Responses = json.load(open("db/responses.json"))
-Greetings_Evo = json.load(open("db/greetings.json"))
-Feelings_Evo = json.load(open("db/feelings.json"))
-Goodbye_Evo = json.load(open("db/goodbye.json"))
+KAI_Responses = json.load(open("db/responses.json"))
+KAI_Greetings = json.load(open("db/greetings.json"))
+KAI_Feelings = json.load(open("db/feelings.json"))
+KAI_Goodbyes = json.load(open("db/goodbye.json"))
 
 
-async def speak_evo(evotext):
+def kai_color(text_1, color_1, bg_1, text_2, color_2, bg_2):
+    cprint() + cprint()
+
+
+def kai_speaker(KAI_TEXT):
     speaker = pyttsx3.init("sapi5")
-    speaker.setProperty("rate", 145)
+    speaker.setProperty("rate", 150)
     voices = speaker.getProperty("voices")
     speaker.setProperty("voice", voices[0].id)
-    print(f"E.V.O: {evotext}")
-    speaker.say(evotext)
+    print(f"{Fore.BLUE}ҠΛI: {Style.RESET_ALL}{KAI_TEXT}")
+    speaker.say(KAI_TEXT)
     speaker.runAndWait()
 
 
-async def evo_command():
+def KAI_Command():
     recog = sprecog.Recognizer()
     with sprecog.Microphone() as mic:
         userquery = ""
         recog.adjust_for_ambient_noise(mic, duration=0.2)
         winsound.Beep(600, 200)
-        print("LISTENING: ")
-        recog.pause_threshold = 4
-        recog.operation_timeout = 4
+        print(f"{Fore.YELLOW}ҠΛI: {Style.RESET_ALL}listening...")
+        # recog.pause_threshold = 4
+        # recog.operation_timeout = 4
         audio = recog.listen(mic)
         try:
             winsound.Beep(400, 200)
-            print(f"RECOGNIZING: {audio}")
+            print(f"{Fore.BLUE}ҠΛI: {Style.RESET_ALL}recognizing {audio}")
             userquery = recog.recognize_google(
                 audio_data=audio, language="en-us")
-            print(f"USER SAID: {userquery}")
+            print(f"{Fore.GREEN}ҠΛI: {Style.RESET_ALL}usersaid {userquery}")
         except Exception as e:
-            print(e)
-            speak_evo("Sorry, I did not get that.")
+            print(f"{Fore.RED}ҠΛI: {Style.RESET_ALL}Sorry, did not get that.")
+            cprint(f": {e}", "white", "on_grey", attrs=[])
+            kai_speaker(f"Sorry, did not get that.")
             return "none"
         return userquery.lower()
 
@@ -59,36 +66,37 @@ areyou = ["who are you", "what are you"]
 shutdown = ["shutdown", "poweroff"]
 
 
-async def evo_flow():
+def kai_uget():
     while True:
-        usersaid = evo_command()
+        usersaid = KAI_Command()
         if usersaid in greetings:
-            speak_evo(random.choice(Evo_Responses["hello"]["responses"]))
+            kai_speaker(random.choice(KAI_Responses["hello"]["responses"]))
             break
         elif usersaid in goodbye:
-            speak_evo(random.choice(Evo_Responses["goodbye"]["responses"]))
+            kai_speaker(random.choice(KAI_Responses["goodbye"]["responses"]))
             break
         elif usersaid in feeling:
-            speak_evo(random.choice(Evo_Responses["feeling"]["responses"]))
+            kai_speaker(random.choice(KAI_Responses["feeling"]["responses"]))
             break
         elif usersaid in areyou:
-            speak_evo(random.choice(Evo_Responses["areyou"]["responses"]))
+            kai_speaker(random.choice(KAI_Responses["areyou"]["responses"]))
             break
         elif usersaid in areyou:
-            speak_evo(random.choice(Evo_Responses["areyou"]["responses"]))
+            kai_speaker(random.choice(KAI_Responses["areyou"]["responses"]))
             break
         elif usersaid in shutdown:
-            speak_evo(random.choice(Evo_Responses["shutdown"]["responses"]))
+            kai_speaker(random.choice(KAI_Responses["shutdown"]["responses"]))
             os.system("shutdown /s /t 1")
         elif "play" in usersaid:
             songname = usersaid.split("play", 1)[1]
             try:
                 api = requests.get(
                     f"https://magneum.vercel.app/api/youtube_sr?q={songname}")
-                speak_evo(f"Playing {songname} on youtube browser.")
+                name = api.json()["youtube_search"][0]["TITLE"]
+                kai_speaker(f"Playing {name} on youtube browser.")
                 webbrowser.open(api.json()["youtube_search"][0]["LINK"], new=2)
             except Exception as e:
-                speak_evo(f"Sorry could not play {songname} on youtube.")
+                kai_speaker(f"Sorry could not play {songname} on youtube.")
                 break
             break
         else:
@@ -104,20 +112,22 @@ async def evo_flow():
                     presence_penalty=0.0
                 )
                 resp = response["choices"][0]["text"].capitalize()
-                print(f"E.V.O: {resp}")
-                speak_evo(resp)
+                print(f"{Fore.GREEN}ҠΛI: {Style.RESET_ALL}{resp}")
+                kai_speaker(resp)
                 break
             except Exception as e:
-                print(f"ERROR: {e}")
-                speak_evo(f"Sorry I could not understand that.")
+                print(f"{Fore.RED}ҠΛI: {Style.RESET_ALL}Sorry, did not get that.")
+                cprint(f": {e}", "white", "on_grey", attrs=[])
+                kai_speaker(f"Sorry, did not get that.")
                 break
 
 
-async def evoai():
+def KnowledgeAI():
     pa = None
     porcupine = None
     audio_stream = None
-    speak_evo(random.choice(Evo_Responses["greetings"]["responses"]))
+    kai_speaker(random.choice(KAI_Responses["greetings"]["responses"]))
+    winsound.Beep(600, 200)
     try:
         porcupine = pvporcupine.create(
             access_key="kHRZWPKCJGzWJpxesmNHzYJNBSdpxc5MR0TgdIuwxf8TRMyPTvwtGw==", keyword_paths=["models/hey-evo-windows.ppn"])
@@ -134,12 +144,13 @@ async def evoai():
             pcm = struct.unpack_from("h" * porcupine.frame_length, pcm)
             wake_index = porcupine.process(pcm)
             if wake_index == 0:
-                print("WAKE WORD DETECTED: ")
-                evo_flow()
-                print("ON HOLD: ")
+                print(f"{Fore.YELLOW}ҠΛI: {Style.RESET_ALL}wake word detected.")
+                kai_uget()
+                print(
+                    f"{Fore.MAGENTA}ҠΛI: {Style.RESET_ALL}waiting for wake word.")
     except Exception as e:
-        speak_evo(random.choice(Evo_Responses["error"]["responses"]))
-        print(f"ERROR: {e}")
+        kai_speaker(random.choice(KAI_Responses["error"]["responses"]))
+        print(f"{Fore.RED}ҠΛI: {Style.RESET_ALL}{e}")
         pass
     finally:
         if porcupine is not None:
@@ -150,4 +161,4 @@ async def evoai():
             pa.terminate()
 
 
-evoai()
+KnowledgeAI()
