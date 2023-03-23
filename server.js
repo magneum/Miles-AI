@@ -1,55 +1,57 @@
-const apiKey = "860b08c7c72841e6a8a53a3c3cfa8ec6";
-import express from "express";
-import axios from "axios";
-import cors from "cors";
-const app = express();
-const port = 3000;
+// const oapi_key = "284e3df01b68984c1cf2b12204a68ec2";
+// const apiKey = "860b08c7c72841e6a8a53a3c3cfa8ec6";
+// import express from "express";
+// import axios from "axios";
+// import cors from "cors";
+// const app = express();
+// const port = 3000;
 
-app.use(express.json());
-app.use(cors()); // add CORS middleware
+// app.use(express.json());
+// app.use(cors()); // add CORS middleware
 
-app.get("/news", async (req, res) => {
-  const response = await axios.get(
-    "https://newsapi.org/v2/top-headlines?country=in&apiKey=" + apiKey
-  );
-  console.log(response.data.articles[0]);
-  res.send(response.data.articles[0]);
-  console.log("Completed...");
-});
-
-// app.get("/api/users", (req, res) => {
-// // handle GET request for fetching all users
-// res.send("List of users");
+// app.get("/news", async (req, res) => {
+// // // handle GET request for fetching news
+// const response = await axios.get(
+// "https://newsapi.org/v2/top-headlines?country=in&apiKey=" + apiKey
+// );
+// console.log(response.data.articles[0]);
+// res.send(response.data.articles[0]);
+// console.log("Completed...");
 // });
 
-// app.get("/api/users/:id", (req, res) => {
-// // handle GET request for fetching user by id
-// const userId = req.params.id;
-// res.send(`User with id ${userId}`);
+// app.get("/weather", async (req, res) => {
+// // // handle GET request for fetching weather
+// try {
+// // Make a request to the OpenWeatherMap API
+// // Create the API URL using the city name and API key
+// const response = await axios.get(
+// "http://api.openweathermap.org/data/2.5/weather?q=siliguri&appid=" +
+// oapi_key
+// );
+// // Extract the relevant weather information
+// const temperature = Math.round(response.data.main.temp - 273.15); // temperature in Celsius
+// const humidity = response.data.main.humidity; // humidity percentage
+// const wind_speed = response.data.wind.speed; // wind speed in meter/sec
+// const weather_description = response.data.weather[0].description; // description of current weather
+// // Print the weather forecast
+// console.log(`Temperature: ${temperature}°C`);
+// console.log(`Humidity: ${humidity}%`);
+// console.log(`Wind Speed: ${wind_speed} m/s`);
+// console.log(`Weather Description: ${weather_description}`);
+// // send data in json
+// res.send([
+// {
+// temperature: temperature + "°C",
+// humidity: humidity + "%",
+// wind_speed: wind_speed + "m/s",
+// weather_description: weather_description,
+// },
+// ]);
+// } catch (error) {
+// console.error(error);
+// }
 // });
 
-// app.post("/api/users", (req, res) => {
-// // handle POST request for creating a new user
-// const user = req.body;
-// console.log(user);
-// res.send("User created successfully");
+// app.listen(port, () => {
+// console.log(`Server listening at http://localhost:${port}`);
 // });
-
-// app.put("/api/users/:id", (req, res) => {
-// // handle PUT request for updating user by id
-// const userId = req.params.id;
-// const updatedUser = req.body;
-// console.log(`Update user with id ${userId}:`, updatedUser);
-// res.send(`User with id ${userId} updated successfully`);
-// });
-
-// app.delete("/api/users/:id", (req, res) => {
-// // handle DELETE request for deleting user by id
-// const userId = req.params.id;
-// console.log(`Delete user with id ${userId}`);
-// res.send(`User with id ${userId} deleted successfully`);
-// });
-
-app.listen(port, () => {
-  console.log(`Server listening at http://localhost:${port}`);
-});
