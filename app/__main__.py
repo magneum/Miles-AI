@@ -21,10 +21,6 @@ KAI_Feelings = json.load(open("db/feelings.json"))
 KAI_Goodbyes = json.load(open("db/goodbye.json"))
 
 
-def kai_color(text_1, color_1, bg_1, text_2, color_2, bg_2):
-    cprint() + cprint()
-
-
 def kai_speaker(KAI_TEXT):
     speaker = pyttsx3.init("sapi5")
     speaker.setProperty("rate", 150)
