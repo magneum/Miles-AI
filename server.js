@@ -1,5 +1,3 @@
-// const oapi_key = "284e3df01b68984c1cf2b12204a68ec2";
-// const apiKey = "860b08c7c72841e6a8a53a3c3cfa8ec6";
 // import express from "express";
 // import axios from "axios";
 // import cors from "cors";

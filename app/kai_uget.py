@@ -5,13 +5,13 @@ from .kai_command import kai_command
 from .kai_speaker import kai_speaker
 from .responders import *
 import os
-import random
-import requests
-import webbrowser
 import openai as assistant
 from termcolor import cprint
+from dotenv import load_dotenv
 from colorama import Fore, Style
 current_dir = os.path.dirname(__file__)
+
+load_dotenv()
 
 
 def kai_uget():
@@ -26,24 +26,9 @@ def kai_uget():
         elif usersaid in feelings:
             kai_speaker(generate_feelings_response(usersaid))
             break
-        elif "shutdown" in usersaid:
-            kai_speaker(random.choice(KAI_Responses["shutdown"]["responses"]))
-            os.system("shutdown /s /t 1")
-        elif "play" in usersaid:
-            try:
-                songname = usersaid.split("play", 1)[1]
-                api = requests.get(
-                    f"https://magneum.vercel.app/api/youtube_sr?q={songname}")
-                name = api.json()["youtube_search"][0]["TITLE"]
-                kai_speaker(f"Playing {name} on youtube browser.")
-                webbrowser.open(
-                    api.json()["youtube_search"][0]["LINK"], new=2)
-            except Exception as e:
-                kai_speaker(f"Sorry could not play {songname} on youtube.")
-                break
         else:
             try:
-                assistant.api_key = "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"
+                assistant.api_key = os.getenv("OPEN_API")
                 response = assistant.Completion.create(
                     engine="text-davinci-003",
                     prompt=usersaid.capitalize(),
@@ -62,3 +47,20 @@ def kai_uget():
                 cprint(f": {e}", "white", "on_grey", attrs=[])
                 kai_speaker(f"Sorry, did not get that.")
                 break
+
+
+# elif "shutdown" in usersaid:
+#     kai_speaker(random.choice(KAI_Responses["shutdown"]["responses"]))
+#     os.system("shutdown /s /t 1")
+# elif "play" in usersaid:
+#     try:
+#         songname = usersaid.split("play", 1)[1]
+#         api = requests.get(
+#             f"https://magneum.vercel.app/api/youtube_sr?q={songname}")
+#         name = api.json()["youtube_search"][0]["TITLE"]
+#         kai_speaker(f"Playing {name} on youtube browser.")
+#         webbrowser.open(
+#             api.json()["youtube_search"][0]["LINK"], new=2)
+#     except Exception as e:
+#         kai_speaker(f"Sorry could not play {songname} on youtube.")
+#         break
