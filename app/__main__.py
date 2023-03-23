@@ -154,42 +154,46 @@ def kai_uget():
 
 
 def KnowledgeAI():
-    pa = None
-    porcupine = None
-    audio_stream = None
-    kai_speaker(random.choice(KAI_Responses["greetings"]["responses"]))
-    winsound.Beep(600, 200)
     try:
-        porcupine = pvporcupine.create(
-            access_key="kHRZWPKCJGzWJpxesmNHzYJNBSdpxc5MR0TgdIuwxf8TRMyPTvwtGw==", keyword_paths=["models/hey-evo-windows.ppn"])
-        pa = pyaudio.PyAudio()
-        audio_stream = pa.open(
-            channels=1,
-            input=True,
-            format=pyaudio.paInt16,
-            rate=porcupine.sample_rate,
-            frames_per_buffer=porcupine.frame_length
-        )
-        while True:
-            pcm = audio_stream.read(porcupine.frame_length)
-            pcm = struct.unpack_from("h" * porcupine.frame_length, pcm)
-            wake_index = porcupine.process(pcm)
-            if wake_index == 0:
-                print(f"{Fore.YELLOW}ҠΛI: {Style.RESET_ALL}wake word detected.")
-                kai_uget()
-                print(
-                    f"{Fore.MAGENTA}ҠΛI: {Style.RESET_ALL}waiting for wake word.")
-    except Exception as e:
-        kai_speaker(random.choice(KAI_Responses["error"]["responses"]))
-        print(f"{Fore.RED}ҠΛI: {Style.RESET_ALL}{e}")
-        pass
-    finally:
-        if porcupine is not None:
-            porcupine.delete()
-        if audio_stream is not None:
-            audio_stream.close()
-        if pa is not None:
-            pa.terminate()
+        pa = None
+        porcupine = None
+        audio_stream = None
+        kai_speaker(random.choice(KAI_Responses["greetings"]["responses"]))
+        winsound.Beep(600, 200)
+        try:
+            porcupine = pvporcupine.create(
+                access_key="kHRZWPKCJGzWJpxesmNHzYJNBSdpxc5MR0TgdIuwxf8TRMyPTvwtGw==", keyword_paths=["models/hey-evo-windows.ppn"])
+            pa = pyaudio.PyAudio()
+            audio_stream = pa.open(
+                channels=1,
+                input=True,
+                format=pyaudio.paInt16,
+                rate=porcupine.sample_rate,
+                frames_per_buffer=porcupine.frame_length
+            )
+            while True:
+                pcm = audio_stream.read(porcupine.frame_length)
+                pcm = struct.unpack_from("h" * porcupine.frame_length, pcm)
+                wake_index = porcupine.process(pcm)
+                if wake_index == 0:
+                    print(
+                        f"{Fore.YELLOW}ҠΛI: {Style.RESET_ALL}wake word detected.")
+                    kai_uget()
+                    print(
+                        f"{Fore.MAGENTA}ҠΛI: {Style.RESET_ALL}waiting for wake word.")
+        except Exception as e:
+            kai_speaker(random.choice(KAI_Responses["error"]["responses"]))
+            print(f"{Fore.RED}ҠΛI: {Style.RESET_ALL}{e}")
+            pass
+        finally:
+            if porcupine is not None:
+                porcupine.delete()
+            if audio_stream is not None:
+                audio_stream.close()
+            if pa is not None:
+                pa.terminate()
+    except KeyboardInterrupt:
+        sys.exit()
 
 
 KnowledgeAI()
