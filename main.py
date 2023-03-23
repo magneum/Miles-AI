@@ -1,30 +1,26 @@
-from database.greetings.greetings import generate_greeting_response
-import speech_recognition as sprecog
-from colorama import Fore, Style
-from termcolor import cprint
-import openai as assistant
+from database.greetings import generate_greeting_response
 import os
+import re
 import sys
 import time
 import json
 import random
 import struct
 import pyaudio
+import datetime
 import requests
 import pyttsx3
 import webbrowser
 import pvporcupine
 import simpleaudio
+import openai as assistant
+from termcolor import cprint
+from colorama import Fore, Style
+import speech_recognition as sprecog
 current_dir = os.path.dirname(__file__)
 
-# ================================================================= LOCAL IMPORTS =================================================================
-print(generate_greeting_response())
-os._exit(1)
 
-KAI_Responses = json.load(open("database/responses.json"))
-KAI_Greetings = json.load(open("database/greetings.json"))
-KAI_Feelings = json.load(open("database/feelings.json"))
-KAI_Goodbyes = json.load(open("database/goodbye.json"))
+# ================================================================= FUNCTIONS FOR RESPONSES =================================================================
 
 
 # simpleaudio.WaveObject.from_wave_file("src/_Tone.wav").play()
@@ -159,7 +155,7 @@ def KnowledgeAI():
         pa = None
         porcupine = None
         audio_stream = None
-        kai_speaker(random.choice(KAI_Responses["greetings"]["responses"]))
+        kai_speaker(generate_greeting_response("hi"))
         simpleaudio.WaveObject.from_wave_file("src/Tone_.wav").play()
         try:
             porcupine = pvporcupine.create(
