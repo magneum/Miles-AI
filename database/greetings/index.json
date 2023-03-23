@@ -2,7 +2,7 @@
     "greetings": [
         {
             "name": "Formal Greetings",
-            "responses": [
+            "response": [
                 "Good morning, how are you today?",
                 "It's a pleasure to meet you.",
                 "Good afternoon, how can I assist you?",
@@ -80,7 +80,7 @@
         },
         {
             "name": "Informal Greetings",
-            "responses": [
+            "response": [
                 "Hey there, sir!",
                 "What's up, sir?",
                 "Yo, sir!",
@@ -265,7 +265,7 @@
         },
         {
             "name": "Friendly Greetings",
-            "responses": [
+            "response": [
                 "Good morning, sir! How can I assist you today?",
                 "Hello there, sir! What can I do for you?",
                 "Welcome back, sir! How may I help you?",
@@ -334,7 +334,7 @@
         },
         {
             "name": "Casual Greetings",
-            "responses": [
+            "response": [
                 "Hello sir, how are you doing today?",
                 "Good morning sir, how can I assist you?",
                 "Hi sir, what brings you here?",
@@ -408,7 +408,7 @@
         },
         {
             "name": "Unique Greetings",
-            "responses": [
+            "response": [
                 "Hello sir, how are you doing today?",
                 "Good morning sir, how can I assist you?",
                 "Hi sir, what brings you here?",

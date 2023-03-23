@@ -2,7 +2,7 @@
     "feelings": [
         {
             "name": "Positive Emotions",
-            "responses": [
+            "response": [
                 "I'm feeling ecstatic!",
                 "I'm feeling overjoyed!",
                 "I'm feeling content and happy.",
@@ -72,7 +72,7 @@
         },
         {
             "name": "Negative Emotions",
-            "responses": [
+            "response": [
                 "I feel sad and down.",
                 "I am feeling frustrated and irritated.",
                 "I feel angry and resentful.",
@@ -185,7 +185,7 @@
         },
         {
             "name": "Love and Affection Emotions",
-            "responses": [
+            "response": [
                 "I am in love and feel passionately.",
                 "I feel affectionate and caring.",
                 "I am feeling infatuated and smitten.",
@@ -264,7 +264,7 @@
         },
         {
             "name": "Fear and Anxiety Emotions",
-            "responses": [
+            "response": [
                 "I am feeling fearful and scared.",
                 "I feel anxious and nervous.",
                 "I am feeling paranoid and suspicious.",
@@ -342,7 +342,7 @@
         },
         {
             "name": "Surprise and Excitement",
-            "responses": [
+            "response": [
                 "I am feeling surprised and astonished.",
                 "I feel excited and thrilled.",
                 "I am feeling amazed and impressed.",

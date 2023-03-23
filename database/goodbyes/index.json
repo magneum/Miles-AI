@@ -2,7 +2,7 @@
     "goodbyes": [
         {
             "name": "Formal Goodbyes",
-            "responses": [
+            "response": [
                 "Goodbye, it was nice meeting you.",
                 "Thank you for your time. Goodbye.",
                 "Goodbye, have a pleasant day.",
@@ -77,7 +77,7 @@
         },
         {
             "name": "Informal Goodbyes",
-            "responses": [
+            "response": [
                 "See you later!",
                 "Catch you later!",
                 "Bye for now!",
@@ -188,7 +188,7 @@
         },
         {
             "name": "Friendly Goodbyes",
-            "responses": [
+            "response": [
                 "Goodbye, my friend! Talk to you soon!",
                 "Take care, buddy! See you later!",
                 "Later, my dear friend! Keep in touch!",
@@ -289,7 +289,7 @@
         },
         {
             "name": "Casual Goodbyes",
-            "responses": [
+            "response": [
                 "Later, gator!",
                 "Peace!",
                 "Later, dude!",
@@ -412,7 +412,7 @@
         },
         {
             "name": "Unique Goodbyes",
-            "responses": [
+            "response": [
                 "Adios, muchachos!",
                 "Ciao for now!",
                 "See you on the other side!",
