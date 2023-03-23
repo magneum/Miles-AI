@@ -1,3 +1,7 @@
+import speech_recognition as sprecog
+from colorama import Fore, Style
+from termcolor import cprint
+import openai as assistant
 import os
 import sys
 import time
@@ -7,13 +11,9 @@ import struct
 import pyaudio
 import requests
 import pyttsx3
-import winsound
 import webbrowser
 import pvporcupine
-import openai as assistant
-from termcolor import cprint
-from colorama import Fore, Style
-import speech_recognition as sprecog
+import simpleaudio
 
 KAI_Responses = json.load(open("db/responses.json"))
 KAI_Greetings = json.load(open("db/greetings.json"))
@@ -21,8 +21,16 @@ KAI_Feelings = json.load(open("db/feelings.json"))
 KAI_Goodbyes = json.load(open("db/goodbye.json"))
 
 
+# simpleaudio.WaveObject.from_wave_file("src/_Tone.wav").play()
+# simpleaudio.WaveObject.from_wave_file("src/Tone_.wav").play().wait_done()
+# sys.exit()
+
+
 def kai_speaker(KAI_TEXT):
+    # windows
     speaker = pyttsx3.init("sapi5")
+    # linux - apt install espeak && apt install libespeak-dev
+    # speaker = pyttsx3.init("espeak")
     speaker.setProperty("rate", 150)
     voices = speaker.getProperty("voices")
     speaker.setProperty("voice", voices[0].id)
@@ -36,13 +44,13 @@ def KAI_Command():
     with sprecog.Microphone() as mic:
         userquery = ""
         recog.adjust_for_ambient_noise(mic, duration=0.2)
-        winsound.Beep(600, 200)
+        simpleaudio.WaveObject.from_wave_file("src/_Tone.wav").play()
         print(f"{Fore.YELLOW}ҠΛI: {Style.RESET_ALL}listening...")
         # recog.pause_threshold = 4
         # recog.operation_timeout = 4
         audio = recog.listen(mic)
         try:
-            winsound.Beep(400, 200)
+            simpleaudio.WaveObject.from_wave_file("src/Tone_.wav").play()
             print(f"{Fore.BLUE}ҠΛI: {Style.RESET_ALL}recognizing {audio}")
             userquery = recog.recognize_google(
                 audio_data=audio, language="en-us")
@@ -106,30 +114,17 @@ def kai_uget():
             kai_speaker(random.choice(KAI_Responses["shutdown"]["responses"]))
             os.system("shutdown /s /t 1")
         elif "play" in usersaid:
-            if "random" in usersaid:
-                try:
-                    api = requests.get(
-                        f"https://magneum.vercel.app/api/youtube_sr?q={random.choice(music_genres)} random single track")
-                    name = api.json()["youtube_search"][0]["TITLE"]
-                    kai_speaker(f"Playing {name} on youtube browser.")
-                    webbrowser.open(
-                        api.json()["youtube_search"][0]["LINK"], new=2)
-                except Exception as e:
-                    kai_speaker(f"Sorry could not play {songname} on youtube.")
-                    break
-            else:
-                try:
-                    songname = usersaid.split("play", 1)[1]
-                    api = requests.get(
-                        f"https://magneum.vercel.app/api/youtube_sr?q={songname}")
-                    name = api.json()["youtube_search"][0]["TITLE"]
-                    kai_speaker(f"Playing {name} on youtube browser.")
-                    webbrowser.open(
-                        api.json()["youtube_search"][0]["LINK"], new=2)
-                except Exception as e:
-                    kai_speaker(f"Sorry could not play {songname} on youtube.")
-                    break
-            break
+            try:
+                songname = usersaid.split("play", 1)[1]
+                api = requests.get(
+                    f"https://magneum.vercel.app/api/youtube_sr?q={songname}")
+                name = api.json()["youtube_search"][0]["TITLE"]
+                kai_speaker(f"Playing {name} on youtube browser.")
+                webbrowser.open(
+                    api.json()["youtube_search"][0]["LINK"], new=2)
+            except Exception as e:
+                kai_speaker(f"Sorry could not play {songname} on youtube.")
+                break
         else:
             try:
                 assistant.api_key = "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"
@@ -159,7 +154,7 @@ def KnowledgeAI():
         porcupine = None
         audio_stream = None
         kai_speaker(random.choice(KAI_Responses["greetings"]["responses"]))
-        winsound.Beep(600, 200)
+        simpleaudio.WaveObject.from_wave_file("src/Tone_.wav").play()
         try:
             porcupine = pvporcupine.create(
                 access_key="kHRZWPKCJGzWJpxesmNHzYJNBSdpxc5MR0TgdIuwxf8TRMyPTvwtGw==", keyword_paths=["models/hey-evo-windows.ppn"])
@@ -193,7 +188,8 @@ def KnowledgeAI():
             if pa is not None:
                 pa.terminate()
     except KeyboardInterrupt:
-        sys.exit()
+        sys.trackbacklimit = 0
+        cprint("ҠΛI: Shutting down...", "green")
 
 
 KnowledgeAI()

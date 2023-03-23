@@ -1,4 +1,2 @@
-
-import speech_recognition as sprecog
-
-print(sprecog.Microphone())
+import os
+os.system("python3 -m app")

@@ -20,6 +20,7 @@ python-vlc = "3.0.18121"
 chatterbot = "1.0.2"
 pvporcupine = "2.1.4"
 speechrecognition = "3.10.0"
+simpleaudio = "^1.0.4"
 
 
 [build-system]

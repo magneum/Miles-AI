@@ -6,10 +6,11 @@ pyaudio==0.2.13
 urllib3==1.26.15
 termcolor==2.2.0
 pvporcupine==2.1.4
+simpleaudio==1.0.4
 python-vlc==3.0.18121
 SpeechRecognition==3.10.0
 
-# poetry add nltk==3.8.1 pydub==0.25.1 flask==2.2.3 pyaudio==0.2.13 pyttsx3==2.90 urllib3==1.26.15 termcolor==2.2.0 python-vlc==3.0.18121 pvporcupine==2.1.4 SpeechRecognition==3.10.0
+# poetry add nltk==3.8.1 pydub==0.25.1 flask==2.2.3 pyaudio==0.2.13 pyttsx3==2.90 urllib3==1.26.15 termcolor==2.2.0 python-vlc==3.0.18121 pvporcupine==2.1.4 SpeechRecognition==3.10.0 simpleaudio==1.0.4
 
 
 # python3 -m pip install --user pipx && python3 -m pipx ensurepath
