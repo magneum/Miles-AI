@@ -1,13 +1,14 @@
-import speech_recognition as sr
-import pyttsx3
-import random
-import webbrowser
 import os
+import random
+import pyttsx3
 import requests
+import datetime
+import webbrowser
 from bs4 import BeautifulSoup
 from pydub import AudioSegment
 from pydub.playback import play
-import datetime
+import speech_recognition as sr
+
 
 # Define a list of songs to play
 SONGS = [
