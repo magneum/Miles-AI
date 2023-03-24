@@ -38,7 +38,7 @@ def kai_uget():
                     frequency_penalty=0.0,
                     presence_penalty=0.0
                 )
-                resp = response["choices"][0]["text"].capitalize()
+                resp = response["choices"][0]["text"].capitalize() # type: ignore
                 print(f"{Fore.GREEN}ҠΛI: {Style.RESET_ALL}{resp}")
                 kai_speaker(resp)
                 break

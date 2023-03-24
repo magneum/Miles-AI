@@ -14,8 +14,6 @@ def kai_command():
         recog.adjust_for_ambient_noise(mic, duration=0.2)
         simpleaudio.WaveObject.from_wave_file("src/_Tone.wav").play()
         print(f"{Fore.YELLOW}ҠΛI: {Style.RESET_ALL}listening...")
-        # recog.pause_threshold = 4
-        # recog.operation_timeout = 4
         audio = recog.listen(mic)
         try:
             simpleaudio.WaveObject.from_wave_file("src/Tone_.wav").play()
@@ -23,6 +21,10 @@ def kai_command():
             userquery = recog.recognize_google(
                 audio_data=audio, language="en-us")
             print(f"{Fore.GREEN}ҠΛI: {Style.RESET_ALL}usersaid {userquery}")
+        except sprecog.UnknownValueError:
+            return ""
+        except sprecog.RequestError:
+            return ""
         except Exception as e:
             print(f"{Fore.RED}ҠΛI: {Style.RESET_ALL}Sorry, did not get that.")
             cprint(f": {e}", "white", "on_grey", attrs=[])
