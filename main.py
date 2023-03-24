@@ -1,6 +1,7 @@
 from database.greetings import generate_greeting_response
 from app import *
 import os
+import wave
 import random
 import struct
 import pyaudio
@@ -22,7 +23,8 @@ def KnowledgeAI():
         porcupine = None
         audio_stream = None
         kai_speaker(generate_greeting_response("hi"))
-        simpleaudio.WaveObject.from_wave_file("src/Tone_.wav").play()
+        wave.open("src/Tone_.wav")
+        # simpleaudio.WaveObject.from_wave_file("src/Tone_.wav").play()
         try:
             porcupine = pvporcupine.create(
                 access_key="kHRZWPKCJGzWJpxesmNHzYJNBSdpxc5MR0TgdIuwxf8TRMyPTvwtGw==", keyword_paths=["models/hey-evo-windows.ppn"])
