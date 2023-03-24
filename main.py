@@ -47,7 +47,6 @@ def KnowledgeAI():
         except Exception as e:
             kai_speaker(random.choice(KAI_Responses["error"]["responses"]))
             print(f"{Fore.RED}ҠΛI: {Style.RESET_ALL}{e}")
-            pass
         finally:
             if porcupine is not None:
                 porcupine.delete()

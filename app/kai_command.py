@@ -26,6 +26,6 @@ def kai_command():
         except Exception as e:
             print(f"{Fore.RED}ҠΛI: {Style.RESET_ALL}Sorry, did not get that.")
             cprint(f": {e}", "white", "on_grey", attrs=[])
-            kai_speaker(f"Sorry, did not get that.")
+            kai_speaker("Sorry, did not get that.")
             return "none"
         return userquery.lower()
