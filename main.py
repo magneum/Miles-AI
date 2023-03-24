@@ -45,7 +45,7 @@ feelings = r"\bhow\s+(?:are\s+you|are\s+you\s+doing|do\s+you\s+feel|have\s+you\s
 kaida_responses = json.load(open("database/responses.json"))
 
 
-async def kaida_speaker(usersaid):
+def kaida_speaker(usersaid):
     if not isinstance(usersaid, str):
         print(f"{Fore.RED}Error: Input must be a string.{Style.RESET_ALL}")
         return
@@ -61,7 +61,7 @@ async def kaida_speaker(usersaid):
         print(f"{Fore.RED}Error: {e}{Style.RESET_ALL}")
 
 
-async def kaida_command():
+def kaida_command():
     recognizer = sr.Recognizer()
     microphone = sr.Microphone()
 
@@ -114,37 +114,37 @@ def generate_open_response(usersaid):
         return "Sorry, I couldn't understand your question or statement."
 
 
-async def kaida_uget():
+def kaida_uget():
     while True:
         try:
-            usersaid = await kaida_command()
+            usersaid = kaida_command()
             if usersaid in greetings:
-                await kaida_speaker(generate_greeting_response(usersaid))
+                kaida_speaker(generate_greeting_response(usersaid))
                 break
             elif usersaid in goodbyes:
-                await kaida_speaker(generate_goodbyes_response(usersaid))
+                kaida_speaker(generate_goodbyes_response(usersaid))
                 break
             elif usersaid in feelings:
                 kaida_speaker(generate_feelings_response(usersaid))
                 break
             else:
                 openresponse = generate_open_response(usersaid)
-                await kaida_speaker(openresponse)
+                kaida_speaker(openresponse)
                 break
         except Exception as e:
             logging.error(traceback.format_exc())
             print(
                 f"{Fore.RED}KΛIDΛ: {Style.RESET_ALL}Sorry, did not get that.")
-            await kaida_speaker(f"Sorry, did not get that.")
+            kaida_speaker(f"Sorry, did not get that.")
             break
 
 
-async def main():
+def main():
     try:
         paud = None
         porcupine = None
         audio_stream = None
-        await kaida_speaker(generate_greeting_response("hi"))
+        kaida_speaker(generate_greeting_response("hi"))
         simpleaudio.WaveObject.from_wave_file("src/Tone_.wav").play()
         try:
             porcupine = pvporcupine.create(
@@ -164,11 +164,11 @@ async def main():
                 if wake_index == 0:
                     print(
                         f"{Fore.YELLOW}KΛIDΛ: {Style.RESET_ALL}wake word detected.")
-                    await kaida_uget()
+                    kaida_uget()
                     print(
                         f"{Fore.MAGENTA}KΛIDΛ: {Style.RESET_ALL}waiting for wake word.")
         except Exception as e:
-            await kaida_speaker(random.choice(kaida_responses["error"]["responses"]))
+            kaida_speaker(random.choice(kaida_responses["error"]["responses"]))
             print(f"{Fore.RED}KΛIDΛ: {Style.RESET_ALL}{e}")
         finally:
             if porcupine is not None:
@@ -180,7 +180,7 @@ async def main():
     except KeyboardInterrupt:
         cprint("KΛIDΛ: Shutting down...", "green")
     except Exception as e:
-        await kaida_speaker(random.choice(kaida_responses["error"]["responses"]))
+        kaida_speaker(random.choice(kaida_responses["error"]["responses"]))
         print(f"{Fore.RED}KΛIDΛ: {Style.RESET_ALL}{e}")
 
 
