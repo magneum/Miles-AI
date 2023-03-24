@@ -3,6 +3,7 @@ import random
 import pyttsx3
 import requests
 import datetime
+import winsound
 import webbrowser
 from bs4 import BeautifulSoup
 from pydub import AudioSegment
@@ -47,10 +48,12 @@ def detect_wake_word():
     while True:
         text = recognize_speech()
         if text.startswith("hey python"):
+            print("Wake word detected!")
             respond("Yes, how can I help you?")
             while True:
                 text = recognize_speech()
                 if text.startswith("hey python"):
+                    print("Wake word detected again!")
                     respond("Yes, how can I help you?")
                     continue
                 elif any(word in text for word in ["quit", "exit"]):
@@ -59,6 +62,7 @@ def detect_wake_word():
                 elif text:
                     chat(text)  # Call the chat function with the user input
                     break
+
 
 # Define a function for carrying out a conversation
 def chat(text):
@@ -128,6 +132,7 @@ def get_weather():
 
 # Define the main function
 def main():
+    winsound.Beep(5500, 300)
     detect_wake_word()
 
 if __name__ == "__main__":

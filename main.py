@@ -31,28 +31,25 @@ greetings = r"hi\b|hello\b|hey\b|greetings\b|salutations\b|yo\b|hiya\b|howdy\bsu
 goodbyes = r"bye\b|goodbye\b|farewell\b|see you\b|take care\b|cheerio\b|ciao\b|so long\b|until next time\b|peace out\b|later\badios\b|au revoir\b|bye for now\b|catch you later\b|have a good one\b|keep in touch\b|leaving now\b|parting ways\b|so farewell\b|stay safe\b|till we meet again\b"
 feelings = r"\bhow\s+(?:are\s+you|are\s+you\s+doing|do\s+you\s+feel|have\s+you\s+been)\s+(?:feeling|today|lately|these\s+days)\b"
 
-KAI_Responses = json.load(open("database/responses.json"))
+rio_responses = json.load(open("database/responses.json"))
 
-def kai_speaker(KAI_TEXT):
-    # windows
+def rio_speaker(rio_TEXT):
     speaker = pyttsx3.init("sapi5")
-    # linux - apt install espeak && apt install libespeak-dev || yay -S espeak-ng-extended-git
-    # speaker = pyttsx3.init("espeak")
-    speaker.setProperty("rate", 150)
+    speaker.setProperty("rate", 145)
     voices = speaker.getProperty("voices")
     speaker.setProperty("voice", voices[1].id)
-    print(f"{Fore.BLUE}ҠΛI: {Style.RESET_ALL}{KAI_TEXT}")
-    speaker.say(KAI_TEXT)
+    print(f"{Fore.BLUE}ҠΛI: {Style.RESET_ALL}{rio_TEXT}")
+    speaker.say(rio_TEXT)
     speaker.runAndWait()
 
 
 
-def kai_command():
+def rio_command():
     recog = sprecog.Recognizer()
     with sprecog.Microphone() as mic:
         userquery = ""
         recog.adjust_for_ambient_noise(mic, duration=int(0.2))
-        simpleaudio.WaveObject.from_wave_file("src/Tone.wav").play()
+        simpleaudio.WaveObject.from_wave_file("src/_Tone.wav").play()
         print(f"{Fore.YELLOW}ҠΛI: {Style.RESET_ALL}listening...")
         audio = recog.listen(mic)
         try:
@@ -72,17 +69,17 @@ def kai_command():
         return userquery.lower()
 
 
-def kai_uget():
+def rio_uget():
     while True:
-        usersaid = kai_command()
+        usersaid = rio_command()
         if usersaid in greetings:
-            kai_speaker(generate_greeting_response(usersaid))
+            rio_speaker(generate_greeting_response(usersaid))
             break
         elif usersaid in goodbyes:
-            kai_speaker(generate_goodbyes_response(usersaid))
+            rio_speaker(generate_goodbyes_response(usersaid))
             break
         elif usersaid in feelings:
-            kai_speaker(generate_feelings_response(usersaid))
+            rio_speaker(generate_feelings_response(usersaid))
             break
         else:
             try:
@@ -98,26 +95,26 @@ def kai_uget():
                 )
                 resp = response["choices"][0]["text"].capitalize() # type: ignore
                 print(f"{Fore.GREEN}ҠΛI: {Style.RESET_ALL}{resp}")
-                kai_speaker(resp)
+                rio_speaker(resp)
                 break
             except Exception as e:
                 print(f"{Fore.RED}ҠΛI: {Style.RESET_ALL}Sorry, did not get that.")
                 cprint(f": {e}", "white", "on_grey", attrs=[])
-                kai_speaker(f"Sorry, did not get that.")
+                rio_speaker(f"Sorry, did not get that.")
                 break
 
-def KnowledgeAI():
+def main():
     try:
-        pa = None
+        paud = None
         porcupine = None
         audio_stream = None
-        kai_speaker(generate_greeting_response("hi"))
+        rio_speaker(generate_greeting_response("hi"))
         simpleaudio.WaveObject.from_wave_file("src/Tone_.wav").play()
         try:
             porcupine = pvporcupine.create(
-                access_key="kHRZWPKCJGzWJpxesmNHzYJNBSdpxc5MR0TgdIuwxf8TRMyPTvwtGw==", keyword_paths=["models/hey-evo-windows.ppn"])
-            pa = pyaudio.PyAudio()
-            audio_stream = pa.open(
+                access_key=os.getenv("PORCUPINE"), keyword_paths=["models/hey-evo-windows.ppn"])
+            paud = pyaudio.PyAudio()
+            audio_stream = paud.open(
                 channels=1,
                 input=True,
                 format=pyaudio.paInt16,
@@ -129,23 +126,24 @@ def KnowledgeAI():
                 pcm = struct.unpack_from("h" * porcupine.frame_length, pcm)
                 wake_index = porcupine.process(pcm)
                 if wake_index == 0:
-                    print(
-                        f"{Fore.YELLOW}ҠΛI: {Style.RESET_ALL}wake word detected.")
-                    kai_uget()
-                    print(
-                        f"{Fore.MAGENTA}ҠΛI: {Style.RESET_ALL}waiting for wake word.")
+                    print(f"{Fore.YELLOW}ҠΛI: {Style.RESET_ALL}wake word detected.")
+                    rio_uget()
+                    print(f"{Fore.MAGENTA}ҠΛI: {Style.RESET_ALL}waiting for wake word.")
         except Exception as e:
-            kai_speaker(random.choice(KAI_Responses["error"]["responses"]))
+            rio_speaker(random.choice(rio_responses["error"]["responses"]))
             print(f"{Fore.RED}ҠΛI: {Style.RESET_ALL}{e}")
         finally:
             if porcupine is not None:
                 porcupine.delete()
             if audio_stream is not None:
                 audio_stream.close()
-            if pa is not None:
-                pa.terminate()
+            if paud is not None:
+                paud.terminate()
     except KeyboardInterrupt:
         cprint("ҠΛI: Shutting down...", "green")
+    except Exception as e:
+        rio_speaker(random.choice(rio_responses["error"]["responses"]))
+        print(f"{Fore.RED}ҠΛI: {Style.RESET_ALL}{e}")
 
 
-KnowledgeAI()
+main()
