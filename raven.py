@@ -1,17 +1,22 @@
-import os
-import random
-import asyncio
-import pyaudio
-import numpy as np
-import pvporcupine
-from app import *
-from termcolor import cprint
-from dotenv import load_dotenv
+
 from colorama import Fore, Style
+from dotenv import load_dotenv
+from termcolor import cprint
+from app import *
+import pvporcupine
+import numpy as np
+import pyaudio
+import struct
+import asyncio
+import random
+import time
+import os
+
+
 load_dotenv()
 
 
-async def play_notif(freq, duration):
+def play_notif(freq, duration):
     signal = np.sin(freq * 2 * np.pi * np.linspace(0,
                     duration, int(duration * 44100), False))
     # Play the audio signal
@@ -24,7 +29,7 @@ async def play_notif(freq, duration):
     pyaudio.PyAudio().terminate()
 
 
-async def wakeword_listen_and_process(porcupine, audio_stream):
+def listen_process(porcupine, audio_stream):
     while True:
         # Read audio data from the stream
         pcm = audio_stream.read(porcupine.frame_length)
@@ -36,25 +41,28 @@ async def wakeword_listen_and_process(porcupine, audio_stream):
             # If the wake word is detected, print a message, speak a response, and wait for a command
             print(f"{Fore.YELLOW}ЯΛVΣП: {Style.RESET_ALL}wake word detected.")
             raven_uget()
+            print(f"{Fore.MAGENTA}ЯΛVΣП: {Style.RESET_ALL}waiting for command.")
         else:
             # Keep listening for the wake word
-            await asyncio.sleep(0)
+            time.sleep(0.1)
 
 
 async def main():
     try:
         # Initialize variables
         paud = None
+        Listening = None
         porcupine = None
         audio_stream = None
 
         # Use the raven_speaker function to greet the user with a response to "hi"
         # raven_speaker(generate_greeting_response("hi"))
         # Play a tone sound to indicate the program is ready
-        await play_notif(800, 0.2)
+        play_notif(800, 0.2)
         # Print that kaida is now listening
         print(f"{Fore.YELLOW}ЯΛVΣП: {Style.RESET_ALL}Ready...")
 
+        # Attempt to execute the following block of code
         try:
             # Initialize Porcupine with the access key and the path to the keyword file
             porcupine = pvporcupine.create(
@@ -71,32 +79,42 @@ async def main():
 
             # Continuously listen for the wake word and commands
             while True:
-                # Listen for the wake word
-                await wakeword_listen_and_process(porcupine, audio_stream)
+                if Listening is not None:
+                    listen_process(porcupine, audio_stream)
+                    Listening = False
+                else:
+                    Listening = True
 
+        # Catch any exception and speak a random error message from the responses.json file
         except Exception as e:
-            # If there's an exception, speak an error message and print the exception
-            raven_speaker(random.choice(raven_responses["error"]["responses"]))
+            raven_speaker(random.choice(
+                json.load(open("database/responses.json"))["error"]["responses"]))
+            # Print the error message in red text
             print(f"{Fore.RED}ЯΛVΣП: {Style.RESET_ALL}{e}")
-        except KeyboardInterrupt:
-            cprint("ЯΛVΣП: Shutting down...", "green")
-            raven_speaker("Shutting down..")
-        except Exception as e:
-            # If there's any exception other than KeyboardInterrupt, speak an error message and print the exception
-            raven_speaker(random.choice(raven_responses["error"]["responses"]))
-            print(f"{Fore.RED}ЯΛVΣП: {Style.RESET_ALL}{e}")
-        finally:
-            # Cleanup resources
-            if porcupine is not None:
-                porcupine.delete()
-            if audio_stream is not None:
-                audio_stream.close()
-            if paud is not None:
-                paud.terminate()
+
+    # Catch the KeyboardInterrupt exception and speak a random goodbye message from the responses.json file
+    except KeyboardInterrupt:
+        raven_speaker(random.choice(
+            json.load(open("database/responses.json"))["goodbye"]["responses"]))
+
+    # Catch any other exception and speak a random error message from the responses.json file
     except Exception as e:
-        # If there's an exception, speak an error message and print the exception
-        raven_speaker(random.choice(raven_responses["error"]["responses"]))
+        raven_speaker(random.choice(
+            json.load(open("database/responses.json"))["error"]["responses"]))
+        # Print the error message in red text
         print(f"{Fore.RED}ЯΛVΣП: {Style.RESET_ALL}{e}")
+
+    # Clean up resources
+    finally:
+        # If porcupine object exists, delete it
+        if porcupine is not None:
+            porcupine.delete()
+        # If audio stream object exists, close it
+        if audio_stream is not None:
+            audio_stream.close()
+        # If PyAudio object exists, terminate it
+        if paud is not None:
+            paud.terminate()
 
 
 # create an event loop and run the coroutine

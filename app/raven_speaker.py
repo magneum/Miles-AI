@@ -14,6 +14,5 @@ def raven_speaker(usersaid):
         print(f"{Fore.BLUE}ЯΛVΣП: {Style.RESET_ALL}{usersaid}")
         speaker.say(usersaid)
         speaker.runAndWait()
-        print(f"{Fore.MAGENTA}ЯΛVΣП: {Style.RESET_ALL}waiting for command.")
     except Exception as e:
         print(f"{Fore.RED}Error: {Style.RESET_ALL}{e}")
