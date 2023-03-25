@@ -25,12 +25,16 @@ r = sr.Recognizer()
 engine = pyttsx3.init()
 
 # Define a function for responding to user input
+
+
 def respond(text):
     print(text)
     engine.say(text)
     engine.runAndWait()
 
 # Define a function for recognizing speech
+
+
 def recognize_speech():
     with sr.Microphone() as source:
         audio = r.listen(source)
@@ -69,7 +73,7 @@ def chat(text):
     respond(f"You said: {text}")
     # Perform some actions based on user input
     if "how are you" in text:
-        respond("I"m doing well, thank you!")
+        respond("I'm doing well, thank you!")
     elif "play music" in text:
         respond("Playing a random song.")
         play_song()
@@ -80,7 +84,7 @@ def chat(text):
     elif "what time is it" in text:
         current_time = datetime.datetime.now().strftime("%I:%M %p")
         respond(f"The current time is {current_time}")
-    elif "what"s the weather like" in text:
+    elif "what's the weather like" in text:
         weather = get_weather()
         respond(f"The current weather is {weather}")
     elif "open website" in text:
@@ -95,9 +99,11 @@ def chat(text):
         respond("Goodbye!")
         exit()
     else:
-        respond("I"m sorry, I didn"t understand what you said.")
+        respond("I'm sorry, I didn't understand what you said.")
 
 # Define a function for playing a random song
+
+
 def play_song():
     url = random.choice(SONGS)
     song = AudioSegment.from_file(url)
@@ -109,15 +115,21 @@ def open_website(website):
     webbrowser.open_new_tab(f"https://{website}")
 
 # Define a function for opening an application
+
+
 def open_application(app):
     os.startfile(app)
 
 # Define a function for searching the web
+
+
 def search(query):
     url = f"https://www.google.com/search?q={query}"
     webbrowser.open_new_tab(url)
 
 # Define a function for getting the weather
+
+
 def get_weather():
     # Replace with your own API key
     api_key = "YOUR_API_KEY"
@@ -131,9 +143,12 @@ def get_weather():
     return f"{temperature} degrees Celsius and {description}"
 
 # Define the main function
+
+
 def main():
     winsound.Beep(5500, 300)
     detect_wake_word()
+
 
 if __name__ == "__main__":
     main()
