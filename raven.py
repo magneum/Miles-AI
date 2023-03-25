@@ -66,7 +66,7 @@ async def main():
         try:
             # Initialize Porcupine with the access key and the path to the keyword file
             porcupine = pvporcupine.create(
-                access_key=os.getenv("PORCUPINE"), keyword_paths=["models/hey-evo-windows.ppn"])
+                access_key=os.getenv("PORCUPINE_KEY"), keyword_paths=["models/hey-evo-windows.ppn"])
             # Initialize PyAudio and the audio stream with Porcupine's settings
             paud = pyaudio.PyAudio()
             audio_stream = paud.open(
