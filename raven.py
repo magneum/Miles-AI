@@ -37,7 +37,7 @@ async def play_notif(freq, duration):
     pyaudio.PyAudio().terminate()
 
 
-async def wakeword_listen(porcupine, audio_stream):
+async def wakeword_listen_and_process(porcupine, audio_stream):
     while True:
         # Read audio data from the stream
         pcm = audio_stream.read(porcupine.frame_length)
@@ -85,7 +85,7 @@ async def main():
             # Continuously listen for the wake word and commands
             while True:
                 # Listen for the wake word
-                await wakeword_listen(porcupine, audio_stream)
+                await wakeword_listen_and_process(porcupine, audio_stream)
 
         except Exception as e:
             # If there's an exception, speak an error message and print the exception
