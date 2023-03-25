@@ -58,7 +58,7 @@ def raven_command():
     # handle error when audio playback fails
     except sa.PlaybackError as e:
         print(f"{Fore.RED}ЯΛVΣП: {Style.RESET_ALL}Could not play sound; {e}")
-        raven_speaker("Sorry, I didn't understand that.")
+        raven_speaker(f"Could not play sound; {e}")
         return "none"
 
     # return recognized user input in lowercase

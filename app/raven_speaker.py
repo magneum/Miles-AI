@@ -25,11 +25,11 @@ def raven_speaker(usersaid):
         return
     try:
         speaker = pyttsx3.init("sapi5")
-        speaker.setProperty("rate", 170)
+        speaker.setProperty("rate", 145)
         voices = speaker.getProperty("voices")
         speaker.setProperty("voice", voices[1].id)
         print(f"{Fore.BLUE}ЯΛVΣП: {Style.RESET_ALL}{usersaid}")
         speaker.say(usersaid)
         speaker.runAndWait()
     except Exception as e:
-        print(f"{Fore.RED}Error: {e}{Style.RESET_ALL}")
+        print(f"{Fore.RED}Error: {Style.RESET_ALL}{e}")

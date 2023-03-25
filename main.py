@@ -13,7 +13,7 @@ import asyncio
 import pyaudio
 import threading
 import traceback
-import winsound
+# import winsound
 import simpleaudio
 from app import *
 import pvporcupine
@@ -38,8 +38,6 @@ raven_responses = json.load(open("database/responses.json"))
 # ===========================================================================================
 
 
-
-
 def main():
     try:
         # Initialize variables
@@ -51,7 +49,7 @@ def main():
         raven_speaker(generate_greeting_response("hi"))
 
         # Play a tone sound to indicate the program is ready
-        winsound.Beep(200, 200)
+        # winsound.Beep(200, 200)
 
         # Print that kaida is now listening
         print(f"{Fore.YELLOW}ЯΛVΣП: {Style.RESET_ALL}listening...")

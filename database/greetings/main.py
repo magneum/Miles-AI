@@ -39,7 +39,7 @@ def generate_greeting_response(user_input):
         random_list(casual_response,
                     formal_response,
                     friendly_response,
-                    # informal_response,
+                    informal_response,
                     unique_response),
 
     }
