@@ -11,7 +11,7 @@ def raven_speaker(usersaid):
         # speaker.setProperty("volume", 0.5)
         voices = speaker.getProperty("voices")
         speaker.setProperty("voice", voices[0].id)
-        print(f"{Fore.BLUE}ЯΛVΣП: {usersaid}")
+        print(f"{Fore.BLUE}RAVEN: {usersaid}")
         speaker.say(usersaid)
         speaker.runAndWait()
     except Exception as e:

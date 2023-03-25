@@ -29,22 +29,18 @@ def play_notif(freq, duration):
     pyaudio.PyAudio().terminate()
 
 
-def listen_process(porcupine, audio_stream, paud):
-    while True:
-        # Read audio data from the stream
-        pcm = audio_stream.read(porcupine.frame_length)
-        # Convert the binary data to an array of integers
-        pcm = struct.unpack_from("h" * porcupine.frame_length, pcm)
-        # Process the audio data with Porcupine
-        wake_index = porcupine.process(pcm)
-        if wake_index == 0:
-            # If the wake word is detected, print a message, speak a response, and wait for a command
-            print(f"{Fore.YELLOW}ЯΛVΣП: wake word detected.")
-            raven_uget(porcupine, audio_stream, paud)
-            print(f"{Fore.MAGENTA}ЯΛVΣП: waiting for command.")
-        else:
-            # Keep listening for the wake word
-            time.sleep(0.1)
+def listen_process(porcupine, audio_stream, paud, Listening):
+    # Read audio data from the stream
+    pcm = audio_stream.read(porcupine.frame_length)
+    # Convert the binary data to an array of integers
+    pcm = struct.unpack_from("h" * porcupine.frame_length, pcm)
+    # Process the audio data with Porcupine
+    wake_index = porcupine.process(pcm)
+    if wake_index == 0:
+        # If the wake word is detected, print a message, speak a response, and wait for a command
+        print(f"{Fore.YELLOW}RAVEN: wake word detected.")
+        raven_uget(porcupine, audio_stream, paud)
+        print(f"{Fore.MAGENTA}RAVEN: waiting for command.")
 
 
 async def main():
@@ -58,7 +54,7 @@ async def main():
         # Play a tone sound to indicate the program is ready
         play_notif(800, 0.2)
         # Print that raven is now listening
-        print(f"{Fore.YELLOW}ЯΛVΣП: Ready...")
+        print(f"{Fore.YELLOW}RAVEN: Ready...")
 
         # Attempt to execute the following block of code
         try:
@@ -78,7 +74,7 @@ async def main():
             # Continuously listen for the wake word and commands
             while True:
                 if Listening is not None:
-                    listen_process(porcupine, audio_stream, paud)
+                    listen_process(porcupine, audio_stream, paud, Listening)
                     Listening = False
                 else:
                     Listening = True
@@ -88,7 +84,7 @@ async def main():
             raven_speaker(random.choice(
                 json.load(open("database/responses.json"))["error"]["responses"]))
             # Print the error message in red text
-            print(f"{Fore.RED}ЯΛVΣП: {e}")
+            print(f"{Fore.RED}RAVEN: {e}")
 
     # Catch the KeyboardInterrupt exception and speak a random goodbye message from the responses.json file
     except KeyboardInterrupt:
@@ -100,7 +96,7 @@ async def main():
         raven_speaker(random.choice(
             json.load(open("database/responses.json"))["error"]["responses"]))
         # Print the error message in red text
-        print(f"{Fore.RED}ЯΛVΣП: {e}")
+        print(f"{Fore.RED}RAVEN: {e}")
 
     # Clean up resources
     finally:

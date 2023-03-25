@@ -26,6 +26,6 @@ def raven_uget(porcupine, audio_stream, paud):
     except Exception as e:  # If an exception occurs
         logging.error(traceback.format_exc())  # Log the error message
         print(
-            f"{Fore.RED}ЯΛVΣП: Sorry, did not get that.")  # Output an error message to the console
+            f"{Fore.RED}RAVEN: Sorry, did not get that.")  # Output an error message to the console
         # Output an error message using the conversational agent
         raven_speaker(f"Sorry, did not get that.")
