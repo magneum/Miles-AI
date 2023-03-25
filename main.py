@@ -1,4 +1,4 @@
-# Kaida - This Japanese name means "little dragon," and could be a good fit for an AI chatbot that is powerful and efficient.
+# Raven - This Japanese name means "little dragon," and could be a good fit for an AI chatbot that is powerful and efficient.
 
 
 import os
@@ -33,7 +33,7 @@ greetings = r"hi\b|hello\b|hey\b|greetings\b|salutations\b|yo\b|hiya\b|howdy\bsu
 goodbyes = r"bye\b|goodbye\b|farewell\b|see you\b|take care\b|cheerio\b|ciao\b|so long\b|until next time\b|peace out\b|later\badios\b|au revoir\b|bye for now\b|catch you later\b|have a good one\b|keep in touch\b|leaving now\b|parting ways\b|so farewell\b|stay safe\b|till we meet again\b"
 feelings = r"\bhow\s+(?:are\s+you|are\s+you\s+doing|do\s+you\s+feel|have\s+you\s+been)\s+(?:feeling|today|lately|these\s+days)\b"
 
-kaida_responses = json.load(open("database/responses.json"))
+raven_responses = json.load(open("database/responses.json"))
 
 
 # ===========================================================================================
@@ -46,14 +46,14 @@ def main():
         porcupine = None
         audio_stream = None
 
-        # Use the kaida_speaker function to greet the user with a response to "hi"
-        kaida_speaker(generate_greeting_response("hi"))
+        # Use the raven_speaker function to greet the user with a response to "hi"
+        raven_speaker(generate_greeting_response("hi"))
 
         # Play a tone sound to indicate the program is ready
         simpleaudio.WaveObject.from_wave_file("src/_Tone.wav").play()
 
         # Print that kaida is now listening
-        print(f"{Fore.YELLOW}KΛIDΛ: {Style.RESET_ALL}listening...")
+        print(f"{Fore.YELLOW}ЯΛVΣП: {Style.RESET_ALL}listening...")
 
         try:
             # Initialize Porcupine with the access key and the path to the keyword file
@@ -85,10 +85,10 @@ def main():
                 if wake_index == 0:
                     # Notify the user and ask for a command
                     print(
-                        f"{Fore.YELLOW}KΛIDΛ: {Style.RESET_ALL}wake word detected.")
-                    kaida_uget()
+                        f"{Fore.YELLOW}ЯΛVΣП: {Style.RESET_ALL}wake word detected.")
+                    raven_uget()
                     print(
-                        f"{Fore.MAGENTA}KΛIDΛ: {Style.RESET_ALL}waiting for command.")
+                        f"{Fore.MAGENTA}ЯΛVΣП: {Style.RESET_ALL}waiting for command.")
 
                     # Add a loop to re-listen for the wake word and commands
                     while True:
@@ -104,10 +104,10 @@ def main():
                         if wake_index == 0:
                             # If the wake word is detected, print a message, speak a response, and wait for a command
                             print(
-                                f"{Fore.YELLOW}KΛIDΛ: {Style.RESET_ALL}wake word detected.")
-                            kaida_uget()
+                                f"{Fore.YELLOW}ЯΛVΣП: {Style.RESET_ALL}wake word detected.")
+                            raven_uget()
                             print(
-                                f"{Fore.MAGENTA}KΛIDΛ: {Style.RESET_ALL}waiting for command.")
+                                f"{Fore.MAGENTA}ЯΛVΣП: {Style.RESET_ALL}waiting for command.")
                         else:
                             # If a command is detected, process it and break out of the loop
                             # The loop is used to keep listening for the wake word after a command has been processed
@@ -115,16 +115,16 @@ def main():
                     continue
         except Exception as e:
             # If there's an exception, speak an error message and print the exception
-            kaida_speaker(random.choice(kaida_responses["error"]["responses"]))
-            print(f"{Fore.RED}KΛIDΛ: {Style.RESET_ALL}{e}")
+            raven_speaker(random.choice(raven_responses["error"]["responses"]))
+            print(f"{Fore.RED}ЯΛVΣП: {Style.RESET_ALL}{e}")
 
     except KeyboardInterrupt:
-        cprint("KΛIDΛ: Shutting down...", "green")
-        kaida_speaker(generate_goodbyes_response("bye"))
+        cprint("ЯΛVΣП: Shutting down...", "green")
+        raven_speaker(generate_goodbyes_response("bye"))
     except Exception as e:
         # If there's any exception other than KeyboardInterrupt, speak an error message and print the exception
-        kaida_speaker(random.choice(kaida_responses["error"]["responses"]))
-        print(f"{Fore.RED}KΛIDΛ: {Style.RESET_ALL}{e}")
+        raven_speaker(random.choice(raven_responses["error"]["responses"]))
+        print(f"{Fore.RED}ЯΛVΣП: {Style.RESET_ALL}{e}")
     finally:
         # Cleanup resources
         if porcupine is not None:

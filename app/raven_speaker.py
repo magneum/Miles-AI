@@ -16,10 +16,10 @@ from dotenv import load_dotenv
 import speech_recognition as sr
 from colorama import Fore, Style
 
-# Define a function to speak the response using the kaida_speaker function
+# Define a function to speak the response using the raven_speaker function
 
 
-def kaida_speaker(usersaid):
+def raven_speaker(usersaid):
     if not isinstance(usersaid, str):
         print(f"{Fore.RED}Error: Input must be a string.{Style.RESET_ALL}")
         return
@@ -28,7 +28,7 @@ def kaida_speaker(usersaid):
         speaker.setProperty("rate", 160)
         voices = speaker.getProperty("voices")
         speaker.setProperty("voice", voices[1].id)
-        print(f"{Fore.BLUE}KΛIDΛ: {Style.RESET_ALL}{usersaid}")
+        print(f"{Fore.BLUE}ЯΛVΣП: {Style.RESET_ALL}{usersaid}")
         speaker.say(usersaid)
         speaker.runAndWait()
     except Exception as e:
