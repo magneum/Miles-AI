@@ -59,20 +59,18 @@ def raven_command():
     # handle error when audio is not recognized
     except sr.UnknownValueError:
         print(f"{Fore.RED}ЯΛVΣП: {Style.RESET_ALL}Sorry, I didn't understand that.")
-        raven_speaker("Sorry, I didn't understand that.")
-        return "none"
+        return ""
 
     # handle error when speech recognition service is unavailable
     except sr.RequestError as e:
         print(f"{Fore.RED}ЯΛVΣП: {Style.RESET_ALL}Could not request results from Google Speech Recognition service; {e}")
-        raven_speaker("Sorry, I didn't understand that.")
-        return "none"
+        return ""
 
     # handle error when audio playback fails
     except sa.PlaybackError as e:
         print(f"{Fore.RED}ЯΛVΣП: {Style.RESET_ALL}Could not play sound; {e}")
         raven_speaker(f"Could not play sound; {e}")
-        return "none"
+        return ""
 
     # return recognized user input in lowercase
     return user_input.lower()
