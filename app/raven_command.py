@@ -9,6 +9,7 @@ import pyttsx3
 import asyncio
 import pyaudio
 import traceback
+import numpy as np
 import simpleaudio
 import pvporcupine
 from termcolor import cprint
@@ -17,6 +18,18 @@ import speech_recognition as sr
 from colorama import Fore, Style
 from .raven_speaker import raven_speaker
 
+
+def play_notif(freq, duration):
+    signal = np.sin(freq * 2 * np.pi * np.linspace(0,
+                    duration, int(duration * 44100), False))
+    # Play the audio signal
+    stream = pyaudio.PyAudio().open(format=pyaudio.paFloat32,
+                                    channels=1,
+                                    rate=44100,
+                                    output=True)
+    stream.write(signal.astype(np.float32).tobytes())
+    stream.close()
+    pyaudio.PyAudio().terminate()
 
 # define function to recognize user speech input
 
@@ -30,14 +43,14 @@ def raven_command():
     # adjust microphone for ambient noise and prompt user to speak
     with microphone as source:
         recognizer.adjust_for_ambient_noise(source)
-        simpleaudio.WaveObject.from_wave_file("src/_Tone.wav").play()
         print(f"{Fore.YELLOW}ЯΛVΣП: {Style.RESET_ALL}listening...")
+        simpleaudio.WaveObject.from_wave_file("src/Tone_.wav").play()
         audio = recognizer.listen(source)
 
     # try to recognize user input from the audio
     try:
         # play sound to indicate audio recognition is complete
-        simpleaudio.WaveObject.from_wave_file("src/Tone_.wav").play()
+        simpleaudio.WaveObject.from_wave_file("src/_Tone.wav").play()
         print(
             f"{Fore.BLUE}ЯΛVΣП: {Style.RESET_ALL}recognizing {len(audio.frame_data)} bytes of audio")
         user_input = recognizer.recognize_google(audio)

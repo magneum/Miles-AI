@@ -30,6 +30,7 @@ feelings = r"\bhow\s+(?:are\s+you|are\s+you\s+doing|do\s+you\s+feel|have\s+you\s
 
 raven_responses = json.load(open("database/responses.json"))
 
+
 def raven_uget():
     while True:
         try:

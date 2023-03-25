@@ -16,9 +16,8 @@ from dotenv import load_dotenv
 import speech_recognition as sr
 from colorama import Fore, Style
 
+
 # Defining function to generate open response using OpenAI API
-
-
 def generate_open_response(usersaid):
     # Setting API key for OpenAI
     openai.api_key = os.getenv("OPENAI_API_KEY")
