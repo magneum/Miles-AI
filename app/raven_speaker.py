@@ -28,7 +28,7 @@ def raven_speaker(usersaid):
         speaker.setProperty("rate", 150)
         # speaker.setProperty("volume", 0.5)
         voices = speaker.getProperty("voices")
-        speaker.setProperty("voice", voices[0].id)
+        speaker.setProperty("voice", voices[1].id)
         print(f"{Fore.BLUE}ЯΛVΣП: {Style.RESET_ALL}{usersaid}")
         speaker.say(usersaid)
         speaker.runAndWait()

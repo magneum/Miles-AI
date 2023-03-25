@@ -3,6 +3,7 @@ import json
 import random
 import datetime
 
+goodbyes = r"bye\b|goodbye\b|farewell\b|see you\b|take care\b|cheerio\b|ciao\b|so long\b|until next time\b|peace out\b|later\badios\b|au revoir\b|bye for now\b|catch you later\b|have a good one\b|keep in touch\b|leaving now\b|parting ways\b|so farewell\b|stay safe\b|till we meet again\b"
 
 # ================================================================= DATA-LISTS FOR GREETINGS =================================================================
 casual_response = json.load(open("database/goodbyes/Casual.json"))["response"]

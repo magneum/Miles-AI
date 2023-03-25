@@ -4,6 +4,8 @@ import random
 import datetime
 
 
+feelings = r"\bhow\s+(?:are\s+you|are\s+you\s+doing|do\s+you\s+feel|have\s+you\s+been)\s+(?:feeling|today|lately|these\s+days)\b"
+
 # ================================================================= DATA-LISTS FOR GREETINGS =================================================================
 affection_response = json.load(
     open("database/feelings/Affection.json"))["response"]
