@@ -11,7 +11,9 @@ import struct
 import pyttsx3
 import asyncio
 import pyaudio
+import threading
 import traceback
+import winsound
 import simpleaudio
 from app import *
 import pvporcupine
@@ -19,9 +21,6 @@ from termcolor import cprint
 from dotenv import load_dotenv
 import speech_recognition as sr
 from colorama import Fore, Style
-from database.feelings import generate_feelings_response
-from database.goodbyes import generate_goodbyes_response
-from database.greetings import generate_greeting_response
 
 
 # ===========================================================================================
@@ -39,6 +38,8 @@ raven_responses = json.load(open("database/responses.json"))
 # ===========================================================================================
 
 
+
+
 def main():
     try:
         # Initialize variables
@@ -50,7 +51,7 @@ def main():
         raven_speaker(generate_greeting_response("hi"))
 
         # Play a tone sound to indicate the program is ready
-        simpleaudio.WaveObject.from_wave_file("src/_Tone.wav").play()
+        winsound.Beep(200, 200)
 
         # Print that kaida is now listening
         print(f"{Fore.YELLOW}ЯΛVΣП: {Style.RESET_ALL}listening...")

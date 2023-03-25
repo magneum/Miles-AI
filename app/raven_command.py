@@ -15,6 +15,8 @@ from termcolor import cprint
 from dotenv import load_dotenv
 import speech_recognition as sr
 from colorama import Fore, Style
+from .raven_speaker import raven_speaker
+
 
 # define function to recognize user speech input
 

@@ -25,7 +25,7 @@ def raven_speaker(usersaid):
         return
     try:
         speaker = pyttsx3.init("sapi5")
-        speaker.setProperty("rate", 160)
+        speaker.setProperty("rate", 170)
         voices = speaker.getProperty("voices")
         speaker.setProperty("voice", voices[1].id)
         print(f"{Fore.BLUE}ЯΛVΣП: {Style.RESET_ALL}{usersaid}")
