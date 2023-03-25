@@ -1,3 +1,5 @@
+import math
+import re
 import os
 import wave
 import json
@@ -47,11 +49,11 @@ def raven_uget():
                 # Generate and output a feeling response
                 raven_speaker(generate_feelings_response(usersaid))
                 break  # Exit the loop
-            else:  # If the user input does not match any of the above categories
-                openresponse = generate_open_response(
-                    usersaid)  # Generate an open response
-                raven_speaker(openresponse)  # Output the open response
-                break  # Exit the loop
+            else:
+                # If the expression is empty, output a response based on other categories
+                openresponse = generate_open_response(usersaid)
+                raven_speaker(openresponse)
+            break  # Exit the loop
         except Exception as e:  # If an exception occurs
             logging.error(traceback.format_exc())  # Log the error message
             print(

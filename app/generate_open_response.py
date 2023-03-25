@@ -44,7 +44,7 @@ def generate_open_response(usersaid):
     response = openai.Completion.create(
         engine="text-davinci-003",
         prompt=usersaid,
-        max_tokens=1000,  # 2048 is max
+        max_tokens=500,  # 2048 is max
         n=1,
         stop=None,
         temperature=0.5,
