@@ -20,8 +20,10 @@ from termcolor import cprint
 from dotenv import load_dotenv
 import speech_recognition as sr
 from colorama import Fore, Style
-# ===========================================================================================
-
+# ********************************************************************************************************
+#
+#
+# ********************************************************************************************************
 load_dotenv()
 current_dir = os.path.dirname(__file__)
 
@@ -30,9 +32,11 @@ goodbyes = r"bye\b|goodbye\b|farewell\b|see you\b|take care\b|cheerio\b|ciao\b|s
 feelings = r"\bhow\s+(?:are\s+you|are\s+you\s+doing|do\s+you\s+feel|have\s+you\s+been)\s+(?:feeling|today|lately|these\s+days)\b"
 
 raven_responses = json.load(open("database/responses.json"))
+# ********************************************************************************************************
+#
+#
+# ********************************************************************************************************
 
-
-# ===========================================================================================
 
 async def play_notif(freq, duration):
     signal = np.sin(freq * 2 * np.pi * np.linspace(0,
@@ -45,6 +49,10 @@ async def play_notif(freq, duration):
     stream.write(signal.astype(np.float32).tobytes())
     stream.close()
     pyaudio.PyAudio().terminate()
+# ********************************************************************************************************
+#
+#
+# ********************************************************************************************************
 
 
 async def porcupine_listen(porcupine, audio_stream):
@@ -67,6 +75,10 @@ async def porcupine_listen(porcupine, audio_stream):
         else:
             # Keep listening for the wake word
             await asyncio.sleep(0)
+# ********************************************************************************************************
+#
+#
+# ********************************************************************************************************
 
 
 async def command_listen(porcupine, audio_stream):
@@ -87,6 +99,10 @@ async def command_listen(porcupine, audio_stream):
             # If a command is detected, process it and break out of the loop
             # The loop is used to keep listening for the wake word after a command has been processed
             break
+# ********************************************************************************************************
+#
+#
+# ********************************************************************************************************
 
 
 async def main():
@@ -164,8 +180,10 @@ async def main():
         # If there's an exception, speak an error message and print the exception
         raven_speaker(random.choice(raven_responses["error"]["responses"]))
         print(f"{Fore.RED}ЯΛVΣП: {Style.RESET_ALL}{e}")
-
-
+# ********************************************************************************************************
+#
+#
+# ********************************************************************************************************
 # create an event loop and run the coroutine
 loop = asyncio.get_event_loop()
 loop.run_until_complete(main())
