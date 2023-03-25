@@ -30,7 +30,7 @@ def raven_command():
     # adjust microphone for ambient noise and prompt user to speak
     with microphone as source:
         recognizer.adjust_for_ambient_noise(source)
-        print(f"{Fore.YELLOW}ЯΛVΣП: {Style.RESET_ALL}listening...")
+        print(f"{Fore.YELLOW}ЯΛVΣП: listening...")
         simpleaudio.WaveObject.from_wave_file("src/Tone_.wav").play()
         audio = recognizer.listen(source, timeout=4)
 
@@ -39,23 +39,23 @@ def raven_command():
         # play sound to indicate audio recognition is complete
         simpleaudio.WaveObject.from_wave_file("src/_Tone.wav").play()
         print(
-            f"{Fore.BLUE}ЯΛVΣП: {Style.RESET_ALL}recognizing {len(audio.frame_data)} bytes of audio")
+            f"{Fore.BLUE}ЯΛVΣП: recognizing {len(audio.frame_data)} bytes of audio")
         user_input = recognizer.recognize_google(audio)
-        print(f"{Fore.GREEN}ЯΛVΣП: {Style.RESET_ALL}user input: {user_input}")
+        print(f"{Fore.GREEN}ЯΛVΣП: user input: {user_input}")
 
     # handle error when audio is not recognized
     except sr.UnknownValueError:
-        print(f"{Fore.RED}ЯΛVΣП: {Style.RESET_ALL}Sorry, I didn't understand that.")
+        print(f"{Fore.RED}ЯΛVΣП: Sorry, I didn't understand that.")
         return ""
 
     # handle error when speech recognition service is unavailable
     except sr.RequestError as e:
-        print(f"{Fore.RED}ЯΛVΣП: {Style.RESET_ALL}Could not request results from Google Speech Recognition service; {e}")
+        print(f"{Fore.RED}ЯΛVΣП: Could not request results from Google Speech Recognition service; {e}")
         return ""
 
     # handle error when audio playback fails
     except sa.PlaybackError as e:
-        print(f"{Fore.RED}ЯΛVΣП: {Style.RESET_ALL}Could not play sound; {e}")
+        print(f"{Fore.RED}ЯΛVΣП: Could not play sound; {e}")
         raven_speaker(f"Could not play sound; {e}")
         return ""
 

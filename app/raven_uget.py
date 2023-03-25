@@ -7,7 +7,7 @@ from database.goodbyes import *
 from database.greetings import *
 
 
-def raven_uget():
+def raven_uget(porcupine, audio_stream, paud):
     try:
         usersaid = raven_command()  # Retrieve user's input
         if usersaid in greetings:  # If the user input is a greeting
@@ -26,6 +26,6 @@ def raven_uget():
     except Exception as e:  # If an exception occurs
         logging.error(traceback.format_exc())  # Log the error message
         print(
-            f"{Fore.RED}ЯΛVΣП: {Style.RESET_ALL}Sorry, did not get that.")  # Output an error message to the console
+            f"{Fore.RED}ЯΛVΣП: Sorry, did not get that.")  # Output an error message to the console
         # Output an error message using the conversational agent
         raven_speaker(f"Sorry, did not get that.")
