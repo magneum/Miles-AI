@@ -55,11 +55,9 @@ async def main():
         porcupine = None
         audio_stream = None
 
-        # Use the raven_speaker function to greet the user with a response to "hi"
-        # raven_speaker(generate_greeting_response("hi"))
         # Play a tone sound to indicate the program is ready
         play_notif(800, 0.2)
-        # Print that kaida is now listening
+        # Print that raven is now listening
         print(f"{Fore.YELLOW}ЯΛVΣП: Ready...")
 
         # Attempt to execute the following block of code
