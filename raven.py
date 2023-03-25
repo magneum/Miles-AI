@@ -136,27 +136,33 @@ async def main():
                 frames_per_buffer=porcupine.frame_length
             )
 
-            # Continuously listen for the wake word and commands
+            # Set a flag to indicate whether the wake word has been detected
+            wake_word_detected = False
+
             while True:
-                # Listen for the wake word
-                await porcupine_listen(porcupine, audio_stream)
-
-                # Notify the user and ask for a command
-                print(
-                    f"{Fore.YELLOW}ЯΛVΣП: {Style.RESET_ALL}wake word detected.")
-                raven_uget()
-                print(
-                    f"{Fore.MAGENTA}ЯΛVΣП: {Style.RESET_ALL}waiting for command.")
-                await play_notif(600, 0.2)
-
-                # Listen for a command
-                command_index = await listen_for_command(porcupine, audio_stream)
-
-                # Process the command
-                command = raven_responses["commands"][command_index]
-                print(
-                    f"{Fore.MAGENTA}ЯΛVΣП: {Style.RESET_ALL}processing command: {command}")
-                process_command(command)
+                if wake_word_detected:
+                    # If the wake word has already been detected, listen for a command
+                    command_index = await listen_for_command(porcupine, audio_stream)
+                    # Process the command
+                    command = raven_responses["commands"][command_index]
+                    print(
+                        f"{Fore.MAGENTA}ЯΛVΣП: {Style.RESET_ALL}processing command: {command}")
+                    process_command(command)
+                    # Reset the flag
+                    wake_word_detected = False
+                else:
+                    # Listen for the wake word
+                    detected = await porcupine_listen(porcupine, audio_stream)
+                    if detected:
+                        # If the wake word is detected, set the flag
+                        wake_word_detected = True
+                        # Notify the user and ask for a command
+                        print(
+                            f"{Fore.YELLOW}ЯΛVΣП: {Style.RESET_ALL}wake word detected.")
+                        raven_uget()
+                        print(
+                            f"{Fore.MAGENTA}ЯΛVΣП: {Style.RESET_ALL}waiting for command.")
+                        await play_notif(600, 0.2)
         except Exception as e:
             # If there's an exception, speak an error message and print the exception
             raven_speaker(random.choice(raven_responses["error"]["responses"]))
@@ -177,13 +183,11 @@ async def main():
             if paud is not None:
                 paud.terminate()
     except Exception as e:
-        # If there's an exception, speak an error message and print the exception
+        # If there's any exception other than KeyboardInterrupt, speak an error message and print the exception
         raven_speaker(random.choice(raven_responses["error"]["responses"]))
         print(f"{Fore.RED}ЯΛVΣП: {Style.RESET_ALL}{e}")
-# ********************************************************************************************************
-#
-#
-# ********************************************************************************************************
+
+
 # create an event loop and run the coroutine
 loop = asyncio.get_event_loop()
 loop.run_until_complete(main())
