@@ -1,26 +1,13 @@
-# Raven - This Japanese name means "little dragon," and could be a good fit for an AI chatbot that is powerful and efficient.
-
-
 import os
-import wave
-import json
 import random
-import openai
-import logging
-import struct
-import pyttsx3
 import asyncio
 import pyaudio
-import threading
-import traceback
 import numpy as np
 import pvporcupine
 from app import *
 from termcolor import cprint
 from dotenv import load_dotenv
-import speech_recognition as sr
 from colorama import Fore, Style
-# ********************************************************************************************************
 load_dotenv()
 
 
