@@ -1,10 +1,11 @@
-from colorama import Fore, Style
 from .raven_command import raven_command
 from .raven_speaker import raven_speaker
 from .generate_open_response import *
+from colorama import Fore, Style
+from database.greetings import *
 from database.feelings import *
 from database.goodbyes import *
-from database.greetings import *
+import logging
 
 
 def raven_uget(porcupine, audio_stream, paud):

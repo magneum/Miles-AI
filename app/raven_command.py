@@ -41,7 +41,7 @@ def raven_command():
         print(
             f"{Fore.BLUE}RAVEN: recognizing {len(audio.frame_data)} bytes of audio")
         user_input = recognizer.recognize_google(audio)
-        print(f"{Fore.GREEN}RAVEN: user input: {user_input}")
+        print(f"{Fore.GREEN}USER: {user_input}")
 
     # handle error when audio is not recognized
     except sr.UnknownValueError:

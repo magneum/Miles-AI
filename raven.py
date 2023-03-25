@@ -29,7 +29,7 @@ def play_notif(freq, duration):
     pyaudio.PyAudio().terminate()
 
 
-def listen_process(porcupine, audio_stream, paud, Listening):
+def listen_process(porcupine, audio_stream, paud):
     # Read audio data from the stream
     pcm = audio_stream.read(porcupine.frame_length)
     # Convert the binary data to an array of integers
@@ -73,11 +73,20 @@ async def main():
 
             # Continuously listen for the wake word and commands
             while True:
-                if Listening is not None:
-                    listen_process(porcupine, audio_stream, paud, Listening)
-                    Listening = False
-                else:
-                    Listening = True
+                Listening = listen_process(porcupine, audio_stream, paud)
+                while True:
+                    if Listening and Listening is not None:
+                        if porcupine is not None:
+                            porcupine.delete()
+                        if audio_stream is not None:
+                            audio_stream.close()
+                        if paud is not None:
+                            paud.terminate()
+                        print(f"{Fore.YELLOW}RAVEN: re-listening...")
+                        Listening = listen_process(
+                            porcupine, audio_stream, paud)
+                    else:
+                        listen_process(porcupine, audio_stream, paud)
 
         # Catch any exception and speak a random error message from the responses.json file
         except Exception as e:
