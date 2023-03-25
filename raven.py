@@ -37,7 +37,7 @@ async def play_notif(freq, duration):
     pyaudio.PyAudio().terminate()
 
 
-async def porcupine_listen(porcupine, audio_stream):
+async def wakeword_listen(porcupine, audio_stream):
     while True:
         # Read audio data from the stream
         pcm = audio_stream.read(porcupine.frame_length)
@@ -49,28 +49,9 @@ async def porcupine_listen(porcupine, audio_stream):
             # If the wake word is detected, print a message, speak a response, and wait for a command
             print(f"{Fore.YELLOW}ЯΛVΣП: {Style.RESET_ALL}wake word detected.")
             raven_uget()
-            print(f"{Fore.MAGENTA}ЯΛVΣП: {Style.RESET_ALL}waiting for command.")
-            await command_listen(porcupine, audio_stream)
         else:
             # Keep listening for the wake word
             await asyncio.sleep(0)
-
-
-async def command_listen(porcupine, audio_stream):
-    while True:
-        # Read audio data from the stream
-        pcm = audio_stream.read(porcupine.frame_length)
-        # Convert the binary data to an array of integers
-        pcm = struct.unpack_from("h" * porcupine.frame_length, pcm)
-        # Process the audio data with Porcupine
-        wake_index = porcupine.process(pcm)
-        if wake_index == 0:
-            # Keep listening for the wake word
-            await asyncio.sleep(0)
-        else:
-            # If a command is detected, process it and break out of the loop
-            # The loop is used to keep listening for the wake word after a command has been processed
-            break
 
 
 async def main():
@@ -81,11 +62,11 @@ async def main():
         audio_stream = None
 
         # Use the raven_speaker function to greet the user with a response to "hi"
-        raven_speaker(generate_greeting_response("hi"))
+        # raven_speaker(generate_greeting_response("hi"))
         # Play a tone sound to indicate the program is ready
         await play_notif(800, 0.2)
         # Print that kaida is now listening
-        print(f"{Fore.YELLOW}ЯΛVΣП: {Style.RESET_ALL}listening...")
+        print(f"{Fore.YELLOW}ЯΛVΣП: {Style.RESET_ALL}Ready...")
 
         try:
             # Initialize Porcupine with the access key and the path to the keyword file
@@ -104,28 +85,15 @@ async def main():
             # Continuously listen for the wake word and commands
             while True:
                 # Listen for the wake word
-                await porcupine_listen(porcupine, audio_stream)
-                # Notify the user and ask for a command
-                print(
-                    f"{Fore.YELLOW}ЯΛVΣП: {Style.RESET_ALL}wake word detected.")
-                raven_uget()
-                print(
-                    f"{Fore.MAGENTA}ЯΛVΣП: {Style.RESET_ALL}waiting for command.")
-                await play_notif(600, 0.2)
-                # Listen for a command
-                command_index = await listen_for_command(porcupine, audio_stream)
-                # Process the command
-                command = raven_responses["commands"][command_index]
-                print(
-                    f"{Fore.MAGENTA}ЯΛVΣП: {Style.RESET_ALL}processing command: {command}")
-                process_command(command)
+                await wakeword_listen(porcupine, audio_stream)
+
         except Exception as e:
             # If there's an exception, speak an error message and print the exception
             raven_speaker(random.choice(raven_responses["error"]["responses"]))
             print(f"{Fore.RED}ЯΛVΣП: {Style.RESET_ALL}{e}")
         except KeyboardInterrupt:
             cprint("ЯΛVΣП: Shutting down...", "green")
-            raven_speaker(generate_goodbyes_response("bye"))
+            raven_speaker("Shutting down..")
         except Exception as e:
             # If there's any exception other than KeyboardInterrupt, speak an error message and print the exception
             raven_speaker(random.choice(raven_responses["error"]["responses"]))
