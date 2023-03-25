@@ -13,9 +13,9 @@ import asyncio
 import pyaudio
 import threading
 import traceback
-from app import *
 import numpy as np
 import pvporcupine
+from app import *
 from termcolor import cprint
 from dotenv import load_dotenv
 import speech_recognition as sr
@@ -97,7 +97,7 @@ async def main():
         audio_stream = None
 
         # Use the raven_speaker function to greet the user with a response to "hi"
-        # raven_speaker(generate_greeting_response("hi"))
+        raven_speaker(generate_greeting_response("hi"))
 
         # Play a tone sound to indicate the program is ready
         await play_notif(800, 0.2)

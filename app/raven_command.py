@@ -45,7 +45,7 @@ def raven_command():
         recognizer.adjust_for_ambient_noise(source)
         print(f"{Fore.YELLOW}ЯΛVΣП: {Style.RESET_ALL}listening...")
         simpleaudio.WaveObject.from_wave_file("src/Tone_.wav").play()
-        audio = recognizer.listen(source)
+        audio = recognizer.listen(source, timeout=4)
 
     # try to recognize user input from the audio
     try:
