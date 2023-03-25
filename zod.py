@@ -69,7 +69,7 @@ def chat(text):
     respond(f"You said: {text}")
     # Perform some actions based on user input
     if "how are you" in text:
-        respond("I'm doing well, thank you!")
+        respond("I"m doing well, thank you!")
     elif "play music" in text:
         respond("Playing a random song.")
         play_song()
@@ -80,7 +80,7 @@ def chat(text):
     elif "what time is it" in text:
         current_time = datetime.datetime.now().strftime("%I:%M %p")
         respond(f"The current time is {current_time}")
-    elif "what's the weather like" in text:
+    elif "what"s the weather like" in text:
         weather = get_weather()
         respond(f"The current weather is {weather}")
     elif "open website" in text:
@@ -95,7 +95,7 @@ def chat(text):
         respond("Goodbye!")
         exit()
     else:
-        respond("I'm sorry, I didn't understand what you said.")
+        respond("I"m sorry, I didn"t understand what you said.")
 
 # Define a function for playing a random song
 def play_song():
