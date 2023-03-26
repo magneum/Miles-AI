@@ -6,19 +6,15 @@ import numpy as np
 import threading
 import pyaudio
 import struct
-import pyttsx3
 import asyncio
 import random
-import logging
 import os
 from app import *
-from pygame import mixer
 from database.greetings import *
 from database.feelings import *
 from database.goodbyes import *
 import logging
 load_dotenv()
-speaker = pyttsx3.init("sapi5")
 # =============================================================================================================
 
 
@@ -62,6 +58,7 @@ async def my_coroutine():
         porcupine = None
         audio_stream = None
 
+        miles_speaker(generate_greeting_response("hello"))
         # Play a tone sound to indicate the program is ready
         play_notif(800, 0.2)
         # Print that miles is now listening
@@ -126,4 +123,3 @@ async def my_coroutine():
 if not asyncio.get_event_loop().is_running():
     loop = asyncio.get_event_loop()
     loop.run_until_complete(my_coroutine())
-# =============================================================================================================

@@ -24,16 +24,19 @@ def miles_uget(porcupine, audio_stream, paud):
         elif re.search(greetings, usersaid):
             # Generate a greeting response based on the user's input
             response = generate_greeting_response(usersaid)
+            miles_speaker(response)
 
         # Check if user's input matches any of the goodbyes in the goodbyes list
         elif re.search(goodbyes, usersaid):
             # Generate a goodbye response based on the user's input
             response = generate_goodbyes_response(usersaid)
+            miles_speaker(response)
 
         # Check if user's input matches any of the feelings in the feelings list
         elif re.search(feelings, usersaid):
             # Generate a response based on the user's input
             response = generate_feelings_response(usersaid)
+            miles_speaker(response)
 
         # Check if the user's input contains the words "shutdown", "exit", or "quit"
         elif re.search(r"(shutdown|exit|quit)", usersaid):
@@ -51,15 +54,27 @@ def miles_uget(porcupine, audio_stream, paud):
 
         # check if user wants to know the current time
         elif re.match(r"(what time is it|what's the time|do you know the time)\b", usersaid):
-            get_time(usersaid)
+            response = get_time(usersaid)
+            miles_speaker(response)
 
         # check if user wants to hear a joke
         elif re.match(r"(tell me|say) a joke\b", usersaid):
-            get_joke(usersaid)
+            response = get_joke(usersaid)
+            miles_speaker(response)
 
         # check if user wants to know the news
         elif re.match(r"(what's|what is|tell me) the news\b", usersaid):
             get_news(usersaid)
+
+        # elif re.match(r"(what's|what is|tell me) the news\b", usersaid):
+        #     # match optional language argument
+        #     match = re.search(r"language (\w+)\b", usersaid)
+        #     language = match.group(1) if match else 'en'
+        #     # match optional page size argument
+        #     match = re.search(r"(\d+) (news|articles)\b", usersaid)
+        #     page_size = int(match.group(1)) if match else 5
+        #     # call get_news() function with parsed arguments
+        #     get_news(usersaid, language=language, page_size=page_size)
 
         # check if user wants to know date
         elif re.match(r"(what's|what is) today's date\b", usersaid):
@@ -88,27 +103,24 @@ def miles_uget(porcupine, audio_stream, paud):
                     query = match.group("query")
                     perform_search(query)
 
-        # check if user wants to perform a calculation
-        elif re.match(r"what is (?P<calculation>.+)", usersaid):
-            perform_calculation(usersaid)
+        # # check if user wants to perform a reminder
+        # elif re.match(r"remind me to (?P<reminder>.+) at (?P<time>.+)", usersaid):
+        #     schedule_reminder(usersaid)
 
-        # check if user wants to perform a reminder
-        elif re.match(r"remind me to (?P<reminder>.+) at (?P<time>.+)", usersaid):
-            schedule_reminder(usersaid)
+        # # check if user wants to send a message
+        # elif re.match(r"(send|write|compose) (?P<message_type>email|message) to (?P<recipient>.+) saying (?P<message>.+)", usersaid):
+        #     send_message(usersaid)
 
-        # check if user wants to send a message
-        elif re.match(r"(send|write|compose) (?P<message_type>email|message) to (?P<recipient>.+) saying (?P<message>.+)", usersaid):
-            send_message(usersaid)
-
-        # check if user wants to perform a file operation
-        elif re.match(r"(copy|move) (?P<file>.+) (to|from) (?P<location>.+)", usersaid):
-            perform_file_operation(usersaid)
+        # # check if user wants to perform a file operation
+        # elif re.match(r"(copy|move) (?P<file>.+) (to|from) (?P<location>.+)", usersaid):
+        #     perform_file_operation(usersaid)
 
         else:
+            miles_speaker(f"Sorry, I cannot perform {usersaid} yet")
             # Generate a response for any other input
-            response = open_response(usersaid)
-            # Use text-to-speech to speak the generated response
-            miles_speaker(response)
+            # response = open_response(usersaid)
+            # # Use text-to-speech to speak the generated response
+            # miles_speaker(response)
 
     except ValueError as e:
         # Log a warning if an empty input is received

@@ -11,7 +11,7 @@ def miles_speaker(usersaid):
         # set the pyttsx3 engine
         speaker = pyttsx3.init("sapi5")
         # Set the speaking rate to 140
-        speaker.setProperty("rate", 145)
+        speaker.setProperty("rate", 140)
         # Get a list of all available voices and set the default voice to the first voice in the list
         voices = speaker.getProperty("voices")
         speaker.setProperty("voice", voices[0].id)

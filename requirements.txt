@@ -13,7 +13,8 @@ termcolor
 python-vlc
 pvporcupine
 simpleaudio
-python-dotenv
+python-dotenvtranslate
+google-cloud-translate
 SpeechRecognition
 wikipedia
 
