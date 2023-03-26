@@ -39,11 +39,11 @@ def get_news(usersaid):
                 url = article["url"]
                 news_text = f"{title}\n{description}\n{source}\n{url}\n"
                 print(news_text)
-                raven_speaker(news_text)
+                miles_speaker(news_text)
         else:
             print("No articles found.")
-            raven_speaker("No articles found.")
+            miles_speaker("No articles found.")
     else:
         print("An error occurred while retrieving the news.")
-        raven_speaker("An error occurred while retrieving the news.")
+        miles_speaker("An error occurred while retrieving the news.")
 # =============================================================================================================

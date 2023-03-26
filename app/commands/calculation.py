@@ -287,7 +287,7 @@ def calculate(input_string):
 
     # If the user input does not match any of the regular expressions, print an error message
     print("Invalid input format.")
-    raven_speaker("Invalid input format.")
+    miles_speaker("Invalid input format.")
     return None
 
 
@@ -306,11 +306,11 @@ def calculate(input_string):
 #     # Print the result
 #     print(
 #         f"The hypotenuse of a triangle with sides {side1} and {side2} is {hypotenuse:.2f}.")
-#     raven_speaker(
+#     miles_speaker(
 #         f"The hypotenuse of a triangle with sides {side1} and {side2} is {hypotenuse:.2f}.")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 
 # # =============================================================================================================
 # # Define the regular expression pattern
@@ -327,11 +327,11 @@ def calculate(input_string):
 #     # Print the result
 #     print(
 #         f"The perimeter of a rectangle with sides {length} and {width} is {perimeter:.2f}.")
-#     raven_speaker(
+#     miles_speaker(
 #         f"The perimeter of a rectangle with sides {length} and {width} is {perimeter:.2f}.")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 
 # # =============================================================================================================
 # # Define the regular expression pattern
@@ -361,10 +361,10 @@ def calculate(input_string):
 #         sum_angles = 1440
 #     # Print the result
 #     print(f"The sum of angles in a {shape} is {sum_angles} degrees.")
-#     raven_speaker(f"The sum of angles in a {shape} is {sum_angles} degrees.")
+#     miles_speaker(f"The sum of angles in a {shape} is {sum_angles} degrees.")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 
 # # =============================================================================================================
 # regex_addition = r"^(?P<first_number>-?\d+\.?\d*)\s*\+\s*(?P<second_number>-?\d+\.?\d*)$"
@@ -379,10 +379,10 @@ def calculate(input_string):
 
 #     # Print the result
 #     print(f"{first_number} + {second_number} = {result}")
-#     raven_speaker(f"{first_number} + {second_number} = {result}")
+#     miles_speaker(f"{first_number} + {second_number} = {result}")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 # # =============================================================================================================
 # regex_subtraction = r"^(?P<first_number>-?\d+\.?\d*)\s*-\s*(?P<second_number>-?\d+\.?\d*)$"
 # match = re.match(regex_subtraction, usersaid)
@@ -394,11 +394,11 @@ def calculate(input_string):
 #     result = subtract(first_number, second_number)
 #     # Print the result
 #     print(f"{first_number} - {second_number} = {result}")
-#     raven_speaker(f"{first_number} - {second_number} = {result}")
+#     miles_speaker(f"{first_number} - {second_number} = {result}")
 #     break
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 # # =============================================================================================================
 # regex_multiplication = r"^(?P<first_number>-?\d+\.?\d*)\s*\*\s*(?P<second_number>-?\d+\.?\d*)$"
 # # find matches
@@ -411,10 +411,10 @@ def calculate(input_string):
 #     result = first_number * second_number
 #     # print result
 #     print(result)
-#     raven_speaker(result)
+#     miles_speaker(result)
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 # # =============================================================================================================
 # regex_division = r"^(?P<first_number>-?\d+\.?\d*)\s*\/\s*(?P<second_number>-?\d+\.?\d*)$"
 # match = re.match(regex_division, usersaid)
@@ -423,10 +423,10 @@ def calculate(input_string):
 #     second_number = float(match.group("second_number"))
 #     result = first_number / second_number
 #     print(result)
-#     raven_speaker(result)
+#     miles_speaker(result)
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 # # =============================================================================================================
 # regex_exponentiation = r"^(?P<base>-?\d+\.?\d*)\s*\^\s*(?P<exponent>-?\d+\.?\d*)$"
 # match = re.match(regex_exponentiation, usersaid)
@@ -438,10 +438,10 @@ def calculate(input_string):
 #     result = base ** exponent
 #     # Print the result
 #     print(f"{base}^{exponent} = {result}")
-#     raven_speaker(f"{base}^{exponent} = {result}")
+#     miles_speaker(f"{base}^{exponent} = {result}")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 # # =============================================================================================================
 # regex_square_root = r"^sqrt\((?P<number>-?\d+\.?\d*)\)$"
 # # Attempt to match user input to square root regex pattern
@@ -454,10 +454,10 @@ def calculate(input_string):
 #     result = math.sqrt(number)
 #     # Print result
 #     print(f"sqrt({number}) = {result}")
-#     raven_speaker(f"sqrt({number}) = {result}")
+#     miles_speaker(f"sqrt({number}) = {result}")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 # # =============================================================================================================
 # # Define the regex pattern for cube root
 # regex_cube_root = r"^cbrt\((?P<number>-?\d+\.?\d*)\)$"
@@ -470,10 +470,10 @@ def calculate(input_string):
 #     result = number ** (1/3)
 #     # Print the result
 #     print(f"The cube root of {number} is {result:.2f}")
-#     raven_speaker(f"The cube root of {number} is {result:.2f}")
+#     miles_speaker(f"The cube root of {number} is {result:.2f}")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 # # =============================================================================================================
 # # Define the regular expression pattern
 # regex_n_root = r"^(?P<root>-?\d+\.?\d*)-th\s*root\s*of\s*(?P<number>-?\d+\.?\d*)$"
@@ -489,10 +489,10 @@ def calculate(input_string):
 
 #     # Print the result
 #     print(f"{root}-th root of {number} = {result}")
-#     raven_speaker(f"{root}-th root of {number} = {result}")
+#     miles_speaker(f"{root}-th root of {number} = {result}")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 # # =============================================================================================================
 # regex_logarithm = r"^log\s*\((?P<number>-?\d+\.?\d*)\s*,\s*(?P<base>-?\d+\.?\d*)\)$"
 # match = re.match(regex_logarithm, usersaid)
@@ -504,10 +504,10 @@ def calculate(input_string):
 #     result = math.log(number, base)
 #     # Print the result
 #     print(f"log({number}, {base}) = {result}")
-#     raven_speaker(f"log({number}, {base}) = {result}")
+#     miles_speaker(f"log({number}, {base}) = {result}")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 # # =============================================================================================================
 # # Define the regex pattern
 # regex_natural_logarithm = r"^ln\s*\((?P<number>-?\d+\.?\d*)\)$"
@@ -518,10 +518,10 @@ def calculate(input_string):
 #     number = float(match.group("number"))
 #     result = math.log(number)
 #     print(f"ln({number}) = {result}")
-#     raven_speaker(f"ln({number}) = {result}")
+#     miles_speaker(f"ln({number}) = {result}")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 # # =============================================================================================================
 # # Define the regex pattern for factorial calculation
 # regex_factorial = r"^(?P<number>-?\d+\.?\d*)\s*!$"
@@ -536,10 +536,10 @@ def calculate(input_string):
 #         result *= i
 #     # Print the result
 #     print(f"{number}! = {result}")
-#     raven_speaker(f"{number}! = {result}")
+#     miles_speaker(f"{number}! = {result}")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 # # =============================================================================================================
 # # Define regex pattern for percentage calculation
 # regex_percentage = r"^(?P<number>-?\d+\.?\d*)\s*%\s*(?P<percentage>-?\d+\.?\d*)$"
@@ -553,10 +553,10 @@ def calculate(input_string):
 #     result = number * (percentage / 100)
 #     # Print the result
 #     print(f"{number}% of {percentage} = {result}")
-#     raven_speaker(f"{number}% of {percentage} = {result}")
+#     miles_speaker(f"{number}% of {percentage} = {result}")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 # # =============================================================================================================
 # # Define regex pattern for circle area calculation
 # regex_circle_area = r"^circle\s*area\s*\((?P<radius>-?\d+\.?\d*)\)$"
@@ -567,10 +567,10 @@ def calculate(input_string):
 #     radius = float(match.group("radius"))
 #     area = 3.14 * radius**2
 #     print(f"The area of the circle with radius {radius} is {area:.2f}")
-#     raven_speaker(f"The area of the circle with radius {radius} is {area:.2f}")
+#     miles_speaker(f"The area of the circle with radius {radius} is {area:.2f}")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 # # =============================================================================================================
 # # Define regex pattern for circle circumference calculation
 # regex_circle_circumference = r"^circle\s*(circumference|perimeter)\s*\((?P<radius>-?\d+\.?\d*)\)$"
@@ -585,11 +585,11 @@ def calculate(input_string):
 #     # Print the result
 #     print(
 #         f"The circumference of the circle with radius {radius} is {circumference:.2f}.")
-#     raven_speaker(
+#     miles_speaker(
 #         f"The circumference of the circle with radius {radius} is {circumference:.2f}.")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 # # =============================================================================================================
 # # Define the regex pattern
 # regex_pythagorean_theorem = r"^pythagorean\s*theorem\s*\((?P<leg1>-?\d+\.?\d*)\s*,\s*(?P<leg2>-?\d+\.?\d*)\)$"
@@ -605,11 +605,11 @@ def calculate(input_string):
 #     # Print the result
 #     print(
 #         f"The hypotenuse of the right triangle with legs {leg1} and {leg2} is {hypotenuse}.")
-#     raven_speaker(
+#     miles_speaker(
 #         f"The hypotenuse of the right triangle with legs {leg1} and {leg2} is {hypotenuse}.")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 # # =============================================================================================================
 # # Define the regular expression pattern
 # regex_triangle_area = r"^triangle\s*area\s*\((?P<base>-?\d+\.?\d*)\s*,\s*(?P<height>-?\d+\.?\d*)\)$"
@@ -625,11 +625,11 @@ def calculate(input_string):
 #     # Print the result
 #     print(
 #         f"The area of the triangle with base {base} and height {height} is {area}")
-#     raven_speaker(
+#     miles_speaker(
 #         f"The area of the triangle with base {base} and height {height} is {area}")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 
 # # =============================================================================================================
 # # Define the regular expression pattern
@@ -647,11 +647,11 @@ def calculate(input_string):
 #     # Print the result
 #     print(
 #         f"The semiperimeter of the triangle with side lengths {side1}, {side2}, and {side3} is {semiperimeter}.")
-#     raven_speaker(
+#     miles_speaker(
 #         f"The semiperimeter of the triangle with side lengths {side1}, {side2}, and {side3} is {semiperimeter}.")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 
 # # =============================================================================================================
 # # Define regex pattern for rectangle area calculation
@@ -668,11 +668,11 @@ def calculate(input_string):
 #     # Print the result
 #     print(
 #         f"The area of the rectangle with width {width} and height {height} is {area}.")
-#     raven_speaker(
+#     miles_speaker(
 #         f"The area of the rectangle with width {width} and height {height} is {area}.")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 
 # # =============================================================================================================
 # # Define the regex pattern for Celsius to Fahrenheit conversion
@@ -687,10 +687,10 @@ def calculate(input_string):
 #     fahrenheit = celsius * 1.8 + 32
 #     # Print the result
 #     print(f"{celsius} C to F = {fahrenheit} F")
-#     raven_speaker(f"{celsius} C to F = {fahrenheit} F")
+#     miles_speaker(f"{celsius} C to F = {fahrenheit} F")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 # # =============================================================================================================
 # # Define the regular expression pattern for Fahrenheit to Celsius conversion
 # regex_fahrenheit_to_celsius = r"^(?P<fahrenheit>-?\d+.?\d*)\sF\sto\s*C$"
@@ -704,10 +704,10 @@ def calculate(input_string):
 #     celsius = (fahrenheit - 32) * 5/9
 #     # Print the result
 #     print(f"{fahrenheit} F = {celsius:.2f} C")
-#     raven_speaker(f"{fahrenheit} F = {celsius:.2f} C")
+#     miles_speaker(f"{fahrenheit} F = {celsius:.2f} C")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 # # =============================================================================================================
 # # Define regex pattern for kilometers to miles conversion
 # regex_kilometers_to_miles = r"^(?P<kilometers>-?\d+.?\d*)\sKM\sto\s*MILES?$"
@@ -721,10 +721,10 @@ def calculate(input_string):
 #     miles = kilometers * 0.621371
 #     # Print the result
 #     print(f"{kilometers} kilometers is equal to {miles} miles")
-#     raven_speaker(f"{kilometers} kilometers is equal to {miles} miles")
+#     miles_speaker(f"{kilometers} kilometers is equal to {miles} miles")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 # # =============================================================================================================
 # # Define the regular expression pattern
 # regex_miles_to_kilometers = r"^(?P<miles>-?\d+\.?\d*)\sMILES?\sto\s*KM$"
@@ -738,10 +738,10 @@ def calculate(input_string):
 #     kilometers = miles * 1.60934
 #     # Print the result
 #     print(f"{miles} miles is equal to {kilometers:.2f} kilometers.")
-#     raven_speaker(f"{miles} miles is equal to {kilometers:.2f} kilometers.")
+#     miles_speaker(f"{miles} miles is equal to {kilometers:.2f} kilometers.")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 # # =============================================================================================================
 # # Define the regular expression pattern
 # regex_feet_to_meters = r"^(?P<feet>-?\d+\.?\d*)\sFT\sto\s*M$"
@@ -755,10 +755,10 @@ def calculate(input_string):
 #     meters = feet * 0.3048
 #     # Print the result
 #     print(f"{feet} feet is equal to {meters:.2f} meters.")
-#     raven_speaker(f"{feet} feet is equal to {meters:.2f} meters.")
+#     miles_speaker(f"{feet} feet is equal to {meters:.2f} meters.")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 
 # # =============================================================================================================
 # # Define the regular expression pattern
@@ -773,10 +773,10 @@ def calculate(input_string):
 #     feet = meters * 3.28084
 #     # Print the result
 #     print(f"{meters} meters is equal to {feet:.2f} feet.")
-#     raven_speaker(f"{meters} meters is equal to {feet:.2f} feet.")
+#     miles_speaker(f"{meters} meters is equal to {feet:.2f} feet.")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 
 # # =============================================================================================================
 # # Define the regular expression pattern
@@ -791,11 +791,11 @@ def calculate(input_string):
 #     centimeters = inches * 2.54
 #     # Print the result
 #     print(f"{inches} inches is equal to {centimeters:.2f} centimeters.")
-#     raven_speaker(
+#     miles_speaker(
 #         f"{inches} inches is equal to {centimeters:.2f} centimeters.")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 
 # # =============================================================================================================
 # # Define the regular expression pattern
@@ -810,11 +810,11 @@ def calculate(input_string):
 #     inches = centimeters / 2.54
 #     # Print the result
 #     print(f"{centimeters} centimeters is equal to {inches:.2f} inches.")
-#     raven_speaker(
+#     miles_speaker(
 #         f"{centimeters} centimeters is equal to {inches:.2f} inches.")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 
 # # =============================================================================================================
 # # Define the regular expression pattern
@@ -829,10 +829,10 @@ def calculate(input_string):
 #     kilograms = pounds * 0.453592
 #     # Print the result
 #     print(f"{pounds} pounds is equal to {kilograms:.2f} kilograms.")
-#     raven_speaker(f"{pounds} pounds is equal to {kilograms:.2f} kilograms.")
+#     miles_speaker(f"{pounds} pounds is equal to {kilograms:.2f} kilograms.")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 
 # # =============================================================================================================
 # # Define the regular expression pattern
@@ -847,10 +847,10 @@ def calculate(input_string):
 #     pounds = kilograms * 2.20462
 #     # Print the result
 #     print(f"{kilograms} kilograms is equal to {pounds:.2f} pounds.")
-#     raven_speaker(f"{kilograms} kilograms is equal to {pounds:.2f} pounds.")
+#     miles_speaker(f"{kilograms} kilograms is equal to {pounds:.2f} pounds.")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 
 # # =============================================================================================================
 # # Define the regular expression pattern
@@ -874,23 +874,23 @@ def calculate(input_string):
 #         root1 = (-b + math.sqrt(discriminant)) / (2*a)
 #         root2 = (-b - math.sqrt(discriminant)) / (2*a)
 #         print(f"The roots are {root1:.2f} and {root2:.2f}.")
-#         raven_speaker(f"The roots are {root1:.2f} and {root2:.2f}.")
+#         miles_speaker(f"The roots are {root1:.2f} and {root2:.2f}.")
 #     # If the discriminant is zero, there is one real root
 #     elif discriminant == 0:
 #         root = -b / (2*a)
 #         print(f"The root is {root:.2f}.")
-#         raven_speaker(f"The root is {root:.2f}.")
+#         miles_speaker(f"The root is {root:.2f}.")
 #     # If the discriminant is negative, there are two complex roots
 #     else:
 #         real_part = -b / (2*a)
 #         imaginary_part = math.sqrt(-discriminant) / (2*a)
 #         print(
 #             f"The roots are {real_part:.2f} + {imaginary_part:.2f}i and {real_part:.2f} - {imaginary_part:.2f}i.")
-#         raven_speaker(
+#         miles_speaker(
 #             f"The roots are {real_part:.2f} + {imaginary_part:.2f}i and {real_part:.2f} - {imaginary_part:.2f}i.")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 
 # # =============================================================================================================
 # # Define the regular expression pattern
@@ -913,11 +913,11 @@ def calculate(input_string):
 #     standard_form = f"{slope:.2f}x - y + {y_intercept:.2f} = 0"
 #     # Print the standard form equation
 #     print(f"The standard form of the equation is {standard_form}")
-#     raven_speaker(
+#     miles_speaker(
 #         f"The slope-intercept form of the equation is y = {slope:.2f}x + {y_intercept:.2f}. The point-slope form of the equation is {point_slope_form}. The standard form of the equation is {standard_form}.")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 
 # # =============================================================================================================
 # # Define the regular expression pattern
@@ -934,10 +934,10 @@ def calculate(input_string):
 
 #     # Print the equation in slope-intercept form
 #     print(f"y = {m}x + {b}")
-#     raven_speaker(f"y = {m}x + {b}")
+#     miles_speaker(f"y = {m}x + {b}")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 
 # # =============================================================================================================
 # # Define the regular expression pattern
@@ -960,10 +960,10 @@ def calculate(input_string):
 
 #     # Print the solution
 #     print(f"The solution is x = {x:.2f} and y = {y:.2f}.")
-#     raven_speaker(f"The solution is x = {x:.2f} and y = {y:.2f}.")
+#     miles_speaker(f"The solution is x = {x:.2f} and y = {y:.2f}.")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 
 # # =============================================================================================================
 # # Define the regular expression pattern
@@ -980,10 +980,10 @@ def calculate(input_string):
 #     interest = p * r * t / 100
 #     # Print the result
 #     print(f"The interest is {interest:.2f}")
-#     raven_speaker(f"The interest is {interest:.2f}")
+#     miles_speaker(f"The interest is {interest:.2f}")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 
 # # =============================================================================================================
 # # Define the regular expression pattern
@@ -1001,11 +1001,11 @@ def calculate(input_string):
 #     # Print the result
 #     print(
 #         f"The distance between ({x1}, {y1}) and ({x2}, {y2}) is {distance:.2f}")
-#     raven_speaker(
+#     miles_speaker(
 #         f"The distance between ({x1}, {y1}) and ({x2}, {y2}) is {distance:.2f}")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 
 # # =============================================================================================================
 # # Define the regular expression pattern
@@ -1024,11 +1024,11 @@ def calculate(input_string):
 #     # Print the result
 #     print(
 #         f"The slope of the line passing through ({x1}, {y1}) and ({x2}, {y2}) is {slope:.2f}.")
-#     raven_speaker(
+#     miles_speaker(
 #         f"The slope of the line passing through ({x1}, {y1}) and ({x2}, {y2}) is {slope:.2f}.")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 
 # # =============================================================================================================
 # # Define the regular expression pattern
@@ -1048,11 +1048,11 @@ def calculate(input_string):
 #     # Print the result
 #     print(
 #         f"The midpoint of the line segment with endpoints ({x1}, {y1}) and ({x2}, {y2}) is ({midpoint_x}, {midpoint_y}).")
-#     raven_speaker(
+#     miles_speaker(
 #         f"The midpoint of the line segment with endpoints ({x1}, {y1}) and ({x2}, {y2}) is ({midpoint_x}, {midpoint_y}).")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 
 # # =============================================================================================================
 # # Define the regular expression pattern
@@ -1072,10 +1072,10 @@ def calculate(input_string):
 #     # Print the roots
 #     print(
 #         f"The roots of the quartic equation {a}x^4 + {b}x^3 + {c}x^2 + {d}x + {e} are: {roots}")
-#     raven_speaker(
+#     miles_speaker(
 #         f"The roots of the quartic equation {a}x^4 + {b}x^3 + {c}x^2 + {d}x + {e} are: {roots}")
 # else:
 #     print("Invalid input format.")
-#     raven_speaker("Invalid input format.")
+#     miles_speaker("Invalid input format.")
 
 # # =============================================================================================================

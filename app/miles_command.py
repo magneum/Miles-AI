@@ -4,11 +4,11 @@ import simpleaudio
 import logging
 import speech_recognition as sr
 from colorama import Fore, Style
-from .raven_speaker import raven_speaker
+from .miles_speaker import miles_speaker
 # =============================================================================================================
 
 
-def raven_command():
+def miles_command():
 
     # initialize speech recognition and microphone
     recognizer = sr.Recognizer()
@@ -44,7 +44,7 @@ def raven_command():
     # handle error when audio playback fails
     except sa.PlaybackError as e:
         print(f"{Fore.RED}RAVEN: Could not play sound; {e}")
-        raven_speaker(f"Could not play sound; {e}")
+        miles_speaker(f"Could not play sound; {e}")
         return ""
 
     # return recognized user input in lowercase

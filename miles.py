@@ -32,7 +32,7 @@ def listen_process(porcupine, audio_stream, paud):
     if wake_index == 0:
         # If the wake word is detected, print a message, speak a response, and wait for a command
         print(f"{Fore.YELLOW}RAVEN: wake word detected.")
-        raven_uget(porcupine, audio_stream, paud)
+        miles_uget(porcupine, audio_stream, paud)
         print(f"{Fore.MAGENTA}RAVEN: waiting for command.")
     else:
         pass
@@ -64,7 +64,7 @@ async def my_coroutine():
 
         # Play a tone sound to indicate the program is ready
         play_notif(800, 0.2)
-        # Print that raven is now listening
+        # Print that miles is now listening
         print(f"{Fore.YELLOW}RAVEN: Ready...")
 
         # Attempt to execute the following block of code
@@ -93,19 +93,19 @@ async def my_coroutine():
                 listen_process(porcupine, audio_stream, paud)
         # Catch any exception and speak a random error message from the responses.json file
         except Exception as e:
-            raven_speaker(random.choice(
+            miles_speaker(random.choice(
                 json.load(open("database/responses.json"))["error"]["responses"]))
             # Print the error message in red text
             print(f"{Fore.RED}RAVEN: {e}")
 
     # Catch the KeyboardInterrupt exception and speak a random goodbye message from the responses.json file
     except KeyboardInterrupt:
-        raven_speaker(random.choice(
+        miles_speaker(random.choice(
             json.load(open("database/responses.json"))["goodbye"]["responses"]))
 
     # Catch any other exception and speak a random error message from the responses.json file
     except Exception as e:
-        raven_speaker(random.choice(
+        miles_speaker(random.choice(
             json.load(open("database/responses.json"))["error"]["responses"]))
         # Print the error message in red text
         print(f"{Fore.RED}RAVEN: {e}")

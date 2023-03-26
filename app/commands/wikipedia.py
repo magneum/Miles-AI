@@ -25,14 +25,14 @@ def handle_wikipedia(usersaid):
             if page.exists():
                 if hasattr(page, 'summary'):
                     summary = page.summary[0:500] + "..."
-                    raven_speaker(
+                    miles_speaker(
                         f"Here's what I found on Wikipedia: {summary}")
                 else:
-                    raven_speaker(f"No summary available for {search_query}.")
+                    miles_speaker(f"No summary available for {search_query}.")
             else:
-                raven_speaker(
+                miles_speaker(
                     f"Sorry, I could not find anything on Wikipedia for {search_query}")
         except Exception as e:
-            raven_speaker(
+            miles_speaker(
                 f"An error occurred while searching on Wikipedia: {str(e)}")
 # =============================================================================================================

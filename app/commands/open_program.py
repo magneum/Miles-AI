@@ -12,10 +12,10 @@ def open_program(program_name):
     except ValueError as ve:
         error_msg = f"An error occurred while opening {program_name}: {str(ve)}"
         print(error_msg)
-        raven_speaker(error_msg)
+        miles_speaker(error_msg)
 
     except Exception as e:
         error_msg = f"An error occurred while opening {program_name}: {str(e)}"
         print(error_msg)
-        raven_speaker(error_msg)
+        miles_speaker(error_msg)
 # =============================================================================================================

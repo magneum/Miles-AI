@@ -67,6 +67,6 @@ def perform_search(query, engine=None):
         return "Error: Failed to open web browser."
 
     # Speak the response
-    raven_speaker(
+    miles_speaker(
         f"Here are the search results from {specified_engine['name']} for {query}.")
 # =============================================================================================================

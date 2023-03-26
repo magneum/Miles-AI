@@ -26,8 +26,8 @@ def get_joke(usersaid):
     # Check if the API returned a joke
     if joke_data["type"] == "single":
         # Speak the joke
-        raven_speaker(joke_data["joke"])
+        miles_speaker(joke_data["joke"])
     else:
         # If no joke is returned, inform the user
-        raven_speaker("Sorry, I couldn't find a joke for that category.")
+        miles_speaker("Sorry, I couldn't find a joke for that category.")
 # =============================================================================================================

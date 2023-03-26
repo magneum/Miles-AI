@@ -3,10 +3,10 @@ import logging
 import speech_recognition as sr
 from colorama import Fore, Style
 # =============================================================================================================
-# Define a function to speak the response using the raven_speaker function
+# Define a function to speak the response using the miles_speaker function
 
 
-def raven_speaker(usersaid):
+def miles_speaker(usersaid):
     try:
         # set the pyttsx3 engine
         speaker = pyttsx3.init("sapi5")

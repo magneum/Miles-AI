@@ -1,5 +1,5 @@
-from .raven_command import raven_command
-from .raven_speaker import raven_speaker
+from .miles_command import miles_command
+from .miles_speaker import miles_speaker
 from .open_response import *
 from colorama import Fore, Style
 from database.greetings import *
@@ -10,10 +10,10 @@ import logging
 # =============================================================================================================
 
 
-def raven_uget(porcupine, audio_stream, paud):
+def miles_uget(porcupine, audio_stream, paud):
     try:
         # Retrieve user's input
-        usersaid = raven_command()
+        usersaid = miles_command()
 
         # pass if user's input is empty
         if not usersaid:
@@ -37,7 +37,7 @@ def raven_uget(porcupine, audio_stream, paud):
         # Check if the user's input contains the words "shutdown", "exit", or "quit"
         elif re.search(r"(shutdown|exit|quit)", usersaid):
             # Shut down the program
-            raven_speaker("Shutting down...")
+            miles_speaker("Shutting down...")
             os._exit(0)
 
         # Check if the user's input is related to music commands
@@ -107,21 +107,21 @@ def raven_uget(porcupine, audio_stream, paud):
             # Generate a response for any other input
             response = open_response(usersaid)
             # Use text-to-speech to speak the generated response
-            raven_speaker(response)
+            miles_speaker(response)
 
     except ValueError as e:
         # Log a warning if an empty input is received
         logging.warning(f"Empty input received from user: {e}")
         # Use text-to-speech to ask the user to try again
-        raven_speaker("Sorry, I didn't catch that. Can you please try again?")
+        miles_speaker("Sorry, I didn't catch that. Can you please try again?")
 
     except Exception as e:
         # Log an error if an exception occurs
         logging.error(traceback.format_exc())
         # Use text-to-speech to inform the user that an error has occurred
-        raven_speaker("Oops! Something went wrong. Please try again later.")
+        miles_speaker("Oops! Something went wrong. Please try again later.")
 
     except:
         # If an error occurs, speak the error message
-        raven_speaker(f"An error occurred: {str(e)}")
+        miles_speaker(f"An error occurred: {str(e)}")
 # =============================================================================================================
