@@ -9,6 +9,7 @@ import struct
 import asyncio
 import random
 import os
+import glob
 from app import *
 from app import miles_uget
 from database.greetings import *
@@ -138,6 +139,10 @@ async def my_coroutine():
         # If PyAudio object exists, terminate it
         if paud is not None:
             paud.terminate()
+        # if there are .mp3 files in directory, delete them
+        if glob.glob(os.path.join("/", "*.mp3")):
+            for file in glob.glob(os.path.join("/", "*.mp3")):
+                os.remove(file)
 
 
 # =============================================================================================================
