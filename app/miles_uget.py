@@ -4,6 +4,7 @@ from .open_response import *
 from colorama import Fore, Style
 from database.greetings import *
 from database.feelings import *
+import traceback
 from database.goodbyes import *
 from .commands import *
 import logging

@@ -1,4 +1,4 @@
-import wikipediaapi
+import wikipedia
 # =============================================================================================================
 
 
@@ -15,7 +15,7 @@ def handle_wikipedia(usersaid):
         search_query = match.group("search_query")
 
         # Initialize Wikipedia API object
-        wiki = wikipediaapi.Wikipedia('en')
+        wiki = wikipedia.Wikipedia('en')
 
         try:
             # Search for the given query
