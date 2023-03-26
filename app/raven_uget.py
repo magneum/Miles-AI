@@ -36,20 +36,18 @@ def raven_uget(porcupine, audio_stream, paud):
             # Generate a response based on the user's input
             response = generate_feelings_response(usersaid)
         # Check if the user's input contains the word "shutdown"
-        elif "shutdown" in usersaid:
+        elif re.search(r"(shutdown|exit|quit)", usersaid):
             # Shut down the program
             raven_speaker("Shutting down...")
             os._exit(0)
         # Check if the user's input is related to music commands
         elif re.match(r"(?P<play>play)(ing)?(?P<artist>\s+[a-zA-Z]+)?(\s+by)?(\s+(the\s+)?(?P<song>[a-zA-Z]+))?|(?P<stop>stop|pause|resume)|(volume)?(?P<direction>up|down)", usersaid):
             handle_music_command(usersaid)
-            response = "Music command executed"
         else:
             # Generate a response for any other input
             response = generate_open_response(usersaid)
-
-        # Use text-to-speech to speak the generated response
-        raven_speaker(response)
+            # Use text-to-speech to speak the generated response
+            raven_speaker(response)
 
     except Exception as e:
         # If an error occurs, speak the error message
