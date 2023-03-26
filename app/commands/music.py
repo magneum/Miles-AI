@@ -39,7 +39,7 @@ def handle_music_player(usersaid, audiourl):
         if match:
             songname = match.group(1)
             artist = match.group(2)
-            parsed_audio_url = urlparse("https://example.com/audio")
+            parsed_audio_url = urlparse(audiourl)
             url = f"{parsed_audio_url.scheme}://{parsed_audio_url.netloc}/{artist}/{songname}.mp3"
             if validators.url(url):
                 response = requests.get(url)
@@ -56,7 +56,7 @@ def handle_music_player(usersaid, audiourl):
         match = re.match(regex_play, usersaid)
         if match:
             songname = match.group(1)
-            parsed_audio_url = urlparse("https://example.com/audio")
+            parsed_audio_url = urlparse(audiourl)
             url = f"{parsed_audio_url.scheme}://{parsed_audio_url.netloc}/{songname}.mp3"
             if validators.url(url):
                 response = requests.get(url)
