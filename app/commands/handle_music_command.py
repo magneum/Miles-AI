@@ -29,6 +29,10 @@ def handle_music_command(usersaid, volume=None):
         if match:
             # If the user wants to play music:
             if match.group("query"):
+                # Generate a random filename for the audio file
+                filen = "".join(
+                    random.choice(string.ascii_lowercase) for _ in range(10)
+                )
                 # Get the query from the user input
                 query = match.group("query")
                 # Speak to user to wait for the audio file to download
@@ -40,7 +44,7 @@ def handle_music_command(usersaid, volume=None):
                 data = response.json()
                 # Get the name and filename of the audio file
                 name = data["name"]
-                filename = f"{name}.mp3"
+                filename = f"{filen}.mp3"
                 # Use FFmpeg to download and convert the audio file
                 subprocess.run(["bin/ffmpeg.exe", "-i", data["url"], filename])
                 # If the file exists, load and play it with Pygame
