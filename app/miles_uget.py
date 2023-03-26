@@ -48,11 +48,13 @@ def miles_uget(porcupine):
             os._exit(0)
 
         # Check if the user's input is related to music commands
-        elif re.match(
-            r"(?P<play>play)(ing)?(?P<artist>\s+[a-zA-Z]+)?(\s+by)?(\s+(the\s+)?(?P<song>[a-zA-Z]+))?|(?P<stop>stop|pause|resume)|(?P<volume>volume(\s+(?P<amount>[0-9]+(\.[0-9]+)?))?\s+(?P<direction>up|down))",
-            usersaid,
-        ):
-            handle_music_command(usersaid)
+        elif "play" in usersaid or "music" in usersaid or "sing" in usersaid:
+            mathed = re.match(
+                r"(?P<play>play)(ing)?(?P<artist>\s+[a-zA-Z]+)?(\s+by)?(\s+(the\s+)?(?P<song>[a-zA-Z]+))?|(?P<stop>stop|pause|resume)|(?P<volume>volume(\s+(?P<amount>[0-9]+(\.[0-9]+)?))?\s+(?P<direction>up|down))",
+                usersaid,
+            )
+            if mathed:
+                handle_music_command(usersaid)
 
         # # Handle the wikipedia search command
         # elif re.match(r"(?P<wikipedia>wikipedia|wiki) (?P<search_query>.+)", usersaid):

@@ -134,8 +134,8 @@ def handle_music_command(usersaid, volume=None):
                     pygame.mixer.music.stop()
                     print("Stopping the music")
                     miles_speaker("Stopping the music")
-                    if os.path.exists(filename):
-                        os.remove(filename)
+                    # if os.path.exists(filename):
+                    #     os.remove(filename)
 
         elif match.group("volume"):
             if volume is not None:
