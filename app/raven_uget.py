@@ -1,6 +1,6 @@
 from .raven_command import raven_command
 from .raven_speaker import raven_speaker
-from .generate_open_response import *
+from .open_response import *
 from colorama import Fore, Style
 from database.greetings import *
 from database.feelings import *
@@ -105,7 +105,7 @@ def raven_uget(porcupine, audio_stream, paud):
 
         else:
             # Generate a response for any other input
-            response = generate_open_response(usersaid)
+            response = open_response(usersaid)
             # Use text-to-speech to speak the generated response
             raven_speaker(response)
 
