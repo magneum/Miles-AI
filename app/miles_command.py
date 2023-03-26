@@ -1,7 +1,4 @@
-import pyaudio
-import numpy as np
 import simpleaudio
-import logging
 import speech_recognition as sr
 from colorama import Fore, Style
 from .miles_speaker import miles_speaker
@@ -43,7 +40,7 @@ def miles_command():
         return ""
 
     # handle error when audio playback fails
-    except sa.PlaybackError as e:
+    except sr.PlaybackError as e:
         print(f"{Fore.RED}MÌLΣƧ. ΛI: {Style.RESET_ALL}Could not play sound; {e}")
         miles_speaker(f"Could not play sound; {e}")
         return ""

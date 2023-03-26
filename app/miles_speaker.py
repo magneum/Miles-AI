@@ -1,6 +1,4 @@
 import pyttsx3
-import logging
-import speech_recognition as sr
 from colorama import Fore, Style
 # =============================================================================================================
 # Define a function to speak the response using the miles_speaker function
