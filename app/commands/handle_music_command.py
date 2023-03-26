@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 # =============================================================================================================
 
 
-def handle_music_command(usersaid, audiourl):
+def handle_music_command(usersaid):
     try:
         pygame.mixer.init()
         usersaid = html.escape(usersaid).strip()
@@ -28,22 +28,22 @@ def handle_music_command(usersaid, audiourl):
         match = re.match(regex_play, usersaid)
         if match:
             # Generate a random string of 10 lowercase letters
-            songname = "".join(random.choice(string.ascii_lowercase)
-                               for _ in range(10))
-            filename = f"{songname}.mp3"
-            subprocess.run(["bin/ffmpeg.exe", "-i", audiourl, filename])
+            # songname = "".join(random.choice(string.ascii_lowercase)
+            #                    for _ in range(10))
+            filename = f"src/Cigarettes.mp3"
+            # subprocess.run(["bin/ffmpeg.exe", "-i", audiourl, filename])
 
             if os.path.exists(filename):
                 pygame.mixer.music.load(filename)
                 pygame.mixer.music.play()
-                print(f"Now playing: {songname}")
-                miles_speaker(f"Now playing: {songname}")
+                print(f"Now playing: Cigarettes")
+                miles_speaker(f"Now playing: Cigarettes")
             else:
                 raise ValueError("Unable to fetch audio file")
 
         # check if user wants to resume the music
         elif re.match(regex_resume, usersaid):
-            if pygame.mixer.music.get_busy():
+            if pygame.mixer.music.get_pos() > 0 and pygame.mixer.music.get_busy() == False:
                 pygame.mixer.music.unpause()
                 print("Resuming the music")
                 miles_speaker("Resuming the music")

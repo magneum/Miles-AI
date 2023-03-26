@@ -8,6 +8,7 @@ import traceback
 from database.goodbyes import *
 from .commands import *
 import logging
+from .commands import *
 # =============================================================================================================
 
 
@@ -48,23 +49,23 @@ def miles_uget(porcupine, audio_stream, paud):
         elif re.match(r"(?P<play>play)(ing)?(?P<artist>\s+[a-zA-Z]+)?(\s+by)?(\s+(the\s+)?(?P<song>[a-zA-Z]+))?|(?P<stop>stop|pause|resume)|(volume)?(?P<direction>up|down)", usersaid):
             handle_music_command(usersaid)
 
-        # Handle the wikipedia search command
-        elif re.match(r"(?P<wikipedia>wikipedia|wiki) (?P<search_query>.+)", usersaid):
-            handle_wikipedia(usersaid)
+        # # Handle the wikipedia search command
+        # elif re.match(r"(?P<wikipedia>wikipedia|wiki) (?P<search_query>.+)", usersaid):
+        #     handle_wikipedia(usersaid)
 
-        # check if user wants to know the current time
-        elif re.match(r"(what time is it|what's the time|do you know the time)\b", usersaid):
-            response = get_time(usersaid)
-            miles_speaker(response)
+        # # check if user wants to know the current time
+        # elif re.match(r"(what time is it|what's the time|do you know the time)\b", usersaid):
+        #     response = get_time(usersaid)
+        #     miles_speaker(response)
 
-        # check if user wants to hear a joke
-        elif re.match(r"(tell me|say) a joke\b", usersaid):
-            response = get_joke(usersaid)
-            miles_speaker(response)
+        # # check if user wants to hear a joke
+        # elif re.match(r"(tell me|say) a joke\b", usersaid):
+        #     response = get_joke(usersaid)
+        #     miles_speaker(response)
 
-        # check if user wants to know the news
-        elif re.match(r"(what's|what is|tell me) the news\b", usersaid):
-            get_news(usersaid)
+        # # check if user wants to know the news
+        # elif re.match(r"(what's|what is|tell me) the news\b", usersaid):
+        #     get_news(usersaid)
 
         # elif re.match(r"(what's|what is|tell me) the news\b", usersaid):
         #     # match optional language argument
@@ -76,32 +77,32 @@ def miles_uget(porcupine, audio_stream, paud):
         #     # call get_news() function with parsed arguments
         #     get_news(usersaid, language=language, page_size=page_size)
 
-        # check if user wants to know date
-        elif re.match(r"(what's|what is) today's date\b", usersaid):
-            get_date(usersaid)
+        # # check if user wants to know date
+        # elif re.match(r"(what's|what is) today's date\b", usersaid):
+        #     get_date(usersaid)
 
-       # check if user wants to open a program
-        elif re.match(r"open (?P<program>.+)", usersaid):
-            program_name = re.match(
-                r"open (?P<program>.+)", usersaid).group("program")
-            open_program(program_name)
+    #    # check if user wants to open a program
+    #     elif re.match(r"open (?P<program>.+)", usersaid):
+    #         program_name = re.match(
+    #             r"open (?P<program>.+)", usersaid).group("program")
+    #         open_program(program_name)
 
-        # check if user wants to perform a search
-        elif re.match(r"(search|look up|find) (?P<query>.+)", usersaid):
-            # If the user specified an engine
-            match = re.match(
-                r"(search|look up|find) (?P<query>.+?) (in|on) (?P<engine>\w+)", usersaid)
-            if match:
-                query = match.group("query")
-                engine = match.group("engine")
-                perform_search(query, engine)
-            else:
-                # If the user didn't specify an engine
-                match = re.match(
-                    r"(search|look up|find) (?P<query>.+)", usersaid)
-                if match:
-                    query = match.group("query")
-                    perform_search(query)
+        # # check if user wants to perform a search
+        # elif re.match(r"(search|look up|find) (?P<query>.+)", usersaid):
+        #     # If the user specified an engine
+        #     match = re.match(
+        #         r"(search|look up|find) (?P<query>.+?) (in|on) (?P<engine>\w+)", usersaid)
+        #     if match:
+        #         query = match.group("query")
+        #         engine = match.group("engine")
+        #         perform_search(query, engine)
+        #     else:
+        #         # If the user didn't specify an engine
+        #         match = re.match(
+        #             r"(search|look up|find) (?P<query>.+)", usersaid)
+        #         if match:
+        #             query = match.group("query")
+        #             perform_search(query)
 
         # # check if user wants to perform a reminder
         # elif re.match(r"remind me to (?P<reminder>.+) at (?P<time>.+)", usersaid):
@@ -137,4 +138,3 @@ def miles_uget(porcupine, audio_stream, paud):
     except:
         # If an error occurs, speak the error message
         miles_speaker(f"An error occurred: {str(e)}")
-# =============================================================================================================
