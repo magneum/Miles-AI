@@ -4,14 +4,12 @@ from scipy.io.wavfile import write
 import librosa
 import numpy as np
 from tensorflow.keras.models import load_model
-
-####### ALL CONSTANTS #####
+# =============================================================================================================
 fs = 44100
 seconds = 2
 filename = "prediction.wav"
 class_names = ["Wake Word NOT Detected", "Wake Word Detected"]
-
-##### LOADING OUR SAVED MODEL and PREDICTING ###
+# =============================================================================================================
 model = load_model("public/audio/wake_word.h5")
 
 print("Prediction Started: ")
@@ -35,3 +33,4 @@ if prediction[:, 1] > 0.99:
 else:
     print(f"Wake Word NOT Detected")
     print("Confidence:", prediction[:, 0])
+# =============================================================================================================

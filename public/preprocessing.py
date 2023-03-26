@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import librosa.display
 import matplotlib.pyplot as plt
-
+# =============================================================================================================
 print(librosa.__version__)  # type: ignore
 
 sample = "public/audio/bg_noises/0.wav"
@@ -12,15 +12,14 @@ data, sample_rate = librosa.load(sample)
 # plt.title("wave form")
 # librosa.display.waveplot(data, sr=sample_rate)
 # plt.show()
-
+# =============================================================================================================
 mfccs = librosa.feature.mfcc(y=data, sr=sample_rate, n_mfcc=40)
 # print(f"Shape of mfcc: {mfccs.shape}")
 
 # plt.title("MFCC")
 # librosa.display.specshow(mfccs, sr=sample_rate, x_axis="time")
 # plt.show()
-
-
+# =============================================================================================================
 all_data = []
 data_path_dict = {
     0: ["public/audio/bg_noises/" + file_path for file_path in os.listdir("public/audio/bg_noises/")],
@@ -44,3 +43,4 @@ df.to_pickle("public/audio/audio_data.csv")
 # pip install numba==0.48
 # pip uninstall --yes librosa
 # pip install librosa --force-reinstall
+# =============================================================================================================

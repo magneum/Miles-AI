@@ -7,11 +7,7 @@ from database.feelings import *
 from database.goodbyes import *
 from .commands import *
 import logging
-
-# +==================================================================================================================
-#
-#
-# +==================================================================================================================
+# =============================================================================================================
 
 
 def raven_uget(porcupine, audio_stream, paud):
@@ -128,3 +124,4 @@ def raven_uget(porcupine, audio_stream, paud):
     except:
         # If an error occurs, speak the error message
         raven_speaker(f"An error occurred: {str(e)}")
+# =============================================================================================================

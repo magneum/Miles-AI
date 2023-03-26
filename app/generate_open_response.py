@@ -1,14 +1,10 @@
 import os
 import openai
 import logging
-# +==================================================================================================================
-#
-#
-# +==================================================================================================================
+# =============================================================================================================
+
 
 # Defining function to generate open response using OpenAI API
-
-
 def generate_open_response(usersaid):
     # Setting API key for OpenAI
     openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -36,3 +32,4 @@ def generate_open_response(usersaid):
         return response.choices[0].text.strip()
     else:
         return "Sorry, I couldn't understand your question or statement."
+# =============================================================================================================

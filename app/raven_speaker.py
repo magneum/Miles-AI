@@ -2,15 +2,10 @@ import pyttsx3
 import logging
 import speech_recognition as sr
 from colorama import Fore, Style
-
-
-# +==================================================================================================================
-#
-#
-# +==================================================================================================================
-
-
+# =============================================================================================================
 # Define a function to speak the response using the raven_speaker function
+
+
 def raven_speaker(usersaid):
     try:
         # set the pyttsx3 engine
@@ -29,3 +24,4 @@ def raven_speaker(usersaid):
     except Exception as e:
         # If an error occurs, print the error message in red color
         print(f"{Fore.RED}Error: {e}")
+# =============================================================================================================

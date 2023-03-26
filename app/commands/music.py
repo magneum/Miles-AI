@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 import validators
 import html
 import logging
-
+# =============================================================================================================
 # regex patterns for various commands
 regex_play = r"(play|start)( the)?\s?(song|music)?\s?(.*)"
 regex_stop = r"(stop|end|finish|terminate)( the)?\s?(song|music)?"
@@ -17,10 +17,10 @@ regex_volume_down = r"volume (down|decrease)"
 regex_specific_song = r"(play|start)( the)?\s?(song|music)?\s?(.*)\s(by|of)\s?(.*)"
 regex_specific_artist = r"(play|start)( the)?\s?(song|music)?\s?(by|of)\s?(.*)"
 regex_specific_album = r"(play|start)( the)?\s?(album)\s?(.*)"
-
-
+# =============================================================================================================
 # initialize logger
 logger = logging.getLogger(__name__)
+# =============================================================================================================
 
 
 def handle_music_player(usersaid, audiourl):
@@ -106,7 +106,7 @@ def handle_music_player(usersaid, audiourl):
     except Exception as e:
         logger.exception("Error: %s", e)
 
-
+# =============================================================================================================
 # # check if user wants to play a specific artist
 # elif re.match(regex_specific_artist, usersaid):
 #     artistname = re.match(regex_specific_artist, usersaid).group(5)
@@ -120,3 +120,4 @@ def handle_music_player(usersaid, audiourl):
 #     response = requests.get(audiourl + albumname)
 #     pygame.mixer.music.load(BytesIO(response.content))
 #     pygame.mixer.music.play()
+# =============================================================================================================

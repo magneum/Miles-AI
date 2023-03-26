@@ -2,6 +2,7 @@ import webbrowser
 import urllib.parse
 import random
 import re
+# =============================================================================================================
 
 
 def perform_search(query, engine=None):
@@ -68,3 +69,4 @@ def perform_search(query, engine=None):
     # Speak the response
     raven_speaker(
         f"Here are the search results from {specified_engine['name']} for {query}.")
+# =============================================================================================================

@@ -1,4 +1,5 @@
 import os
+# =============================================================================================================
 
 
 def open_program(program_name):
@@ -17,3 +18,4 @@ def open_program(program_name):
         error_msg = f"An error occurred while opening {program_name}: {str(e)}"
         print(error_msg)
         raven_speaker(error_msg)
+# =============================================================================================================

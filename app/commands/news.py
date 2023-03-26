@@ -1,6 +1,7 @@
 import requests
 import json
 import random
+# =============================================================================================================
 
 
 def get_news(usersaid):
@@ -45,3 +46,4 @@ def get_news(usersaid):
     else:
         print("An error occurred while retrieving the news.")
         raven_speaker("An error occurred while retrieving the news.")
+# =============================================================================================================
