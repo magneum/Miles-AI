@@ -52,17 +52,60 @@ def raven_uget(porcupine, audio_stream, paud):
         elif re.match(r"(?P<wikipedia>wikipedia|wiki) (?P<search_query>.+)", usersaid):
             handle_wikipedia(usersaid)
 
+        # check if user wants to know the current time
         elif re.match(r"(what time is it|what's the time|do you know the time)\b", usersaid):
-            pass
+            get_time(usersaid)
 
+        # check if user wants to hear a joke
         elif re.match(r"(tell me|say) a joke\b", usersaid):
-            pass
+            get_joke(usersaid)
 
+        # check if user wants to know the news
         elif re.match(r"(what's|what is|tell me) the news\b", usersaid):
-            pass
+            get_news(usersaid)
 
+        # check if user wants to know date
         elif re.match(r"(what's|what is) today's date\b", usersaid):
-            pass
+            get_date(usersaid)
+
+       # check if user wants to open a program
+        elif re.match(r"open (?P<program>.+)", usersaid):
+            program_name = re.match(
+                r"open (?P<program>.+)", usersaid).group("program")
+            open_program(program_name)
+
+        # check if user wants to perform a search
+        elif re.match(r"(search|look up|find) (?P<query>.+)", usersaid):
+            # If the user specified an engine
+            match = re.match(
+                r"(search|look up|find) (?P<query>.+?) (in|on) (?P<engine>\w+)", usersaid)
+            if match:
+                query = match.group("query")
+                engine = match.group("engine")
+                perform_search(query, engine)
+            else:
+                # If the user didn't specify an engine
+                match = re.match(
+                    r"(search|look up|find) (?P<query>.+)", usersaid)
+                if match:
+                    query = match.group("query")
+                    perform_search(query)
+
+        # check if user wants to perform a calculation
+        elif re.match(r"what is (?P<calculation>.+)", usersaid):
+            perform_calculation(usersaid)
+
+        # check if user wants to perform a reminder
+        elif re.match(r"remind me to (?P<reminder>.+) at (?P<time>.+)", usersaid):
+            schedule_reminder(usersaid)
+
+        # check if user wants to send a message
+        elif re.match(r"(send|write|compose) (?P<message_type>email|message) to (?P<recipient>.+) saying (?P<message>.+)", usersaid):
+            send_message(usersaid)
+
+        # check if user wants to perform a file operation
+        elif re.match(r"(copy|move) (?P<file>.+) (to|from) (?P<location>.+)", usersaid):
+            perform_file_operation(usersaid)
 
         else:
             # Generate a response for any other input
