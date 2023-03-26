@@ -16,7 +16,7 @@ def miles_speaker(usersaid):
         voices = speaker.getProperty("voices")
         speaker.setProperty("voice", voices[0].id)
         # Print the message to be spoken in blue color
-        print(f"{Fore.BLUE}MÌLΣƧ. ΛI: {usersaid}")
+        print(f"{Fore.BLUE}MÌLΣƧ. ΛI: {Style.RESET_ALL}{usersaid}")
         # Say the message using the text-to-speech engine
         speaker.say(usersaid)
         # Wait until the text-to-speech engine has finished speaking before continuing

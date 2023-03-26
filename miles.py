@@ -27,9 +27,9 @@ def listen_process(porcupine, audio_stream, paud):
     wake_index = porcupine.process(pcm)
     if wake_index == 0:
         # If the wake word is detected, print a message, speak a response, and wait for a command
-        print(f"{Fore.YELLOW}MÌLΣƧ. ΛI: wake word detected.")
+        print(f"{Fore.YELLOW}MÌLΣƧ. ΛI: {Style.RESET_ALL}wake word detected.")
         miles_uget(porcupine, audio_stream, paud)
-        print(f"{Fore.MAGENTA}MÌLΣƧ. ΛI: waiting for command.")
+        print(f"{Fore.MAGENTA}MÌLΣƧ. ΛI: {Style.RESET_ALL}waiting for command.")
     else:
         pass
 # =============================================================================================================
@@ -42,7 +42,8 @@ def listening_loop(porcupine, audio_stream, paud):
         while True:  # loop indefinitely
             if Listening and Listening is not None:  # if wake word is detected and the Listening variable is not None
                 # print message to indicate that Raven is re-listening
-                print(f"{Fore.YELLOW}MÌLΣƧ. ΛI: re-listening...")
+                print(
+                    f"{Fore.YELLOW}MÌLΣƧ. ΛI: {Style.RESET_ALL}re-listening...")
                 # call listen_process function to listen for wake word and commands
                 Listening = listen_process(porcupine, audio_stream, paud)
             else:  # if wake word is not detected or Listening variable is None
@@ -62,7 +63,7 @@ async def my_coroutine():
         # Play a tone sound to indicate the program is ready
         play_notif(800, 0.2)
         # Print that miles is now listening
-        print(f"{Fore.YELLOW}MÌLΣƧ. ΛI: Ready...")
+        print(f"{Fore.YELLOW}MÌLΣƧ. ΛI: {Style.RESET_ALL}Ready...")
 
         # Attempt to execute the following block of code
         try:
@@ -93,7 +94,7 @@ async def my_coroutine():
             miles_speaker(random.choice(
                 json.load(open("database/responses.json"))["error"]["responses"]))
             # Print the error message in red text
-            print(f"{Fore.RED}MÌLΣƧ. ΛI: {e}")
+            print(f"{Fore.RED}MÌLΣƧ. ΛI: {Style.RESET_ALL}{e}")
 
     # Catch the KeyboardInterrupt exception and speak a random goodbye message from the responses.json file
     except KeyboardInterrupt:
@@ -105,7 +106,7 @@ async def my_coroutine():
         miles_speaker(random.choice(
             json.load(open("database/responses.json"))["error"]["responses"]))
         # Print the error message in red text
-        print(f"{Fore.RED}MÌLΣƧ. ΛI: {e}")
+        print(f"{Fore.RED}MÌLΣƧ. ΛI: {Style.RESET_ALL}{e}")
 
     # Clean up resources
     finally:
