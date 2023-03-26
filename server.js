@@ -30,6 +30,7 @@ app.get("/youtube", async (req, res) => {
     },
   }).then(async function (response) {
     const api_data = await response.json();
+    console.log(api_data);
     ytdlp.audio
       .Auto_Sorted_Data({
         yturl: api_data.youtube_search[0].LINK, // required
