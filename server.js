@@ -33,7 +33,7 @@ app.get("/youtube", async (req, res) => {
     ytdlp.audio
       .Auto_Sorted_Data({
         yturl: api_data.youtube_search[0].LINK, // required
-        quality: "highest-possible", // required
+        quality: "lowest-possible", // required
       })
       .then((r) => {
         console.log(c.bgGreen("[PROMISE]:"), c.bgGrey("Auto_Sorted_Data()"));
@@ -44,7 +44,10 @@ app.get("/youtube", async (req, res) => {
         console.log(c.blue("Extensions:"), c.gray(r.extensions));
         console.log(c.blue("Audiocodec:"), c.gray(r.acodec));
         console.log(c.blue("Url:"), c.gray(r.url));
-        res.send(r.url);
+        res.send({
+          name: api_data.youtube_search[0].TITLE,
+          url: r.url,
+        });
       })
       .catch((error) => console.log(c.bgRed("ERROR: "), c.gray(error.message)));
   });

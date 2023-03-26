@@ -1,3 +1,4 @@
+from app.commands import handle_music_command
 from .miles_command import miles_command
 from .miles_speaker import miles_speaker
 from .open_response import *
@@ -9,10 +10,11 @@ from database.goodbyes import *
 from .commands import *
 import logging
 from .commands import *
+
 # =============================================================================================================
 
 
-def miles_uget(porcupine, audio_stream, paud):
+def miles_uget(porcupine):
     try:
         # Retrieve user's input
         usersaid = miles_command()
@@ -46,7 +48,10 @@ def miles_uget(porcupine, audio_stream, paud):
             os._exit(0)
 
         # Check if the user's input is related to music commands
-        elif re.match(r"(?P<play>play)(ing)?(?P<artist>\s+[a-zA-Z]+)?(\s+by)?(\s+(the\s+)?(?P<song>[a-zA-Z]+))?|(?P<stop>stop|pause|resume)|(volume)?(?P<direction>up|down)", usersaid):
+        elif re.match(
+            r"(?P<play>play)(ing)?(?P<artist>\s+[a-zA-Z]+)?(\s+by)?(\s+(the\s+)?(?P<song>[a-zA-Z]+))?|(?P<stop>stop|pause|resume)|(?P<volume>volume(\s+(?P<amount>[0-9]+(\.[0-9]+)?))?\s+(?P<direction>up|down))",
+            usersaid,
+        ):
             handle_music_command(usersaid)
 
         # # Handle the wikipedia search command
@@ -81,11 +86,11 @@ def miles_uget(porcupine, audio_stream, paud):
         # elif re.match(r"(what's|what is) today's date\b", usersaid):
         #     get_date(usersaid)
 
-    #    # check if user wants to open a program
-    #     elif re.match(r"open (?P<program>.+)", usersaid):
-    #         program_name = re.match(
-    #             r"open (?P<program>.+)", usersaid).group("program")
-    #         open_program(program_name)
+        #    # check if user wants to open a program
+        #     elif re.match(r"open (?P<program>.+)", usersaid):
+        #         program_name = re.match(
+        #             r"open (?P<program>.+)", usersaid).group("program")
+        #         open_program(program_name)
 
         # # check if user wants to perform a search
         # elif re.match(r"(search|look up|find) (?P<query>.+)", usersaid):
@@ -117,11 +122,11 @@ def miles_uget(porcupine, audio_stream, paud):
         #     perform_file_operation(usersaid)
 
         else:
-            miles_speaker(f"Sorry, I cannot perform {usersaid} yet")
+            # miles_speaker(f"Sorry, I cannot perform {usersaid} yet")
             # Generate a response for any other input
-            # response = open_response(usersaid)
+            response = open_response(usersaid)
             # # Use text-to-speech to speak the generated response
-            # miles_speaker(response)
+            miles_speaker(response)
 
     except ValueError as e:
         # Log a warning if an empty input is received
