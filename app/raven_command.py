@@ -1,24 +1,15 @@
 import pyaudio
 import numpy as np
 import simpleaudio
+import logging
 import speech_recognition as sr
 from colorama import Fore, Style
 from .raven_speaker import raven_speaker
 
-
-def play_notif(freq, duration):
-    signal = np.sin(freq * 2 * np.pi * np.linspace(0,
-                    duration, int(duration * 44100), False))
-    # Play the audio signal
-    stream = pyaudio.PyAudio().open(format=pyaudio.paFloat32,
-                                    channels=1,
-                                    rate=44100,
-                                    output=True)
-    stream.write(signal.astype(np.float32).tobytes())
-    stream.close()
-    pyaudio.PyAudio().terminate()
-
-# define function to recognize user speech input
+# +==================================================================================================================
+#
+#
+# +==================================================================================================================
 
 
 def raven_command():
