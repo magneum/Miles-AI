@@ -34,7 +34,7 @@ app.get("/youtube", async (req, res) => {
     ytdlp.audio
       .Auto_Sorted_Data({
         yturl: api_data.youtube_search[0].LINK, // required
-        quality: "lowest-possible", // required
+        quality: "highest-possible", // required
       })
       .then((r) => {
         console.log(c.bgGreen("[PROMISE]:"), c.bgGrey("Auto_Sorted_Data()"));
