@@ -17,7 +17,7 @@ def miles_command():
     # adjust microphone for ambient noise and prompt user to speak
     with microphone as source:
         recognizer.adjust_for_ambient_noise(source)
-        print(f"{Fore.YELLOW}RAVEN: listening...")
+        print(f"{Fore.YELLOW}MÌLΣƧ. ΛI: listening...")
         simpleaudio.WaveObject.from_wave_file("src/Tone_.wav").play()
         audio = recognizer.listen(source, timeout=4)
 
@@ -26,24 +26,24 @@ def miles_command():
         # play sound to indicate audio recognition is complete
         simpleaudio.WaveObject.from_wave_file("src/_Tone.wav").play()
         print(
-            f"{Fore.BLUE}RAVEN: recognizing {len(audio.frame_data)} bytes of audio")
+            f"{Fore.BLUE}MÌLΣƧ. ΛI: recognizing {len(audio.frame_data)} bytes of audio")
         user_input = recognizer.recognize_google(audio)
         print(f"{Fore.GREEN}USER: {user_input}")
 
     # handle error when audio is not recognized
     except sr.UnknownValueError:
-        print(f"{Fore.RED}RAVEN: Sorry, I didn't understand that.")
+        print(f"{Fore.RED}MÌLΣƧ. ΛI: Sorry, I didn't understand that.")
         return ""
 
     # handle error when speech recognition service is unavailable
     except sr.RequestError as e:
         print(
-            f"{Fore.RED}RAVEN: Could not request results from Google Speech Recognition service; {e}")
+            f"{Fore.RED}MÌLΣƧ. ΛI: Could not request results from Google Speech Recognition service; {e}")
         return ""
 
     # handle error when audio playback fails
     except sa.PlaybackError as e:
-        print(f"{Fore.RED}RAVEN: Could not play sound; {e}")
+        print(f"{Fore.RED}MÌLΣƧ. ΛI: Could not play sound; {e}")
         miles_speaker(f"Could not play sound; {e}")
         return ""
 
