@@ -1,6 +1,9 @@
+import Fetch from "node-fetch";
+import { ytdlp } from "yt-dlp";
 import express from "express";
 import axios from "axios";
 import cors from "cors";
+import c from "chalk";
 const app = express();
 const port = 3000;
 
@@ -15,6 +18,36 @@ app.get("/news", async (req, res) => {
   console.log(response.data.articles[0]);
   res.send(response.data.articles[0]);
   console.log("Completed...");
+});
+
+app.get("/youtube", async (req, res) => {
+  Fetch("https://magneum.vercel.app/api/youtube_sr?q=" + req.query.q, {
+    method: "get",
+    headers: {
+      accept: "*/*",
+      "accept-language": "en-US,en;q=0.9",
+      "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+    },
+  }).then(async function (response) {
+    const api_data = await response.json();
+    ytdlp.audio
+      .Auto_Sorted_Data({
+        yturl: api_data.youtube_search[0].LINK, // required
+        quality: "highest-possible", // required
+      })
+      .then((r) => {
+        console.log(c.bgGreen("[PROMISE]:"), c.bgGrey("Auto_Sorted_Data()"));
+        console.log(c.blue("Quality:"), c.gray(r.quality));
+        console.log(c.blue("Resolution:"), c.gray(r.resolution));
+        console.log(c.blue("Filesize:"), c.gray(r.filesize));
+        console.log(c.blue("Audiochannels:"), c.gray(r.audiochannels));
+        console.log(c.blue("Extensions:"), c.gray(r.extensions));
+        console.log(c.blue("Audiocodec:"), c.gray(r.acodec));
+        console.log(c.blue("Url:"), c.gray(r.url));
+        res.send(r.url);
+      })
+      .catch((error) => console.log(c.bgRed("ERROR: "), c.gray(error.message)));
+  });
 });
 
 app.get("/weather", async (req, res) => {
