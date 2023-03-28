@@ -183,3 +183,5 @@ build/Release
 
 # npm debugging logs
 npm-debug.log*
+
+corpdata*
