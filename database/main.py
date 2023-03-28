@@ -1,0 +1,7 @@
+# r"can you sing\b|do\syous\ssing\b"
+# r"what can you do\b|what\sare\syour\sabilities\b"
+# r"do you have any hobbies\b|what\sdo\syou\senjoy\b"
+# r"what's your favorite food\b|do\syous\slike\sfood\b"
+# r"what's your favorite movie\b|do\syous\slike\smovies\b"
+# r"how can you improve my life\b|what\scan\si\sdoto\simprove\b"
+# r"what's the meaning of life\b|what\sis\sthe\spurpose\sof\sexistence\b"

@@ -1,0 +1,77 @@
+{
+    "intents": [
+        {
+            "tag": "greeting",
+            "patterns": [
+                "Hi",
+                "Hello",
+                "Hey",
+                "Greetings",
+                "What's up"
+            ],
+            "responses": [
+                "Hi there!",
+                "Hello!",
+                "Hey!",
+                "Greetings!",
+                "What can I help you with today?"
+            ]
+        },
+        {
+            "tag": "goodbye",
+            "patterns": [
+                "Bye",
+                "Goodbye",
+                "See you later",
+                "Take care",
+                "Until next time"
+            ],
+            "responses": [
+                "Goodbye!",
+                "See you later!",
+                "Take care!",
+                "Have a great day!"
+            ]
+        },
+        {
+            "tag": "thanks",
+            "patterns": [
+                "Thank you",
+                "Thanks",
+                "Appreciate it",
+                "Thanks a lot"
+            ],
+            "responses": [
+                "You're welcome!",
+                "No problem!",
+                "Happy to help!"
+            ]
+        },
+        {
+            "tag": "help",
+            "patterns": [
+                "Can you help me?",
+                "What can you do?",
+                "I need assistance",
+                "Help please"
+            ],
+            "responses": [
+                "Sure, I'd be happy to help!",
+                "What do you need help with?",
+                "I'm here to assist you."
+            ]
+        },
+        {
+            "tag": "weather",
+            "patterns": [
+                "What's the weather like?",
+                "Will it rain today?",
+                "Temperature in New York"
+            ],
+            "responses": [
+                "I'm sorry, I am not able to check the weather.",
+                "You can check the weather on your phone or computer."
+            ]
+        }
+    ]
+}

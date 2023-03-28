@@ -1,0 +1,29 @@
+wave
+bs4
+nltk
+flask
+pydub
+openai
+pygame
+pyttsx3
+pyaudio
+urllib3
+waitress
+termcolor
+python-vlc
+pvporcupine
+simpleaudio
+python-dotenvtranslate
+google-cloud-translate
+SpeechRecognition
+wikipedia
+
+# python3 -m poetry add nltk==3.8.1 pydub==0.25.1 flask==2.2.3 pyaudio==0.2.13 pyttsx3==2.90 urllib3==1.26.15 termcolor==2.2.0 python-vlc==3.0.18121 pvporcupine==2.1.4 SpeechRecognition==3.10.0 simpleaudio==1.0.4 bs4==0.0.1 waitress==2.1.2 openai
+
+# curl -sSL https://install.python-poetry.org | python3 -
+# (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python -
+
+# python3 -m pip install --user pipx && python3 -m pipx ensurepath
+# pipx install poetry
+# pipx upgrade poetry
+# pipx uninstall poetry
