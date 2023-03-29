@@ -8,35 +8,36 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.utils import to_categorical
 
 # Load the dataset
-movie_conversations = pd.read_csv("corpdata/tsv/movie_conversations.tsv", sep="\t")
-
-# Extract the conversations
-conversations = movie_conversations.iloc[:, 3].values
-
-# Tokenize the conversations
-tokenizer = Tokenizer(num_words=5000)
-tokenizer.fit_on_texts(conversations)
+movie_lines = pd.read_csv(
+    "corpdata/tsv/movie_lines.tsv", sep="\t", error_bad_lines=False
+)
+movie_lines.dropna(inplace=True)
 
 # Create the input and target sequences
 input_seqs = []
 target_seqs = []
-for conversation in conversations:
-    conversation_tokens = tokenizer.texts_to_sequences([conversation])[0]
-    for i in range(1, len(conversation_tokens)):
-        input_seq = conversation_tokens[
-            :i
-        ]  # input sequence is the conversation up to the i-th token
-        target_seq = conversation_tokens[i]  # target sequence is the i-th token
-        input_seqs.append(input_seq)
-        target_seqs.append(target_seq)
+for i in range(1, len(movie_lines)):
+    conversation = movie_lines.iloc[i - 1, 4] + " " + movie_lines.iloc[i, 4]
+    input_seq = conversation.split(" ")[
+        :-1
+    ]  # input sequence is the conversation up to the last token
+    target_seq = conversation.split(" ")[-1]  # target sequence is the last token
+    input_seqs.append(input_seq)
+    target_seqs.append(target_seq)
+
+# Tokenize the conversations
+tokenizer = Tokenizer(num_words=5000)
+tokenizer.fit_on_texts(input_seqs)
 
 # Pad the input and target sequences
 max_len = max(
     [len(seq) for seq in input_seqs]
 )  # find the maximum length of the input sequences
+input_seqs = tokenizer.texts_to_sequences(input_seqs)  # tokenize the input sequences
 input_seqs = pad_sequences(
     input_seqs, maxlen=max_len, padding="pre"
 )  # pad the input sequences to the maximum length
+target_seqs = tokenizer.texts_to_sequences(target_seqs)  # tokenize the target sequences
 target_seqs = to_categorical(
     target_seqs, num_classes=5000
 )  # one-hot encode the target sequences
@@ -58,10 +59,9 @@ model = Model(inputs=input_seq, outputs=output_seq)  # create the model
 # Compile the model
 model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
 
-
-os.system("clear")
+os.system("clear")  # clear the terminal in case of linux
+n_epochs = 1000  # set number of epochs
 # Train the model
-n_epochs = 1000
 model.fit(input_seqs, target_seqs, epochs=n_epochs, verbose=1)
 
 # Save the model

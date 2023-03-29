@@ -19,7 +19,7 @@ tokenizer.word_index["<sos>"] = 5001  # Add "<sos>" and "<eos>" to the word inde
 tokenizer.word_index["<eos>"] = 5002
 
 # Define the maximum length of input sequence
-maxlen = 20
+maxlen = 21
 
 # Create a function to preprocess the question
 def preprocess_question(question):
