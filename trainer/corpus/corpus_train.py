@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import numpy as np
 from tensorflow.keras.layers import Input, Embedding, LSTM, Dense
@@ -57,6 +58,8 @@ model = Model(inputs=input_seq, outputs=output_seq)  # create the model
 # Compile the model
 model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
 
+
+os.system("clear")
 # Train the model
 n_epochs = 1000
 model.fit(input_seqs, target_seqs, epochs=n_epochs, verbose=1)
