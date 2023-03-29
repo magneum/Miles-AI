@@ -58,7 +58,8 @@ model = Model(inputs=input_seq, outputs=output_seq)  # create the model
 model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
 
 # Train the model
-model.fit(input_seqs, target_seqs, epochs=1000, verbose=1)
+n_epochs = 1000
+model.fit(input_seqs, target_seqs, epochs=n_epochs, verbose=1)
 
 # Save the model
 model.save("trainer/corpus/corpus_model.h5")
