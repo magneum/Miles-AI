@@ -1,96 +1,64 @@
-import numpy as np
 import pandas as pd
-import tensorflow as tf
+import numpy as np
+from tensorflow.keras.layers import Input, Embedding, LSTM, Dense
+from tensorflow.keras.models import Model
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-from tensorflow.keras.layers import Input, LSTM, Embedding, Dense
-from tensorflow.keras.models import Model
+from tensorflow.keras.utils import to_categorical
 
 # Load the dataset
-characters = pd.read_csv(
-    "trainer/data/tsv/movie_characters_metadata.tsv",
-    sep="\t",
-    encoding="ISO-8859-1",
-    usecols=[0, 1, 4],
-    names=["id", "name", "movie_id"],
-    header=None,
-)
-conversations = pd.read_csv(
-    "trainer/data/tsv/movie_conversations.tsv",
-    sep="\t",
-    encoding="ISO-8859-1",
-    usecols=[3],
-    names=["lines"],
-    header=None,
-)
-lines = pd.read_csv(
-    "trainer/data/tsv/movie_lines.tsv",
-    sep="\t",
-    encoding="ISO-8859-1",
-    usecols=[0, 4],
-    names=["id", "text"],
-    header=None,
-)
-movies = pd.read_csv(
-    "trainer/data/tsv/movie_titles_metadata.tsv",
-    sep="\t",
-    encoding="ISO-8859-1",
-    usecols=[0, 1, 2],
-    names=["id", "title", "year"],
-    header=None,
-)
+movie_conversations = pd.read_csv("corpdata/tsv/movie_conversations.tsv", sep="\t")
 
-# Create a dictionary that maps each line to its ID
-id_to_line = {}
-for i, row in lines.iterrows():
-    id_to_line[row["id"]] = row["text"]
+# Extract the conversations
+conversations = movie_conversations.iloc[:, 3].values
 
-# Create a dictionary that maps each movie ID to its title
-id_to_title = {}
-for i, row in movies.iterrows():
-    id_to_title[row["id"]] = row["title"]
+# Tokenize the conversations
+tokenizer = Tokenizer(num_words=5000)
+tokenizer.fit_on_texts(conversations)
 
-# Create a list of all conversations
-conversations_ids = []
-for i, row in conversations.iterrows():
-    line_ids = row["lines"][1:-1].replace("'", "").replace(" ", "")
-    conversations_ids.append(line_ids.split(","))
+# Create the input and target sequences
+input_seqs = []
+target_seqs = []
+for conversation in conversations:
+    conversation_tokens = tokenizer.texts_to_sequences([conversation])[0]
+    for i in range(1, len(conversation_tokens)):
+        input_seq = conversation_tokens[
+            :i
+        ]  # input sequence is the conversation up to the i-th token
+        target_seq = conversation_tokens[i]  # target sequence is the i-th token
+        input_seqs.append(input_seq)
+        target_seqs.append(target_seq)
 
-# Separate the questions and answers
-questions = []
-answers = []
-for conversation in conversations_ids:
-    for i in range(len(conversation) - 1):
-        questions.append(id_to_line[conversation[i]])
-        answers.append(id_to_line[conversation[i + 1]])
-
-# Preprocess the data
-tokenizer = Tokenizer(num_words=5000, oov_token="<OOV>")
-tokenizer.fit_on_texts(questions + answers)
-question_seq = tokenizer.texts_to_sequences(questions)
-answer_seq = tokenizer.texts_to_sequences(answers)
-question_seq_pad = pad_sequences(question_seq, padding="post", maxlen=20)
-answer_seq_pad = pad_sequences(answer_seq, padding="post", maxlen=20)
-
-# Create a TensorFlow dataset
-dataset = tf.data.Dataset.from_tensor_slices((question_seq_pad, answer_seq_pad))
-dataset = dataset.shuffle(buffer_size=len(questions))
-dataset = dataset.batch(32)
-dataset = dataset.prefetch(buffer_size=tf.data.AUTOTUNE)
+# Pad the input and target sequences
+max_len = max(
+    [len(seq) for seq in input_seqs]
+)  # find the maximum length of the input sequences
+input_seqs = pad_sequences(
+    input_seqs, maxlen=max_len, padding="pre"
+)  # pad the input sequences to the maximum length
+target_seqs = to_categorical(
+    target_seqs, num_classes=5000
+)  # one-hot encode the target sequences
 
 # Define the model architecture
-input_seq = Input(shape=(20,))
-embedding = Embedding(input_dim=5000, output_dim=50)(input_seq)
-encoder = LSTM(50)(embedding)
-decoder = Dense(50, activation="relu")(encoder)
-output_seq = Dense(5000, activation="softmax")(decoder)
-model = Model(inputs=input_seq, outputs=output_seq)
+input_seq = Input(shape=(max_len,))
+embedding = Embedding(input_dim=5000, output_dim=50)(
+    input_seq
+)  # add an embedding layer
+encoder = LSTM(50)(embedding)  # add an LSTM layer for encoding the input sequence
+decoder = Dense(50, activation="relu")(
+    encoder
+)  # add a dense layer with ReLU activation
+output_seq = Dense(5000, activation="softmax")(
+    decoder
+)  # add a dense layer with softmax activation for output
+model = Model(inputs=input_seq, outputs=output_seq)  # create the model
 
 # Compile the model
-model.compile(optimizer="adam", loss="categorical_crossentropy")
+model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
 
 # Train the model
-model.fit(dataset, epochs=50)
+model.fit(input_seqs, target_seqs, epochs=1000, verbose=1)
 
 # Save the model
 model.save("trainer/corpus/corpus_model.h5")
