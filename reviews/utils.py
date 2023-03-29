@@ -41,7 +41,7 @@ def bag_of_words(tokenized_sentence, all_words):
 
 
 try:
-    with open("intents.json", "r") as f:
+    with open("corpdata/intents.json", "r") as f:
         intents = json.load(f)
 except FileNotFoundError:
     print("intents.json file not found")

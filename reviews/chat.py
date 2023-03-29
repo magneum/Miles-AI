@@ -9,7 +9,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Load intents from a JSON file
 try:
-    with open("intents.json", "r") as f:
+    with open("corpdata/intents.json", "r") as f:
         intents = json.load(f)
 except FileNotFoundError:
     print("intents.json file not found")

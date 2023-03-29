@@ -9,7 +9,7 @@ from termcolor import colored
 
 
 # Load the intents file
-with open("intents.json", "r") as f:
+with open("corpdata/intents.json", "r") as f:
     intents = json.load(f)
 
 # Extract words, tags, and xy data from intents
