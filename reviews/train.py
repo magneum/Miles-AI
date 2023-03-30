@@ -1,12 +1,15 @@
+import time
 import json
 import torch
 import numpy as np
 from utils import *
 from model import *
+from tqdm import tqdm
 import torch.nn as nn
+from termcolor import colored, cprint
 from torch.utils.data import Dataset, DataLoader
-from termcolor import colored
 
+# nltk.download("punkt")
 
 # Load the intents file
 with open("corpdata/intents.json", "r") as f:
@@ -39,9 +42,9 @@ X_train = np.array(X_train)
 Y_train = np.array(Y_train)
 
 # Define hyperparameters
-epochs = 100000
-batch_size = 8
+batch_size = 33
 hidden_size = 16
+n_epochs = 1000000  # means 10 | 10000 means 100 | 100000 means 1000 | 1000000 means 10000 | 10000000 means 100000
 learning_rate = 0.001
 output_size = len(tags)
 inputsize = len(X_train[0])
@@ -49,6 +52,9 @@ inputsize = len(X_train[0])
 # Print input and output sizes and tags
 print(colored(f"Input Size: {X_train.shape[1]}", "green"))
 print(colored(f"Output Size: {len(tag2idx)}, Tags: {tags}", "green"))
+time.sleep(4)
+os.system("clear")
+
 
 # Create dataset and dataloader
 class ChatDataset(Dataset):
@@ -77,20 +83,12 @@ model = NeuralNet(X_train.shape[1], hidden_size, len(tag2idx)).to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
-# Train the model
-for epoch in range(1, epochs + 1):
-    for (words, labels) in train_loader:
-        words, labels = words.to(device), labels.to(device)
-        optimizer.zero_grad()
-        outputs = model(words)
-        loss = criterion(outputs, labels.long())
-        loss.backward()
-        optimizer.step()
-
 
 # Train the model
-for epoch in range(1, epochs + 1):
-    for (words, labels) in train_loader:
+for epoch in range(1, n_epochs + 1):
+    # Use tqdm to create a progress bar
+    progress_bar = tqdm(train_loader, desc=f"Epoch {epoch}/{n_epochs}", leave=False)
+    for (words, labels) in progress_bar:
         words = words.to(device)
         labels = labels.to(device)
         outputs = model(words)
@@ -99,7 +97,10 @@ for epoch in range(1, epochs + 1):
         loss.backward()
         optimizer.step()
 
-    # Print loss and accuracy every 100 epochs
+        # Update the progress bar with the current loss
+        progress_bar.set_postfix({"loss": loss.item()})
+
+    # Print loss and accuracy every epochs
     if epoch % 100 == 0:
         with torch.no_grad():
             total, correct = 0, 0
@@ -119,15 +120,14 @@ for epoch in range(1, epochs + 1):
             accuracy = 100 * correct / total
             # Print epoch, loss, and accuracy with colored text
             print(
-                colored(
-                    f"{epoch:2}/{epochs:6}, LOSS: {loss:.4f}, ACCURACY: {accuracy:.2f}%",
-                    "yellow",
-                )
+                f"\033[33mEpochs: \033[37m{int(epoch / 100)}/{int(n_epochs / 100)}\033[0m "
+                f"\033[31mLoss: \033[37m{loss}\033[0m "
+                f"\033[34mAccuracy: \033[37m{accuracy}\033[0m"
             )
 
 
 # Print final loss and save the trained model
-print(colored(f"Final Loss: {loss.item():.4f}", "green"))
+print(colored(f"Final-Loss: {loss.item():.4f}", "green"))
 
 data = {
     "model_state": model.state_dict(),
@@ -137,7 +137,7 @@ data = {
     "all_words": all_words,
     "tags": tags,
 }
-torch.save(data, "model.pth")
+torch.save(data, "reviews/model.pth")
 
 # Print message indicating training completion and model saving
 print(colored(f"> Training completed <", "green"))

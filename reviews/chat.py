@@ -5,6 +5,8 @@ import nltk
 from model import NeuralNet
 from utils import bag_of_words, tokenize
 
+nltk.download("averaged_perceptron_tagger")
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Load intents from a JSON file
@@ -17,7 +19,7 @@ except FileNotFoundError:
 
 # Load model data from a file
 try:
-    data = torch.load("model.pth")
+    data = torch.load("reviews/model.pth")
 except FileNotFoundError:
     print("model.pth file not found")
     exit()
