@@ -1,31 +1,14 @@
 [tool.poetry]
-name = "miles"
-version = "1.0.0"
-description = "AI Voice Assistant with OpenAI Support - Your Personal Assistant"
-authors = ["magneum"]
-license = "Apache"
+name = "miles-ai"
+version = "0.1.0"
+description = ""
+authors = ["magneum <krakinzkon@gmail.com>"]
 readme = "README.md"
+packages = [{include = "miles_ai"}]
 
 [tool.poetry.dependencies]
-wave = "*"
-bs4 = "*"
-nltk = "*"
-flask = "*"
-pydub = "*"
-openai = "*"
-pygame = "*"
-pyttsx3 = "*"
-pyaudio = "*"
-urllib3 = "*"
-waitress = "*"
-wikipedia = "*"
-termcolor = "*"
-python-vlc = "*"
-pvporcupine = "*"
-simpleaudio = "*"
-python-dotenv = "*"
-SpeechRecognition = "*"
-google-cloud-translate = "*"
+python = "^3.10"
+
 
 [build-system]
 requires = ["poetry-core"]
