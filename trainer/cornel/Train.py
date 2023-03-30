@@ -6,13 +6,17 @@ import numpy as np
 import tensorflow as tf
 from nltk.corpus import wordnet
 import matplotlib.pyplot as plt
+from colorama import Fore, Style
 from mpl_toolkits.mplot3d import Axes3D
 from tensorflow.keras.models import Sequential
+from tensorflow.python.client import device_lib
 from sklearn.model_selection import train_test_split
 from nltk.stem import WordNetLemmatizer as lemmatizer
 from tensorflow.keras.layers import Dense, Dropout, Activation, BatchNormalization
 
-# nltk.download("wordnet")
+nltk.download("wordnet")
+
+print(f"{Fore.CYAN}Devices for ML: {device_lib.list_local_devices()}{Style.RESET_ALL}")
 
 # Load the intents from the intents.json file and parse them as a dictionary
 intents = json.loads(open("corpdata/intents.json").read())
@@ -26,6 +30,7 @@ documents = []
 ignore_letters = ["?", ".", "!", ","]
 
 # Loop through each intent in the intents dictionary
+print(f"{Fore.BLUE}Processing intents...{Style.RESET_ALL}")
 for intent in intents["intents"]:
     # Loop through each pattern in the intent
     for pattern in intent["patterns"]:
@@ -37,12 +42,14 @@ for intent in intents["intents"]:
         # If the intent tag is not already in the classes list, add it
         if intent["tag"] not in classes:
             classes.append(intent["tag"])
+print(f"{Fore.GREEN}Done processing intents.{Style.RESET_ALL}")
 
 
 pos_tags = nltk.pos_tag(words)  # Use NLTK to tag parts of speech in the words list
 lemmatizer = lemmatizer()  # Create a new instance of the lemmatizer
 
 # Iterate over each word and its POS tag, lemmatizing the word according to its POS tag
+print(f"{Fore.BLUE}Lemmatizing words...{Style.RESET_ALL}")
 words = [
     lemmatizer.lemmatize(word, pos=wordnet.ADJ)  # lemmatize adjectives
     if tag[1][0].lower() == "j"
@@ -59,8 +66,10 @@ words = [
         words, pos_tags
     )  # iterate over each word and its corresponding POS tag
 ]
+print(f"{Fore.GREEN}Done lemmatizing words.{Style.RESET_ALL}")
 
 # Sort and remove duplicates from the list of words and classes
+print(f"{Fore.BLUE}Sorting and removing duplicates...{Style.RESET_ALL}")
 words = sorted(set(words))
 classes = sorted(set(classes))
 
