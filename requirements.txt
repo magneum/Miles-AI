@@ -19,6 +19,7 @@ sounddevice
 spacy
 SpeechRecognition
 tensorflow
+tensorflow_intel
 termcolor
 torch
 tqdm
