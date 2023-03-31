@@ -8,9 +8,9 @@
     "test": "test"
   },
   "scripts": {
-    "test": "python3 models/miles_neural/Test.py",
+    "pip": "pip install -r requirements.txt --no-warn-script-location",
     "train": "python3 models/miles_neural/Train.py",
-    "pip": "pip install -r requirements.txt",
+    "test": "python3 models/miles_neural/Test.py",
     "server": "node server.js"
   },
   "dependencies": {
