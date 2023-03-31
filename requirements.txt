@@ -14,7 +14,7 @@ pyttsx3
 requests
 scikit_learn
 scipy
-simpleaudio
+# simpleaudio
 sounddevice
 spacy
 SpeechRecognition
