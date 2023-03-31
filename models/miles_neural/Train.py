@@ -189,8 +189,8 @@ model = create_model(
 )
 
 
-adam_learning_rate = 0.001  # Set the learning rate for the Adam optimizer
-epochs = 10000  # Set the number of epochs to train the model for
+adam_learning_rate = 0.01  # Set the learning rate for the Adam optimizer
+epochs = 100  # Set the number of epochs to train the model for
 batch_size = 32  # Set the batch size to use for training
 verbose = 1  # Set the level of verbosity for training progress output
 
