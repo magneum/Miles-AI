@@ -104,7 +104,9 @@ for document in documents:
 
 
 random.shuffle(training)  # Shuffle the training data randomly
-training = np.array(training)  # Convert the training data to a numpy array
+training = np.array(
+    training, dtype=object
+)  # Convert the training data to a numpy array
 # Get the bag of words and output data separately
 training_x = list(training[:, 0])
 training_y = list(training[:, 1])
@@ -242,6 +244,6 @@ def plot_accuracy(training_history):
 
 
 # saves the trained model.
-model.save("models/model/model")
+model.save("models/neural-net/model/model")
 # plot the model accuracy
 plot_accuracy(training_history)

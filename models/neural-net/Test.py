@@ -6,7 +6,7 @@ from tensorflow.keras.models import load_model
 from nltk.stem import WordNetLemmatizer as lemmatizer
 
 # load the model
-model = load_model("models/model/model")
+model = load_model("models/neural-net/model")
 words = pickle.load(open("models/neural-net/model/words.pkl", "rb"))
 classes = pickle.load(open("models/neural-net/model/classes.pkl", "rb"))
 lemmatizer = lemmatizer()
