@@ -1,14 +1,18 @@
-import pickle
+import json
 import nltk
+import pickle
 import numpy as np
 from tensorflow.keras.models import load_model
 from nltk.stem import WordNetLemmatizer as lemmatizer
 
 model = load_model("trainer/cornel/cornel.h5")
 
-words = pickle.load(open("words.pkl", "rb"))
-classes = pickle.load(open("classes.pkl", "rb"))
+words = pickle.load(open("trainer/cornel/words.pkl", "rb"))
+classes = pickle.load(open("trainer/cornel/classes.pkl", "rb"))
 lemmatizer = lemmatizer()
+
+with open("corpdata/intents.json") as file:
+    intents = json.load(file)
 
 
 def clean_up_sentence(sentence):
@@ -39,17 +43,21 @@ def predict_class(sentence):
     return return_list
 
 
+def get_response(intents_list, intents_json):
+    tag = intents_list[0][0]
+    list_of_intents = intents_json["intents"]
+    for i in list_of_intents:
+        if i["tag"] == tag:
+            result = np.random.choice(i["responses"])
+            break
+    return result
+
+
 while True:
     message = input("Enter your message: ")
     if message == "exit":
         break
-    results = predict_class(message)
-    print(results)
-
-
-# chmod +x cuda_11.6.0_510.39.01_linux.run
-# sudo ./cuda_11.6.0_510.39.01_linux.run
-# export PATH=/usr/local/cuda/bin:$PATH
-# export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
-# source ~/.bashrc
-# nvcc --version
+    class_results = predict_class(message)
+    print(class_results)
+    response = get_response(class_results, intents)
+    print(response)

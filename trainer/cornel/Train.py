@@ -66,9 +66,18 @@ training_y = list(training[:, 1])
 def create_model(
     input_shape,
     output_shape,
-    num_layers=6,
-    units_per_layer=[1024, 512, 256, 128, 64, 32],
-    activation_function="relu",
+    num_layers=8,
+    units_per_layer=[2048, 1024, 512, 256, 128, 64, 32, 16],
+    activation_functions=[
+        "relu",
+        "relu",
+        "relu",
+        "sigmoid",
+        "sigmoid",
+        "sigmoid",
+        "tanh",
+        "softmax",
+    ],
     dropout_rate=0.5,
     use_batch_norm=True,
 ):
@@ -77,25 +86,34 @@ def create_model(
         model.add(Dense(units_per_layer[i], input_shape=(input_shape,)))
         if use_batch_norm:
             model.add(BatchNormalization())
-        model.add(Activation(activation_function))
+        model.add(Activation(activation_functions[i]))
         if i < num_layers - 1:
             model.add(Dropout(dropout_rate))
-    model.add(Dense(output_shape, activation="softmax"))
     return model
 
 
 model = create_model(
     input_shape=len(training_x[0]),
     output_shape=len(training_y[0]),
-    num_layers=6,
-    units_per_layer=[1024, 512, 256, 128, 64, 32],
-    activation_function="relu",
+    num_layers=8,
+    units_per_layer=[2048, 1024, 512, 256, 128, 64, 32, 16],
+    activation_functions=[
+        "relu",
+        "relu",
+        "relu",
+        "sigmoid",
+        "sigmoid",
+        "sigmoid",
+        "tanh",
+        "softmax",
+    ],
     dropout_rate=0.5,
     use_batch_norm=True,
 )
 
+
 adam_learning_rate = 0.001
-epochs = 500
+epochs = 1000
 batch_size = 32
 verbose = 1
 
