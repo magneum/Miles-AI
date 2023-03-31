@@ -52,16 +52,18 @@ sequences = tokenizer.texts_to_sequences(training_sentences)
 padded_sequences = pad_sequences(sequences, truncating="post", maxlen=max_len)
 
 # Build the model
-model = Sequential([
-    Embedding(vocab_size, embedding_dim, input_length=max_len),
-    LSTM(16, return_sequences=True),
-    LSTM(16),
-    Dense(num_classes, activation="softmax")
-])
+model = Sequential(
+    [
+        Embedding(vocab_size, embedding_dim, input_length=max_len),
+        LSTM(16, return_sequences=True),
+        LSTM(16),
+        Dense(num_classes, activation="softmax"),
+    ]
+)
 
-model.compile(loss="sparse_categorical_crossentropy",
-              optimizer="adam",
-              metrics=["accuracy"])
+model.compile(
+    loss="sparse_categorical_crossentropy", optimizer="adam", metrics=["accuracy"]
+)
 
 model.summary()
 
@@ -72,7 +74,7 @@ history = model.fit(
     batch_size=32,
     epochs=100,
     verbose=1,
-    validation_split=0.2
+    validation_split=0.2,
 )
 
 # Save the model and preprocessors
@@ -85,6 +87,8 @@ with open("chatbot_model/label_encoder.pickle", "wb") as ecn_file:
     pickle.dump(lbl_encoder, ecn_file, protocol=pickle.HIGHEST_PROTOCOL)
 
 # Print training results
-print(Fore.GREEN +
-      f"Training complete. Trained on {len(training_sentences)} sentences, {num_classes} classes.")
+print(
+    Fore.GREEN
+    + f"Training complete. Trained on {len(training_sentences)} sentences, {num_classes} classes."
+)
 print(Fore.GREEN + f"Model accuracy: {history.history['accuracy'][-1]:.4f}")

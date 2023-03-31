@@ -9,8 +9,9 @@ from sklearn.preprocessing import LabelEncoder
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 import colorama
+
 colorama.init()
-nltk.download('vader_lexicon')
+nltk.download("vader_lexicon")
 
 with open("intents.json") as file:
     data = json.load(file)
@@ -42,26 +43,36 @@ def chat():
 
         # Sentiment analysis
         score = sid.polarity_scores(inp)
-        if score['compound'] >= 0.05:
-            sentiment = 'positive'
-        elif score['compound'] <= -0.05:
-            sentiment = 'negative'
+        if score["compound"] >= 0.05:
+            sentiment = "positive"
+        elif score["compound"] <= -0.05:
+            sentiment = "negative"
         else:
-            sentiment = 'neutral'
-        print(Fore.LIGHTYELLOW_EX +
-              f"Sentiment: {sentiment.capitalize()}" + Style.RESET_ALL)
+            sentiment = "neutral"
+        print(
+            Fore.LIGHTYELLOW_EX
+            + f"Sentiment: {sentiment.capitalize()}"
+            + Style.RESET_ALL
+        )
 
-        result = model.predict(keras.preprocessing.sequence.pad_sequences(tokenizer.texts_to_sequences([inp]),
-                                                                          truncating="post", maxlen=max_len))
+        result = model.predict(
+            keras.preprocessing.sequence.pad_sequences(
+                tokenizer.texts_to_sequences([inp]), truncating="post", maxlen=max_len
+            )
+        )
         tag = lbl_encoder.inverse_transform([np.argmax(result)])
 
         for i in data["intents"]:
             if i["tag"] == tag:
-                print(Fore.GREEN + "ChatBot:" + Style.RESET_ALL,
-                      np.random.choice(i["responses"]))
+                print(
+                    Fore.GREEN + "ChatBot:" + Style.RESET_ALL,
+                    np.random.choice(i["responses"]),
+                )
 
         # print(Fore.GREEN + "ChatBot:" + Style.RESET_ALL,random.choice(responses))
 
 
-print(Fore.YELLOW + "Start messaging with the bot (type quit to stop)!" + Style.RESET_ALL)
+print(
+    Fore.YELLOW + "Start messaging with the bot (type quit to stop)!" + Style.RESET_ALL
+)
 chat()

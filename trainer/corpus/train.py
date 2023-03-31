@@ -1,11 +1,10 @@
 import os
 import pandas as pd
-import numpy as np
-from tensorflow.keras.layers import Input, Embedding, LSTM, Dense
-from tensorflow.keras.models import Model
+from tensorflow.python.keras.models import Model
+from tensorflow.python.keras.utils import to_categorical
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-from tensorflow.keras.utils import to_categorical
+from tensorflow.python.keras.layers import Input, Embedding, LSTM, Dense
 
 # Load the dataset
 movie_lines = pd.read_csv(
