@@ -16,13 +16,13 @@ def miles_command():
     with microphone as source:
         recognizer.adjust_for_ambient_noise(source)
         print(f"{Fore.YELLOW}MÌLΣƧ. ΛI: {Style.RESET_ALL}listening...")
-        simpleaudio.WaveObject.from_wave_file("src/Tone_.wav").play()
+        simpleaudio.WaveObject.from_wave_file("public/src/Tone_.wav").play()
         audio = recognizer.listen(source, timeout=4)
 
     # try to recognize user input from the audio
     try:
         # play sound to indicate audio recognition is complete
-        simpleaudio.WaveObject.from_wave_file("src/_Tone.wav").play()
+        simpleaudio.WaveObject.from_wave_file("public/src/_Tone.wav").play()
         print(
             f"{Fore.BLUE}MÌLΣƧ. ΛI: {Style.RESET_ALL}recognizing {len(audio.frame_data)} bytes of audio"
         )
