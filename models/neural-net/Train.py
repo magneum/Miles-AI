@@ -74,8 +74,8 @@ words = sorted(set(words))
 classes = sorted(set(classes))
 
 # Save the processed words and classes lists to pickle files for later use
-pickle.dump(words, open("models/miles_neural/neuralNet/words.pkl", "wb"))
-pickle.dump(classes, open("models/miles_neural/neuralNet/classes.pkl", "wb"))
+pickle.dump(words, open("models/neural-net/model/words.pkl", "wb"))
+pickle.dump(classes, open("models/neural-net/model/classes.pkl", "wb"))
 
 
 training = []  # Initialize empty list to store training data
@@ -242,6 +242,6 @@ def plot_accuracy(training_history):
 
 
 # saves the trained model.
-model.save("models/neuralNet/model")
+model.save("models/model/model")
 # plot the model accuracy
 plot_accuracy(training_history)

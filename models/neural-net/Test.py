@@ -6,10 +6,9 @@ from tensorflow.keras.models import load_model
 from nltk.stem import WordNetLemmatizer as lemmatizer
 
 # load the model
-model = load_model("models/neuralNet/model")
-
-words = pickle.load(open("models/miles_neural/neuralNet/words.pkl", "rb"))
-classes = pickle.load(open("models/miles_neural/neuralNet/classes.pkl", "rb"))
+model = load_model("models/model/model")
+words = pickle.load(open("models/neural-net/model/words.pkl", "rb"))
+classes = pickle.load(open("models/neural-net/model/classes.pkl", "rb"))
 lemmatizer = lemmatizer()
 
 with open("corpdata/intents.json") as file:
