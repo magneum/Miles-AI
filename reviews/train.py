@@ -9,7 +9,8 @@ import torch.nn as nn
 from termcolor import colored, cprint
 from torch.utils.data import Dataset, DataLoader
 
-# nltk.download("punkt")
+nltk.download("punkt")
+
 
 # Load the intents file
 with open("corpdata/intents.json", "r") as f:
@@ -44,15 +45,15 @@ Y_train = np.array(Y_train)
 # Define hyperparameters
 batch_size = 33
 hidden_size = 16
-n_epochs = 1000000  # means 10 | 10000 means 100 | 100000 means 1000 | 1000000 means 10000 | 10000000 means 100000
-learning_rate = 0.001
+n_epochs = 10000  # means 10 | 10000 means 100 | 100000 means 1000 | 1000000 means 10000 | 10000000 means 100000
+learning_rate = 0.0001
 output_size = len(tags)
 inputsize = len(X_train[0])
 
 # Print input and output sizes and tags
 print(colored(f"Input Size: {X_train.shape[1]}", "green"))
 print(colored(f"Output Size: {len(tag2idx)}, Tags: {tags}", "green"))
-time.sleep(4)
+time.sleep(2)
 os.system("clear")
 
 
@@ -137,8 +138,8 @@ data = {
     "all_words": all_words,
     "tags": tags,
 }
-torch.save(data, "reviews/model.pth")
+torch.save(data, "reviews/miles.pth")
 
 # Print message indicating training completion and model saving
 print(colored(f"> Training completed <", "green"))
-print(colored(f"> Model saved @model.pth <", "green"))
+print(colored(f"> Model saved @miles.pth <", "green"))
