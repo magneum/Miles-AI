@@ -185,3 +185,6 @@ build/Release
 npm-debug.log*
 
 corpdata*
+
+
+*.wav
