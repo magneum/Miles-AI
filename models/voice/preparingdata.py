@@ -1,10 +1,7 @@
-# +====================================================+
+# Import required modules
 import os
 import sounddevice as sd
 from scipy.io.wavfile import write
-
-# +====================================================+
-
 
 # Define a function to record user audio
 def record_user_audio(n_times=100):
@@ -25,9 +22,6 @@ def record_user_audio(n_times=100):
         write(filepath + str(i) + ".wav", fs, myrecording)
         # Print progress
         input(f"Currently at: {i + 1}/{n_times}")
-
-
-# +====================================================+
 
 
 # Define a function to record background noise
@@ -55,4 +49,3 @@ elif value == "2":
     record_background_noise()  # Record background noise
 else:
     print("Invalid input")  # Display error message for invalid input
-# +====================================================+
