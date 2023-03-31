@@ -19,9 +19,10 @@ sounddevice
 spacy
 SpeechRecognition
 tensorflow
-tensorflow_intel
 termcolor
 torch
 tqdm
 translate
 youtube_dl
+
+# python -m poetry add beautifulsoup4 colorama librosa matplotlib nltk numpy openai pandas pvporcupine PyAudio pygame python-dotenv pyttsx3 requests scikit_learn scipy simpleaudio spacy SpeechRecognition tensorflow termcolor torch tqdm translate youtube_dl
