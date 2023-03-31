@@ -7,16 +7,16 @@ import tensorflow as tf
 from nltk.corpus import wordnet
 import matplotlib.pyplot as plt
 from colorama import Fore, Style
+from keras.models import Sequential
 from mpl_toolkits.mplot3d import Axes3D
-from tensorflow.keras.models import Sequential
 from tensorflow.python.client import device_lib
 from sklearn.model_selection import train_test_split
 from nltk.stem import WordNetLemmatizer as lemmatizer
-from tensorflow.keras.layers import Dense, Dropout, Activation, BatchNormalization
+from keras.layers import Dense, BatchNormalization, Activation, Dropout
 
-nltk.download("wordnet")
 
-print(f"{Fore.CYAN}Devices for ML: {device_lib.list_local_devices()}{Style.RESET_ALL}")
+# nltk.download("wordnet")
+# print(f"{Fore.CYAN}Devices for ML: {device_lib.list_local_devices()}{Style.RESET_ALL}")
 
 # Load the intents from the intents.json file and parse them as a dictionary
 intents = json.loads(open("corpdata/intents.json").read())
@@ -112,87 +112,45 @@ training_x = list(training[:, 0])
 training_y = list(training[:, 1])
 
 
-def create_model(
-    input_shape,
-    output_shape,
-    num_layers=8,  # number of hidden layers
-    units_per_layer=[
-        2048,
-        1024,
-        512,
-        256,
-        128,
-        64,
-        32,
-        16,
-    ],  # number of units in each hidden layer
-    activation_functions=[  # activation functions for each hidden layer
-        "relu",
-        "relu",
-        "relu",
-        "sigmoid",
-        "sigmoid",
-        "sigmoid",
-        "tanh",
-        "softmax",
-    ],
-    dropout_rate=0.5,  # dropout rate for regularization
-    use_batch_norm=True,  # whether to use batch normalization
-):
-    model = Sequential()
-    for i in range(num_layers):
-        # add a dense (fully connected) layer with specified number of units
-        # input_shape is only used for the first layer, the input shape for subsequent layers is inferred
-        model.add(Dense(units_per_layer[i], input_shape=(input_shape,)))
-        if use_batch_norm:  # optionally add batch normalization
-            model.add(BatchNormalization())
-        # add activation function for the layer
-        model.add(Activation(activation_functions[i]))
-        if (
-            i < num_layers - 1
-        ):  # add dropout between layers (except for the output layer)
-            model.add(Dropout(dropout_rate))
-    # add the output layer with softmax activation for classification
-    model.add(Dense(output_shape, activation="softmax"))
-    return model
+# Set up neural network architecture and hyperparameters
+model = Sequential()
+num_layers = 8  # number of hidden layers
+units_per_layer = [
+    2048,
+    1024,
+    512,
+    256,
+    128,
+    64,
+    32,
+    16,
+]  # number of units in each hidden layer
+activation_functions = [
+    "relu",
+    "relu",
+    "relu",
+    "sigmoid",
+    "sigmoid",
+    "sigmoid",
+    "tanh",
+    "softmax",
+]  # activation functions for each hidden layer
+dropout_rate = 0.5  # dropout rate for regularization
+use_batch_norm = True  # whether to use batch normalization
+
+# Add layers to the model
+for i in range(num_layers):
+    model.add(Dense(units_per_layer[i], input_shape=(len(training_x[0]),)))
+    if use_batch_norm:
+        model.add(BatchNormalization())
+    model.add(Activation(activation_functions[i]))
+    if i < num_layers - 1:
+        model.add(Dropout(dropout_rate))
+model.add(Dense(len(training_y[0]), activation="softmax"))
 
 
-# Create a neural network model with specified architecture and hyperparameters
-model = create_model(
-    input_shape=len(
-        training_x[0]
-    ),  # Set the shape of input layer to the number of features in training data
-    output_shape=len(
-        training_y[0]
-    ),  # Set the shape of output layer to the number of output classes
-    num_layers=8,  # Set the number of hidden layers in the network
-    units_per_layer=[
-        2048,
-        1024,
-        512,
-        256,
-        128,
-        64,
-        32,
-        16,
-    ],  # Set the number of units in each hidden layer
-    activation_functions=[  # Set the activation function for each hidden layer
-        "relu",
-        "relu",
-        "relu",
-        "sigmoid",
-        "sigmoid",
-        "sigmoid",
-        "tanh",
-        "softmax",
-    ],
-    dropout_rate=0.5,  # Set the dropout rate for regularization
-    use_batch_norm=True,  # Use batch normalization to improve training
-)
-
-
-adam_learning_rate = 0.01  # Set the learning rate for the Adam optimizer
-epochs = 100  # Set the number of epochs to train the model for
+adam_learning_rate = 0.001  # Set the learning rate for the Adam optimizer
+epochs = 1000  # Set the number of epochs to train the model for
 batch_size = 32  # Set the batch size to use for training
 verbose = 1  # Set the level of verbosity for training progress output
 

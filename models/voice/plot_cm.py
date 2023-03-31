@@ -1,13 +1,13 @@
 import matplotlib.pyplot as plt
 import itertools
 import numpy as np
-# =============================================================================================================
+
+# +====================================================+
 
 
-def plot_confusion_matrix(cm, classes,
-                          normalize=False,
-                          title="Confusion matrix",
-                          cmap=plt.cm.Blues):
+def plot_confusion_matrix(
+    cm, classes, normalize=False, title="Confusion matrix", cmap=plt.cm.Blues
+):
     """
     This function prints and plots the confusion matrix.
     Normalization can be applied by setting `normalize=True`.
@@ -27,14 +27,20 @@ def plot_confusion_matrix(cm, classes,
 
     print(cm)
 
-    thresh = cm.max() / 2.
+    thresh = cm.max() / 2.0
     for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
-        plt.text(j, i, cm[i, j],
-                 horizontalalignment="center",
-                 color="white" if cm[i, j] > thresh else "black")
+        plt.text(
+            j,
+            i,
+            cm[i, j],
+            horizontalalignment="center",
+            color="white" if cm[i, j] > thresh else "black",
+        )
 
     plt.tight_layout()
     plt.ylabel("True label")
     plt.xlabel("Predicted label")
     plt.show()
-# =============================================================================================================
+
+
+# +====================================================+
