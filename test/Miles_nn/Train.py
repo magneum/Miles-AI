@@ -74,8 +74,8 @@ words = sorted(set(words))
 classes = sorted(set(classes))
 
 # Save the processed words and classes lists to pickle files for later use
-pickle.dump(words, open("trainer/cornel/words.pkl", "wb"))
-pickle.dump(classes, open("trainer/cornel/classes.pkl", "wb"))
+pickle.dump(words, open("test/Miles_nn/words.pkl", "wb"))
+pickle.dump(classes, open("test/Miles_nn/classes.pkl", "wb"))
 
 
 training = []  # Initialize empty list to store training data
@@ -242,7 +242,7 @@ def plot_accuracy(training_history):
 
 
 # saves the trained model.
-model.save("trainer/cornel/miles_model.h5")
-model.save("trainer/cornel/miles_model")
+model.save("test/Miles_nn/miles_model.h5")
+model.save("test/Miles_nn/miles_model")
 # plot the model accuracy
 plot_accuracy(training_history)

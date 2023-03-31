@@ -6,11 +6,11 @@ from tensorflow.keras.models import load_model
 from nltk.stem import WordNetLemmatizer as lemmatizer
 
 # load the model
-model = load_model("trainer/cornel/miles_model")
-# model = load_model("trainer/cornel/miles_model.h5")
+model = load_model("test/Miles_nn/miles_model")
+# model = load_model("test/Miles_nn/miles_model.h5")
 
-words = pickle.load(open("trainer/cornel/words.pkl", "rb"))
-classes = pickle.load(open("trainer/cornel/classes.pkl", "rb"))
+words = pickle.load(open("test/Miles_nn/words.pkl", "rb"))
+classes = pickle.load(open("test/Miles_nn/classes.pkl", "rb"))
 lemmatizer = lemmatizer()
 
 with open("corpdata/intents.json") as file:
