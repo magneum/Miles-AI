@@ -2,17 +2,17 @@ import json
 import nltk
 import pickle
 import numpy as np
-from tensorflow.python.keras.models import load_model
+from tensorflow.keras.models import load_model
 from nltk.stem import WordNetLemmatizer as lemmatizer
 
 # load the model
-model = load_model("models/miles_neural/model")
+model = load_model("models/neuralNet/model")
 
-words = pickle.load(open("models/miles_neural/words.pkl", "rb"))
-classes = pickle.load(open("models/miles_neural/classes.pkl", "rb"))
+words = pickle.load(open("models/miles_neural/neuralNet/words.pkl", "rb"))
+classes = pickle.load(open("models/miles_neural/neuralNet/classes.pkl", "rb"))
 lemmatizer = lemmatizer()
 
-with open("models/miles_neural/intents.json") as file:
+with open("corpdata/intents.json") as file:
     intents = json.load(file)
 
 

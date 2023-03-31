@@ -7,23 +7,19 @@ import tensorflow as tf
 from nltk.corpus import wordnet
 import matplotlib.pyplot as plt
 from colorama import Fore, Style
-from tensorflow.python.keras.models import Sequential
+from mpl_toolkits.mplot3d import Axes3D
+from tensorflow.keras.models import Sequential
 from tensorflow.python.client import device_lib
 from sklearn.model_selection import train_test_split
 from nltk.stem import WordNetLemmatizer as lemmatizer
-from tensorflow.python.keras.layers import (
-    Dense,
-    Dropout,
-    Activation,
-    BatchNormalization,
-)
+from tensorflow.keras.layers import Dense, Dropout, Activation, BatchNormalization
 
 nltk.download("wordnet")
 
 print(f"{Fore.CYAN}Devices for ML: {device_lib.list_local_devices()}{Style.RESET_ALL}")
 
 # Load the intents from the intents.json file and parse them as a dictionary
-intents = json.loads(open("models/miles_neural/intents.json").read())
+intents = json.loads(open("corpdata/intents.json").read())
 
 # Initialize empty lists for words, classes, and documents
 words = []
@@ -78,8 +74,8 @@ words = sorted(set(words))
 classes = sorted(set(classes))
 
 # Save the processed words and classes lists to pickle files for later use
-pickle.dump(words, open("models/miles_neural/words.pkl", "wb"))
-pickle.dump(classes, open("models/miles_neural/classes.pkl", "wb"))
+pickle.dump(words, open("models/miles_neural/neuralNet/words.pkl", "wb"))
+pickle.dump(classes, open("models/miles_neural/neuralNet/classes.pkl", "wb"))
 
 
 training = []  # Initialize empty list to store training data
@@ -246,6 +242,6 @@ def plot_accuracy(training_history):
 
 
 # saves the trained model.
-model.save("models/miles_neural/model")
+model.save("models/neuralNet/model")
 # plot the model accuracy
 plot_accuracy(training_history)
