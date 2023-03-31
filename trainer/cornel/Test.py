@@ -5,7 +5,9 @@ import numpy as np
 from tensorflow.keras.models import load_model
 from nltk.stem import WordNetLemmatizer as lemmatizer
 
-model = load_model("trainer/cornel/cornel.h5")
+# load the model
+model = load_model("trainer/cornel/miles_model")
+# model = load_model("trainer/cornel/miles_model.h5")
 
 words = pickle.load(open("trainer/cornel/words.pkl", "rb"))
 classes = pickle.load(open("trainer/cornel/classes.pkl", "rb"))
