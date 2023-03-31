@@ -7,12 +7,16 @@ import tensorflow as tf
 from nltk.corpus import wordnet
 import matplotlib.pyplot as plt
 from colorama import Fore, Style
-from mpl_toolkits.mplot3d import Axes3D
-from tensorflow.keras.models import Sequential
+from tensorflow.python.keras.models import Sequential
 from tensorflow.python.client import device_lib
 from sklearn.model_selection import train_test_split
 from nltk.stem import WordNetLemmatizer as lemmatizer
-from tensorflow.keras.layers import Dense, Dropout, Activation, BatchNormalization
+from tensorflow.python.keras.layers import (
+    Dense,
+    Dropout,
+    Activation,
+    BatchNormalization,
+)
 
 nltk.download("wordnet")
 
@@ -242,7 +246,6 @@ def plot_accuracy(training_history):
 
 
 # saves the trained model.
-model.save("models/miles_neural/miles_model.h5")
-model.save("models/miles_neural/miles_model")
+model.save("models/miles_neural/model")
 # plot the model accuracy
 plot_accuracy(training_history)

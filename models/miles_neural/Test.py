@@ -2,12 +2,11 @@ import json
 import nltk
 import pickle
 import numpy as np
-from tensorflow.keras.models import load_model
+from tensorflow.python.keras.models import load_model
 from nltk.stem import WordNetLemmatizer as lemmatizer
 
 # load the model
-model = load_model("models/miles_neural/miles_model")
-# model = load_model("models/miles_neural/miles_model.h5")
+model = load_model("models/miles_neural/model")
 
 words = pickle.load(open("models/miles_neural/words.pkl", "rb"))
 classes = pickle.load(open("models/miles_neural/classes.pkl", "rb"))
