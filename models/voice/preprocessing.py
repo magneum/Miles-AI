@@ -12,17 +12,17 @@ sample = "public/audio/bg_noises/0.wav"
 data, sample_rate = librosa.load(sample)
 
 # Visualizing the waveform
-# plt.title("Waveform")
-# librosa.display.waveplot(data, sr=sample_rate)
-# plt.show()
+plt.title("Waveform")
+librosa.display.waveplot(data, sr=sample_rate)
+plt.show()
 
 # Extracting MFCC features
 mfccs = librosa.feature.mfcc(y=data, sr=sample_rate, n_mfcc=40)
 
 # Visualizing MFCC features
-# plt.title("MFCC")
-# librosa.display.specshow(mfccs, sr=sample_rate, x_axis="time")
-# plt.show()
+plt.title("MFCC")
+librosa.display.specshow(mfccs, sr=sample_rate, x_axis="time")
+plt.show()
 
 # Preprocessing and extracting features from all audio files
 all_data = []
