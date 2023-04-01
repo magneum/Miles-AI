@@ -2,14 +2,12 @@ import json
 import nltk
 import pickle
 import random
-import logging
 import numpy as np
 import tensorflow as tf
 from nltk.corpus import wordnet
 import matplotlib.pyplot as plt
 from colorama import Fore, Style
 from keras.models import Sequential
-from mpl_toolkits.mplot3d import Axes3D
 from tensorflow.python.client import device_lib
 from sklearn.model_selection import train_test_split
 from nltk.stem import WordNetLemmatizer as lemmatizer
@@ -17,7 +15,7 @@ from keras.layers import Dense, BatchNormalization, Activation, Dropout
 
 # ======================================================================================================================
 # nltk.download("wordnet")
-# print(f"{Fore.CYAN}Devices for ML: {device_lib.list_local_devices()}{Style.RESET_ALL}")
+print(f"{Fore.CYAN}Devices for ML: {device_lib.list_local_devices()}{Style.RESET_ALL}")
 
 # Load the intents from the intents.json file and parse them as a dictionary
 intents = json.loads(open("corpdata/intents.json").read())
