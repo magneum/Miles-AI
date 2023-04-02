@@ -3,7 +3,7 @@ import json
 import nltk
 import pickle
 import numpy as np
-from tensorflow.keras.models import load_model
+from keras.models import load_model
 from nltk.stem import WordNetLemmatizer as lemmatizer
 
 # load the model

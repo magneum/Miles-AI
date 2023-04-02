@@ -176,7 +176,7 @@ tuner.search(
 best_model = tuner.get_best_models(num_models=1)[0]
 _, val_acc = best_model.evaluate(val_x, val_y)
 print(f"\nBest validation accuracy: {val_acc*100:.2f}%")
-best_model.save("models/neural-net/model/chatbot_model.h5")
+best_model.save("models/neural-net/model")
 pickle.dump(words, open("models/neural-net/model/words.pkl", "wb"))
 pickle.dump(classes, open("models/neural-net/model/classes.pkl", "wb"))
 print(Fore.GREEN + "Model saved successfully!" + Style.RESET_ALL)
