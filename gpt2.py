@@ -10,7 +10,7 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.optimizers.schedules import ExponentialDecay
 
 
-datasets = [
+for dataset in [
     "large-762M",
     "large-762M-k40",
     "medium-345M-k40",
@@ -19,29 +19,27 @@ datasets = [
     "small-117M",
     "xl-1542M-k40",
     "xl-1542M",
-]
-
-for dataset in datasets:
-    print(f"{Fr.YELLOW}{dataset} read_csv(){Sr.RESET_ALL}")
+]:
+    print(f"{Fr.YELLOW}DATASET INFO: {dataset} read_csv(){Sr.RESET_ALL}")
     train_data = pd.read_csv(f"corpdata/gpt/{dataset}.train.csv")
     valid_data = pd.read_csv(f"corpdata/gpt/{dataset}.valid.csv")
     test_data = pd.read_csv(f"corpdata/gpt/{dataset}.test.csv")
 
-    print(f"{Fr.YELLOW}{dataset} astype(str){Sr.RESET_ALL}")
+    print(f"{Fr.YELLOW}DATASET INFO: {dataset} astype(str){Sr.RESET_ALL}")
     train_data["text"] = train_data["text"].astype(str)
     valid_data["text"] = valid_data["text"].astype(str)
     test_data["text"] = test_data["text"].astype(str)
 
-    print(f"{Fr.YELLOW}{dataset} Tokenizer(){Sr.RESET_ALL}")
+    print(f"{Fr.YELLOW}DATASET INFO: {dataset} Tokenizer(){Sr.RESET_ALL}")
     tokenizer = Tokenizer()
     tokenizer.fit_on_texts(train_data["text"].values)
 
-    print(f"{Fr.YELLOW}{dataset} texts_to_sequences(){Sr.RESET_ALL}")
+    print(f"{Fr.YELLOW}DATASET INFO: {dataset} texts_to_sequences(){Sr.RESET_ALL}")
     train_sequences = tokenizer.texts_to_sequences(train_data["text"].values)
     valid_sequences = tokenizer.texts_to_sequences(valid_data["text"].values)
     test_sequences = tokenizer.texts_to_sequences(test_data["text"].values)
 
-    print(f"{Fr.YELLOW}{dataset} pad_sequences(){Sr.RESET_ALL}")
+    print(f"{Fr.YELLOW}DATASET INFO: {dataset} pad_sequences(){Sr.RESET_ALL}")
     max_length = 128
     train_inputs = pad_sequences(train_sequences, maxlen=max_length, padding="post")
     valid_inputs = pad_sequences(valid_sequences, maxlen=max_length, padding="post")
@@ -146,11 +144,11 @@ tuner.search(
     train_inputs, train_outputs, epochs=5, validation_data=(valid_inputs, valid_outputs)
 )
 
-best_model = tuner.get_best_models(num_models=1)[0]
-test_loss, test_acc, test_mae = best_model.evaluate(test_inputs, test_outputs)
+Final_Model = tuner.get_best_models(num_models=1)[0]
+test_loss, test_acc, test_mae = Final_Model.evaluate(test_inputs, test_outputs)
 
 print("Best Model Summary:")
-print(best_model.summary())
+print(Final_Model.summary())
 print("Best Hyperparameters:")
 print(tuner.get_best_hyperparameters(num_trials=1)[0].values)
-best_model.save("gpt2_model.h5")
+Final_Model.save("gpt2_model.h5")
