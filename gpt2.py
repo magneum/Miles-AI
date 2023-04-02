@@ -1,26 +1,29 @@
 import keras
+import joblib
 import pandas as pd
 from keras import layers
 from keras_tuner import RandomSearch
+from keras.preprocessing.text import Tokenizer
+from keras.preprocessing.sequence import pad_sequences
 
 train_data = pd.read_csv("corpdata/gpt/large-762M-k40.train.csv")
-print("Train data shape:", train_data.shape)
-print("Train data head:", train_data.head())
-
 valid_data = pd.read_csv("corpdata/gpt/large-762M-k40.valid.csv")
-print("Validation data shape:", valid_data.shape)
-print("Validation data head:", valid_data.head())
-
 test_data = pd.read_csv("corpdata/gpt/large-762M-k40.test.csv")
-print("Test data shape:", test_data.shape)
-print("Test data head:", test_data.head())
 
-train_inputs = train_data["input"].values
-train_outputs = train_data["output"].values
-valid_inputs = valid_data["input"].values
-valid_outputs = valid_data["output"].values
-test_inputs = test_data["input"].values
-test_outputs = test_data["output"].values
+tokenizer = Tokenizer()
+tokenizer.fit_on_texts(train_data["text"].values)
+
+train_sequences = tokenizer.texts_to_sequences(train_data["text"].values)
+valid_sequences = tokenizer.texts_to_sequences(valid_data["text"].values)
+test_sequences = tokenizer.texts_to_sequences(test_data["text"].values)
+
+max_length = 128
+train_inputs = pad_sequences(train_sequences, maxlen=max_length, padding="post")
+train_outputs = train_data["ended"].values
+valid_inputs = pad_sequences(valid_sequences, maxlen=max_length, padding="post")
+valid_outputs = valid_data["ended"].values
+test_inputs = pad_sequences(test_sequences, maxlen=max_length, padding="post")
+test_outputs = test_data["ended"].values
 
 
 def build_model(hp):
@@ -29,7 +32,7 @@ def build_model(hp):
         layers.Dense(
             units=hp.Int("units", min_value=32, max_value=512, step=32),
             activation=hp.Choice("activation", values=["relu", "sigmoid"]),
-            input_shape=[len(train_inputs[0])],
+            input_shape=[max_length],
         )
     )
     model.add(layers.Dense(1))
@@ -60,21 +63,21 @@ print("Best Model Summary:")
 print(best_model.summary())
 print("Best Hyperparameters:")
 print(tuner.get_best_hyperparameters(num_trials=1)[0].values)
-best_model.save("gpt2_model.h5")
+best_model.save("got2_model.h5")
 
 
-def generate_response(input_str):
+def generate_response(input_str, model):
     input_data = pd.Series([input_str])
-    prediction = best_model.predict(input_data)[0][0]
+    prediction = model.predict(input_data)[0][0]
     return prediction
 
 
+got2_model = joblib.load("got2_model.joblib")
 print("Hello! I am a chatbot. How can I help you today?")
 while True:
     user_input = input("> ")
     if user_input.lower() == "quit":
         print("Goodbye!")
         break
-    # Generate a response using the best model
-    response = generate_response(user_input)
+    response = generate_response(user_input, got2_model)
     print("Model response:", response)
