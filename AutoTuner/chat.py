@@ -11,7 +11,7 @@ from nltk.stem import WordNetLemmatizer
 words_path = "AutoTuner/words.pkl"
 classes_path = "AutoTuner/classes.pkl"
 model_path = "AutoTuner/chatbot_model.h5"
-intents = json.loads(open("corpdata/intents.json").read())
+intents = json.loads(open("AutoTuner/intents.json").read())
 words = pickle.load(open(words_path, "rb"))
 classes = pickle.load(open(classes_path, "rb"))
 model = keras.models.load_model(model_path)

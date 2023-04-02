@@ -33,7 +33,7 @@ ignore_letters = ["?", ".", "!", ","]
 words_path = "AutoTuner/words.pkl"
 classes_path = "AutoTuner/classes.pkl"
 model_path = "AutoTuner/chatbot_model.h5"
-intents = json.loads(open("corpdata/intents.json").read())
+intents = json.loads(open("AutoTuner/intents.json").read())
 
 print(Fore.BLUE + "Processing intents..." + Style.RESET_ALL)
 for intent in intents["intents"]:
