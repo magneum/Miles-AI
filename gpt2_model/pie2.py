@@ -1,23 +1,18 @@
-import keras
 import pandas as pd
 from colorama import Fore as Fr
 from colorama import Style as Sr
 from keras.preprocessing.text import Tokenizer
-from tensorflow.python.keras import layers, models
-from keras_tuner import HyperParameters, RandomSearch
-from tensorflow.python.keras.regularizers import l1, l2
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-from tensorflow.keras.optimizers.schedules import ExponentialDecay
 
 
 for dataset in [
-    # "large-762M",
-    # "large-762M-k40",
-    # "medium-345M-k40",
-    # "medium-345M",
-    # "small-117M-k40",
-    # "small-117M",
-    # "xl-1542M-k40",
+    "large-762M",
+    "large-762M-k40",
+    "medium-345M-k40",
+    "medium-345M",
+    "small-117M-k40",
+    "small-117M",
+    "xl-1542M-k40",
     "xl-1542M",
 ]:
     print(f"{Fr.GREEN}DATASET INFO: {dataset} {Sr.RESET_ALL}read_csv()")
@@ -55,101 +50,3 @@ for dataset in [
     print(f"{Fr.BLUE}{dataset} TRAIN OUTPUTS SHAPE:{Sr.RESET_ALL}", train_outputs.shape)
     print(f"{Fr.BLUE}{dataset} VALID OUTPUTS SHAPE:{Sr.RESET_ALL}", valid_outputs.shape)
     print(f"{Fr.BLUE}{dataset} TEST OUTPUTS SHAPE:{Sr.RESET_ALL}", test_outputs.shape)
-
-
-class CustomModelBuilder:
-    def __init__(
-        self, input_shape, use_L1_regularization=False, use_L2_regularization=False
-    ):
-        self.input_shape = input_shape
-        self.use_L1_regularization = use_L1_regularization
-        self.use_L2_regularization = use_L2_regularization
-
-    def build_model(self, hp):
-        model = models.Sequential()
-        model.add(
-            layers.Dense(
-                units=hp.Int("units_1", min_value=32, max_value=512, step=32),
-                activation=hp.Choice(
-                    "activation_1", values=["relu", "sigmoid", "tanh"]
-                ),
-                kernel_regularizer=l1(
-                    hp.Choice("l1_regularization", values=[0.0, 1e-5, 1e-4])
-                )
-                if self.use_L1_regularization
-                else None,
-                bias_regularizer=l2(
-                    hp.Choice("l2_regularization", values=[0.0, 1e-5, 1e-4])
-                )
-                if self.use_L2_regularization
-                else None,
-                input_shape=self.input_shape,
-            )
-        )
-
-        for i in range(hp.Int("num_layers", 1, 4)):
-            model.add(
-                layers.Dense(
-                    units=hp.Int(f"units_{i+2}", min_value=32, max_value=512, step=32),
-                    activation=hp.Choice(
-                        f"activation_{i+2}", values=["relu", "sigmoid", "tanh"]
-                    ),
-                    kernel_regularizer=l1(
-                        hp.Choice(f"l1_regularization_{i+1}", values=[0.0, 1e-5, 1e-4])
-                    )
-                    if self.use_L1_regularization
-                    else None,
-                    bias_regularizer=l2(
-                        hp.Choice(f"l2_regularization_{i+1}", values=[0.0, 1e-5, 1e-4])
-                    )
-                    if self.use_L2_regularization
-                    else None,
-                )
-            )
-
-        model.add(layers.Dense(1, activation="sigmoid"))
-        learning_rate = ExponentialDecay(
-            initial_learning_rate=hp.Float(
-                "initial_learning_rate", min_value=1e-5, max_value=1e-3, sampling="log"
-            ),
-            decay_steps=10000,
-            decay_rate=hp.Float(
-                "decay_rate", min_value=0.1, max_value=1, sampling="log"
-            ),
-        )
-        optimizer = keras.optimizers.Adam(learning_rate)
-        model.compile(
-            optimizer=optimizer,
-            loss="categorical_crossentropy",
-            metrics=["accuracy", "mae"],
-        )
-
-        return model
-
-
-model = RandomSearch(
-    CustomModelBuilder,
-    objective="val_accuracy",
-    max_trials=5,
-    executions_per_trial=3,
-    directory="gpt2_model",
-    project_name="gpt2_model",
-    hyperparameters=HyperParameters(),
-    overwrite=True,
-)
-num_epochs = 5
-model.search(
-    train_inputs,
-    train_outputs,
-    epochs=num_epochs,
-    validation_data=(valid_inputs, valid_outputs),
-)
-
-Final_Model = model.get_best_models(num_models=1)[0]
-test_loss, test_acc, test_mae = Final_Model.evaluate(test_inputs, test_outputs)
-
-print("Best Model Summary:")
-print(Final_Model.summary())
-print("Best Hyperparameters:")
-print(model.get_best_hyperparameters(num_trials=1)[0].values)
-Final_Model.save("gpt2_model.h5")
