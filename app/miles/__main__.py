@@ -290,8 +290,8 @@ tuner = RandomSearch(
     objective="val_accuracy",
     max_trials=20,
     executions_per_trial=4,
-    directory="AutoTuner",
-    project_name="IntentsTuner",
+    directory="app/miles/hyperModel",
+    project_name="hyperModel",
 )
 print(Fore.GREEN + "Tuner created." + Style.RESET_ALL)
 
@@ -303,7 +303,7 @@ print(Fore.GREEN + "Callbacks created." + Style.RESET_ALL)
 tuner.search(
     x=train_x,
     y=train_y,
-    epochs=100,
+    epochs=50,
     batch_size=8,
     validation_data=(val_x, val_y),
     verbose=1,
