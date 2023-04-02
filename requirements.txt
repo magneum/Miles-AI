@@ -26,6 +26,7 @@ termcolor==2.2.0
 torch==2.0.0
 tqdm==4.65.0
 translate==3.6.1
+spellchecker==0.4
 
 
 # python -m pip install -r .\requirements.txt -y
