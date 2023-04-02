@@ -11,35 +11,35 @@ from tensorflow.keras.optimizers.schedules import ExponentialDecay
 
 
 for dataset in [
-    "large-762M",
-    "large-762M-k40",
-    "medium-345M-k40",
-    "medium-345M",
-    "small-117M-k40",
-    "small-117M",
-    "xl-1542M-k40",
+    # "large-762M",
+    # "large-762M-k40",
+    # "medium-345M-k40",
+    # "medium-345M",
+    # "small-117M-k40",
+    # "small-117M",
+    # "xl-1542M-k40",
     "xl-1542M",
 ]:
-    print(f"{Fr.YELLOW}DATASET INFO: {dataset} read_csv(){Sr.RESET_ALL}")
+    print(f"{Fr.GREEN}DATASET INFO: {dataset} {Sr.RESET_ALL}read_csv()")
     train_data = pd.read_csv(f"corpdata/gpt/{dataset}.train.csv")
     valid_data = pd.read_csv(f"corpdata/gpt/{dataset}.valid.csv")
     test_data = pd.read_csv(f"corpdata/gpt/{dataset}.test.csv")
 
-    print(f"{Fr.YELLOW}DATASET INFO: {dataset} astype(str){Sr.RESET_ALL}")
+    print(f"{Fr.GREEN}DATASET INFO: {dataset} {Sr.RESET_ALL}astype(str)")
     train_data["text"] = train_data["text"].astype(str)
     valid_data["text"] = valid_data["text"].astype(str)
     test_data["text"] = test_data["text"].astype(str)
 
-    print(f"{Fr.YELLOW}DATASET INFO: {dataset} Tokenizer(){Sr.RESET_ALL}")
+    print(f"{Fr.GREEN}DATASET INFO: {dataset} {Sr.RESET_ALL}Tokenizer()")
     tokenizer = Tokenizer()
     tokenizer.fit_on_texts(train_data["text"].values)
 
-    print(f"{Fr.YELLOW}DATASET INFO: {dataset} texts_to_sequences(){Sr.RESET_ALL}")
+    print(f"{Fr.GREEN}DATASET INFO: {dataset} {Sr.RESET_ALL}texts_to_sequences()")
     train_sequences = tokenizer.texts_to_sequences(train_data["text"].values)
     valid_sequences = tokenizer.texts_to_sequences(valid_data["text"].values)
     test_sequences = tokenizer.texts_to_sequences(test_data["text"].values)
 
-    print(f"{Fr.YELLOW}DATASET INFO: {dataset} pad_sequences(){Sr.RESET_ALL}")
+    print(f"{Fr.GREEN}DATASET INFO: {dataset} {Sr.RESET_ALL}pad_sequences()")
     max_length = 128
     train_inputs = pad_sequences(train_sequences, maxlen=max_length, padding="post")
     valid_inputs = pad_sequences(valid_sequences, maxlen=max_length, padding="post")
@@ -108,7 +108,6 @@ class CustomModelBuilder:
             )
 
         model.add(layers.Dense(1, activation="sigmoid"))
-
         learning_rate = ExponentialDecay(
             initial_learning_rate=hp.Float(
                 "initial_learning_rate", min_value=1e-5, max_value=1e-3, sampling="log"
@@ -119,7 +118,6 @@ class CustomModelBuilder:
             ),
         )
         optimizer = keras.optimizers.Adam(learning_rate)
-
         model.compile(
             optimizer=optimizer,
             loss="categorical_crossentropy",
@@ -129,26 +127,29 @@ class CustomModelBuilder:
         return model
 
 
-tuner = RandomSearch(
+model = RandomSearch(
     CustomModelBuilder,
     objective="val_accuracy",
     max_trials=5,
     executions_per_trial=3,
-    directory="my_dir",
-    project_name="gpt2_tuning",
+    directory="gpt2_model",
+    project_name="gpt2_model",
     hyperparameters=HyperParameters(),
     overwrite=True,
 )
-
-tuner.search(
-    train_inputs, train_outputs, epochs=5, validation_data=(valid_inputs, valid_outputs)
+num_epochs = 5
+model.search(
+    train_inputs,
+    train_outputs,
+    epochs=num_epochs,
+    validation_data=(valid_inputs, valid_outputs),
 )
 
-Final_Model = tuner.get_best_models(num_models=1)[0]
+Final_Model = model.get_best_models(num_models=1)[0]
 test_loss, test_acc, test_mae = Final_Model.evaluate(test_inputs, test_outputs)
 
 print("Best Model Summary:")
 print(Final_Model.summary())
 print("Best Hyperparameters:")
-print(tuner.get_best_hyperparameters(num_trials=1)[0].values)
+print(model.get_best_hyperparameters(num_trials=1)[0].values)
 Final_Model.save("gpt2_model.h5")
