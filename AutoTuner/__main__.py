@@ -1,8 +1,21 @@
-# # =================================================================================== ||
+"""
+The code you provided is a Python script for a chatbot that uses natural language processing and deep learning techniques to understand and respond to user input. 
+It first reads a JSON file containing a set of predefined "intents" that the chatbot can recognize, then tokenizes and lemmatizes the words in these intents to create a set of "bag of words" features that can be used to train a deep learning model.
+
+The script uses the Keras Tuner library to perform a random search over a hyperparameter space for a deep learning model. 
+The hyperparameters include the number of layers, the number of units in each layer, the activation function, the dropout rate, and the learning rate for an optimizer.
+
+The script then splits the data into training and validation sets and trains the deep learning model on the training data using the hyperparameters that were found by the Keras Tuner. 
+The model is evaluated on the validation set to see how well it generalizes to new data.
+
+Finally, the trained model is saved to a file so it can be used to make predictions on new user input.
+"""
+# =================================================================================== ||
 import json
 import nltk
 import pickle
 import random
+import tensorflow
 import numpy as np
 from tensorflow import keras
 from nltk.corpus import wordnet
@@ -12,21 +25,31 @@ from nltk.stem import WordNetLemmatizer
 from keras_tuner.tuners import RandomSearch
 from sklearn.model_selection import train_test_split
 
-intents = json.loads(open("corpdata/intents.json").read())
-with open("models/neural-net/model/words.pkl", "rb") as f:
-    words = pickle.load(f)
-with open("models/neural-net/model/classes.pkl", "rb") as f:
-    classes = pickle.load(f)
 
+words = []
+classes = []
 documents = []
 ignore_letters = ["?", ".", "!", ","]
+words_path = "AutoTuner/words.pkl"
+classes_path = "AutoTuner/classes.pkl"
+model_path = "AutoTuner/chatbot_model.h5"
+intents = json.loads(open("corpdata/intents.json").read())
+
+print(Fore.BLUE + "Processing intents..." + Style.RESET_ALL)
 for intent in intents["intents"]:
     for pattern in intent["patterns"]:
         word_list = nltk.tokenize.word_tokenize(pattern)
+        words.extend(word_list)
         documents.append((word_list, intent["tag"]))
+        if intent["tag"] not in classes:
+            classes.append(intent["tag"])
+print(Fore.GREEN + "Done processing intents." + Style.RESET_ALL)
 
-lemmatizer = WordNetLemmatizer()
+
 pos_tags = nltk.pos_tag(words)
+lemmatizer = WordNetLemmatizer()
+
+print(Fore.BLUE + "Lemmatizing words..." + Style.RESET_ALL)
 words = [
     lemmatizer.lemmatize(word, pos=wordnet.ADJ)
     if tag[1][0].lower() == "j"
@@ -39,14 +62,12 @@ words = [
     else lemmatizer.lemmatize(word)
     for word, tag in zip(words, pos_tags)
 ]
-
+print(Fore.GREEN + "Done lemmatizing words." + Style.RESET_ALL)
+print(Fore.BLUE + "Sorting and removing duplicates..." + Style.RESET_ALL)
 words = sorted(set(words))
 classes = sorted(set(classes))
-
-with open("models/neural-net/model/words.pkl", "wb") as f:
-    pickle.dump(words, f)
-with open("models/neural-net/model/classes.pkl", "wb") as f:
-    pickle.dump(classes, f)
+pickle.dump(words, open(words_path, "wb"))
+pickle.dump(classes, open(classes_path, "wb"))
 
 
 training = []
@@ -77,9 +98,11 @@ num_classes = len(classes)
 
 
 class MyHyperModel(HyperModel):
-    def __init__(self, input_shape, num_classes):
+    def __init__(self, input_shape, num_classes, use_early_stopping=False, hp=None):
         self.input_shape = input_shape
         self.num_classes = num_classes
+        self.use_early_stopping = use_early_stopping
+        self.hp = hp
 
     def build(self, hp):
         model = keras.Sequential()
@@ -132,18 +155,6 @@ class MyHyperModel(HyperModel):
                 )
             )
 
-        if hp.Boolean("use_early_stopping", default=False):
-            early_stopping_patience = hp.Int(
-                "early_stopping_patience", min_value=1, max_value=10
-            )
-            callbacks = [
-                keras.callbacks.EarlyStopping(
-                    monitor="val_loss", patience=early_stopping_patience
-                )
-            ]
-        else:
-            callbacks = []
-
         model.add(keras.layers.Dense(self.num_classes, activation="softmax"))
         model.compile(
             optimizer=optimizer, loss="categorical_crossentropy", metrics=["accuracy"]
@@ -151,33 +162,56 @@ class MyHyperModel(HyperModel):
 
         return model
 
+    def get_callbacks(self):
+        callbacks = []
+        if self.hp:
+            early_stopping_patience = self.hp.Int(
+                "early_stopping_patience", min_value=1, max_value=10, default=5
+            )
+            callbacks.append(
+                tensorflow.keras.callbacks.EarlyStopping(
+                    monitor="val_loss", patience=early_stopping_patience
+                )
+            )
+        return callbacks
 
-my_hyper_model = MyHyperModel(input_shape, num_classes)
+
+my_hyper_model = MyHyperModel(input_shape, num_classes, use_early_stopping=True)
+
+print(Fore.GREEN + "Creating tuner..." + Style.RESET_ALL)
 tuner = RandomSearch(
     my_hyper_model,
     objective="val_accuracy",
-    max_trials=10,
-    executions_per_trial=3,
-    directory="dist/kerasTuner",
-    project_name="helloworld",
+    max_trials=20,
+    executions_per_trial=4,
+    directory="AutoTuner",
+    project_name="IntentsTuner",
 )
+print(Fore.GREEN + "Tuner created." + Style.RESET_ALL)
 
+callbacks = my_hyper_model.get_callbacks()
+print(Fore.GREEN + "Callbacks created." + Style.RESET_ALL)
 
 tuner.search(
     x=train_x,
     y=train_y,
-    epochs=50,
+    epochs=100,
     batch_size=8,
     validation_data=(val_x, val_y),
     verbose=1,
+    callbacks=callbacks,
 )
+print(Fore.GREEN + "Tuning completed." + Style.RESET_ALL)
 
 
 best_model = tuner.get_best_models(num_models=1)[0]
 _, val_acc = best_model.evaluate(val_x, val_y)
 print(f"\nBest validation accuracy: {val_acc*100:.2f}%")
-best_model.save("models/neural-net/model")
-pickle.dump(words, open("models/neural-net/model/words.pkl", "wb"))
-pickle.dump(classes, open("models/neural-net/model/classes.pkl", "wb"))
+
+best_model.save(model_path)
+pickle.dump(words, open(words_path, "wb"))
+pickle.dump(classes, open(classes_path, "wb"))
+
 print(Fore.GREEN + "Model saved successfully!" + Style.RESET_ALL)
+
 # =================================================================================== ||

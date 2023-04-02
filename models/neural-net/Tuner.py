@@ -7,7 +7,7 @@ from tensorflow import keras
 from nltk.corpus import wordnet
 from colorama import Fore, Style
 from keras_tuner import HyperModel
-from kerastuner.tuners import RandomSearch
+from keras_tuner.tuners import RandomSearch
 from sklearn.model_selection import train_test_split
 from nltk.stem import WordNetLemmatizer as lemmatizer
 
