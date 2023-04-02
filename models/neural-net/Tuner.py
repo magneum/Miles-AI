@@ -3,40 +3,25 @@ import nltk
 import pickle
 import random
 import numpy as np
-import tensorflow as tf
 from tensorflow import keras
-from kerastuner import HyperModel
 from nltk.corpus import wordnet
 from colorama import Fore, Style
-from keras.models import Sequential
-from keras.layers import Dense, BatchNormalization, Activation, Dropout
-from keras.optimizers import Adam
+from keras_tuner import HyperModel
+from kerastuner.tuners import RandomSearch
 from sklearn.model_selection import train_test_split
 from nltk.stem import WordNetLemmatizer as lemmatizer
-from kerastuner.tuners import RandomSearch
-from kerastuner.engine.hyperparameters import HyperParameter
-from kerastuner.engine.hyperparameters import Choice
 
+# =================================================================================== ||
 intents = json.loads(open("corpdata/intents.json").read())
+words = pickle.load(open("models/neural-net/model/words.pkl", "rb"))
+classes = pickle.load(open("models/neural-net/model/classes.pkl", "rb"))
 
-words = []
-classes = []
 documents = []
-
-learning_rate = 0.001
-num_epochs = 10000
-batch_size = 128
-verbose = 1
-
 ignore_letters = ["?", ".", "!", ","]
-
 for intent in intents["intents"]:
     for pattern in intent["patterns"]:
         word_list = nltk.tokenize.word_tokenize(pattern)
-        words.extend(word_list)
         documents.append((word_list, intent["tag"]))
-        if intent["tag"] not in classes:
-            classes.append(intent["tag"])
 
 pos_tags = nltk.pos_tag(words)
 lemmatizer = lemmatizer()
@@ -53,7 +38,7 @@ words = [
     else lemmatizer.lemmatize(word)
     for word, tag in zip(words, pos_tags)
 ]
-
+# =================================================================================== ||
 words = sorted(set(words))
 classes = sorted(set(classes))
 
@@ -78,7 +63,13 @@ training = np.array(training, dtype=object)
 training_x = list(training[:, 0])
 training_y = list(training[:, 1])
 
+training_x = np.array(training_x)
+training_y = np.array(training_y)
+x_train, x_val, y_train, y_val = train_test_split(training_x, training_y, test_size=0.2)
 
+input_shape = (len(x_train[0]),)
+num_classes = len(classes)
+# =================================================================================== ||
 class MyHyperModel(HyperModel):
     def __init__(self, input_shape, num_classes):
         self.input_shape = input_shape
@@ -112,5 +103,32 @@ class MyHyperModel(HyperModel):
             loss="categorical_crossentropy",
             metrics=["accuracy"],
         )
-        model.save("my_model.h5")
         return model
+
+
+# =================================================================================== ||
+my_hyper_model = MyHyperModel(input_shape, num_classes)
+tuner = RandomSearch(
+    my_hyper_model,
+    objective="val_accuracy",
+    max_trials=10,
+    executions_per_trial=3,
+    directory="my_dir",
+    project_name="helloworld",
+)
+tuner.search(
+    x=x_train,
+    y=y_train,
+    epochs=50,
+    batch_size=8,
+    validation_data=(x_val, y_val),
+    verbose=1,
+)
+# =================================================================================== ||
+best_model = tuner.get_best_models(num_models=1)[0]
+_, val_acc = best_model.evaluate(x_val, y_val)
+print(f"\nBest validation accuracy: {val_acc*100:.2f}%")
+best_model.save("models/neural-net/model/chatbot_model.h5")
+pickle.dump(words, open("models/neural-net/model/words.pkl", "wb"))
+pickle.dump(classes, open("models/neural-net/model/classes.pkl", "wb"))
+print(Fore.GREEN + "Model saved successfully!" + Style.RESET_ALL)

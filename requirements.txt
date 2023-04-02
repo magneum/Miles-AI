@@ -15,6 +15,7 @@ requests
 scikit_learn
 scipy
 simpleaudio
+keras-tuner
 sounddevice
 spacy
 SpeechRecognition
