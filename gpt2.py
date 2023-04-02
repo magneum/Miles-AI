@@ -60,6 +60,7 @@ print("Best Model Summary:")
 print(best_model.summary())
 print("Best Hyperparameters:")
 print(tuner.get_best_hyperparameters(num_trials=1)[0].values)
+best_model.save("gpt2_model.h5")
 
 
 def generate_response(input_str):
