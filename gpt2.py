@@ -69,14 +69,14 @@ tuner.search(
     train_inputs, train_outputs, epochs=5, validation_data=(valid_inputs, valid_outputs)
 )
 
-best_model = tuner.get_best_models(num_models=1)[0]
-test_loss, test_mae = best_model.evaluate(test_inputs, test_outputs)
+Final_model = tuner.get_best_models(num_models=1)[0]
+test_loss, test_mae = Final_model.evaluate(test_inputs, test_outputs)
 
 print("Best Model Summary:")
-print(best_model.summary())
+print(Final_model.summary())
 print("Best Hyperparameters:")
 print(tuner.get_best_hyperparameters(num_trials=1)[0].values)
-best_model.save("got2_model.h5")
+Final_model.save("gpt2_model.h5")
 
 
 def generate_response(input_str, model):
@@ -85,12 +85,12 @@ def generate_response(input_str, model):
     return prediction
 
 
-got2_model = joblib.load("got2_model.joblib")
+gpt2_model = joblib.load("gpt2_model.joblib")
 print("Hello! I am a chatbot. How can I help you today?")
 while True:
     user_input = input("> ")
     if user_input.lower() == "quit":
         print("Goodbye!")
         break
-    response = generate_response(user_input, got2_model)
+    response = generate_response(user_input, gpt2_model)
     print("Model response:", response)
