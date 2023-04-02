@@ -7,23 +7,36 @@ from keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 train_data = pd.read_csv("corpdata/gpt/large-762M-k40.train.csv")
+print("Train data columns:", train_data.columns)
 valid_data = pd.read_csv("corpdata/gpt/large-762M-k40.valid.csv")
+print("Valid data columns:", valid_data.columns)
 test_data = pd.read_csv("corpdata/gpt/large-762M-k40.test.csv")
+print("Test data columns:", test_data.columns)
+
 
 tokenizer = Tokenizer()
 tokenizer.fit_on_texts(train_data["text"].values)
 
 train_sequences = tokenizer.texts_to_sequences(train_data["text"].values)
+print("Train sequences:", train_sequences)
 valid_sequences = tokenizer.texts_to_sequences(valid_data["text"].values)
+print("Valid sequences:", valid_sequences)
 test_sequences = tokenizer.texts_to_sequences(test_data["text"].values)
+print("Test sequences:", test_sequences)
 
 max_length = 128
 train_inputs = pad_sequences(train_sequences, maxlen=max_length, padding="post")
+print("Train inputs shape:", train_inputs.shape)
 train_outputs = train_data["ended"].values
+print("Train outputs shape:", train_outputs.shape)
 valid_inputs = pad_sequences(valid_sequences, maxlen=max_length, padding="post")
+print("Valid inputs shape:", valid_inputs.shape)
 valid_outputs = valid_data["ended"].values
+print("Valid outputs shape:", valid_outputs.shape)
 test_inputs = pad_sequences(test_sequences, maxlen=max_length, padding="post")
+print("Test inputs shape:", test_inputs.shape)
 test_outputs = test_data["ended"].values
+print("Test outputs shape:", test_outputs.shape)
 
 
 def build_model(hp):
