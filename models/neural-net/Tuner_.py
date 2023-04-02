@@ -7,9 +7,9 @@ import numpy as np
 from tensorflow import keras
 from nltk.corpus import wordnet
 from colorama import Fore, Style
-from kerastuner import HyperModel
+from keras_tuner import HyperModel
 from nltk.stem import WordNetLemmatizer
-from kerastuner.tuners import RandomSearch
+from keras_tuner.tuners import RandomSearch
 from sklearn.model_selection import train_test_split
 
 intents = json.loads(open("corpdata/intents.json").read())
@@ -65,7 +65,7 @@ for document in documents:
     output_row[classes.index(document[1])] = 1
     training.append([bag, output_row])
 random.shuffle(training)
-training = np.array(training)
+training = np.array(training, dtype=object)
 train_x = list(training[:, 0])
 train_y = list(training[:, 1])
 
@@ -124,7 +124,13 @@ class MyHyperModel(HyperModel):
             L2_rate = hp.Float(
                 "L2_rate", min_value=1e-5, max_value=1e-2, sampling="LOG"
             )
-            model.add(keras.regularizers.L2(L2_rate))
+            model.add(
+                keras.layers.Dense(
+                    units=units,
+                    activation=activation,
+                    kernel_regularizer=keras.regularizers.L2(L2_rate),
+                )
+            )
 
         if hp.Boolean("use_early_stopping", default=False):
             early_stopping_patience = hp.Int(
@@ -152,7 +158,7 @@ tuner = RandomSearch(
     objective="val_accuracy",
     max_trials=10,
     executions_per_trial=3,
-    directory="my_dir",
+    directory="dist/kerasTuner",
     project_name="helloworld",
 )
 
