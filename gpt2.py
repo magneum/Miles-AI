@@ -1,10 +1,10 @@
 import keras
 import joblib
 import pandas as pd
-from keras import layers
 from keras_tuner import RandomSearch
+from tensorflow.python.keras import layers
 from keras.preprocessing.text import Tokenizer
-from keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 train_data = pd.read_csv("corpdata/gpt/large-762M-k40.train.csv")
 valid_data = pd.read_csv("corpdata/gpt/large-762M-k40.valid.csv")
