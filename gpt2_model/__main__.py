@@ -113,8 +113,8 @@ tuner = Hyperband(
     objective="val_accuracy",
     max_epochs=10,
     factor=3,
-    directory="corpdata/gpt",
-    project_name="gpt_tuning",
+    directory="gpt2_model",
+    project_name="gpt2_model",
 )
 
 tuner.search(
@@ -131,4 +131,4 @@ print("Best Model Summary:")
 print(best_model.summary())
 print("Best Hyperparameters:")
 print(tuner.get_best_hyperparameters(num_trials=1)[0].values)
-best_model.save("gpt2_model.h5")
+best_model.save("gpt2_model/gpt2_model.h5")
