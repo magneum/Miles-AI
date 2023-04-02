@@ -66,6 +66,6 @@ while True:
         break
     else:
         ints = predict_class(message, model)
-        print(Fore.YELLOW + "CLASS:" + Style.RESET_ALL + res)
         res = get_response(ints, intents)
-        print(Fore.GREEN + "MILES:" + Style.RESET_ALL + res)
+        print(Fore.YELLOW + "CLASS:" + str(ints) + Style.RESET_ALL)
+        print(Fore.GREEN + "MILES:" + str(res) + Style.RESET_ALL)
