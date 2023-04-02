@@ -15,7 +15,7 @@ from keras.layers import Dense, BatchNormalization, Activation, Dropout
 
 # ======================================================================================================================
 # nltk.download("wordnet")
-print(f"{Fore.CYAN}Devices for ML: {device_lib.list_local_devices()}{Style.RESET_ALL}")
+# print(f"{Fore.CYAN}Devices for ML: {device_lib.list_local_devices()}{Style.RESET_ALL}")
 
 # Load the intents from the intents.json file and parse them as a dictionary
 intents = json.loads(open("corpdata/intents.json").read())
@@ -27,8 +27,8 @@ documents = []
 
 
 learning_rate = 0.001  # Define the learning rate schedule for the Adam optimizer
-num_epochs = 10000  # Set the number of epochs to train the model for
-batch_size = 32  # Set the batch size to use for training
+num_epochs = 100000  # Set the number of epochs to train the model for
+batch_size = 64  # Set the batch size to use for training
 verbose = 1  # Set the level of verbosity for training progress output
 
 # Define a list of characters to ignore in the patterns
@@ -182,7 +182,7 @@ for i in range(num_layers):
         raise ValueError(f"Invalid activation function: {activation_function}")
     # Add random dropout for regularization
     if i < num_layers - 1:
-        dropout_rate = np.random.uniform(0.4, 0.6)  # set range of dropout rate
+        dropout_rate = np.random.uniform(0.3, 0.7)  # set range of dropout rate
         model.add(Dropout(dropout_rate))
 
 
