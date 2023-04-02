@@ -30,11 +30,11 @@ words = []
 classes = []
 documents = []
 ignore_letters = ["?", ".", "!", ","]
-words_path = "AutoTuner/words.pkl"
-classes_path = "AutoTuner/classes.pkl"
-model_path = "AutoTuner/chatbot_model.h5"
+words_path = "app/miles/words.pkl"
+classes_path = "app/miles/classes.pkl"
+model_path = "app/miles/chatbot_model.h5"
 glove_file = "corpdata/glove/glove.6B.300d.txt"
-intents = json.loads(open("AutoTuner/intents.json").read())
+intents = json.loads(open("app/miles/intents.json").read())
 
 # Looping through each intent in the intents dictionary
 for intent in intents["intents"]:
@@ -232,7 +232,6 @@ class MyHyperModel(HyperModel):
         )
 
         return model
-
 
     def get_callbacks(self):
         # initialize an empty list of callbacks
