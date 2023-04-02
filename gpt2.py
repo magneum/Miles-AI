@@ -1,96 +1,151 @@
 import keras
-import joblib
 import pandas as pd
-from keras_tuner import RandomSearch
-from tensorflow.python.keras import layers
+from colorama import Fore as Fr
+from colorama import Style as Sr
 from keras.preprocessing.text import Tokenizer
+from tensorflow.python.keras import layers, models
+from keras_tuner import HyperParameters, RandomSearch
+from tensorflow.python.keras.regularizers import l1, l2
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-
-train_data = pd.read_csv("corpdata/gpt/large-762M-k40.train.csv")
-print("Train data columns:", train_data.columns)
-valid_data = pd.read_csv("corpdata/gpt/large-762M-k40.valid.csv")
-print("Valid data columns:", valid_data.columns)
-test_data = pd.read_csv("corpdata/gpt/large-762M-k40.test.csv")
-print("Test data columns:", test_data.columns)
+from tensorflow.keras.optimizers.schedules import ExponentialDecay
 
 
-tokenizer = Tokenizer()
-tokenizer.fit_on_texts(train_data["text"].values)
+datasets = [
+    "large-762M",
+    "large-762M-k40",
+    "medium-345M-k40",
+    "medium-345M",
+    "small-117M-k40",
+    "small-117M",
+    "xl-1542M-k40",
+    "xl-1542M",
+]
 
-train_sequences = tokenizer.texts_to_sequences(train_data["text"].values)
-print("Train sequences:", train_sequences)
-valid_sequences = tokenizer.texts_to_sequences(valid_data["text"].values)
-print("Valid sequences:", valid_sequences)
-test_sequences = tokenizer.texts_to_sequences(test_data["text"].values)
-print("Test sequences:", test_sequences)
+for dataset in datasets:
+    train_data = pd.read_csv(f"corpdata/gpt/{dataset}.train.csv")
+    valid_data = pd.read_csv(f"corpdata/gpt/{dataset}.valid.csv")
+    test_data = pd.read_csv(f"corpdata/gpt/{dataset}.test.csv")
 
-max_length = 128
-train_inputs = pad_sequences(train_sequences, maxlen=max_length, padding="post")
-print("Train inputs shape:", train_inputs.shape)
-train_outputs = train_data["ended"].values
-print("Train outputs shape:", train_outputs.shape)
-valid_inputs = pad_sequences(valid_sequences, maxlen=max_length, padding="post")
-print("Valid inputs shape:", valid_inputs.shape)
-valid_outputs = valid_data["ended"].values
-print("Valid outputs shape:", valid_outputs.shape)
-test_inputs = pad_sequences(test_sequences, maxlen=max_length, padding="post")
-print("Test inputs shape:", test_inputs.shape)
-test_outputs = test_data["ended"].values
-print("Test outputs shape:", test_outputs.shape)
+    train_data["text"] = train_data["text"].astype(str)
+    valid_data["text"] = valid_data["text"].astype(str)
+    test_data["text"] = test_data["text"].astype(str)
+
+    tokenizer = Tokenizer()
+    tokenizer.fit_on_texts(train_data["text"].values)
+
+    train_sequences = tokenizer.texts_to_sequences(train_data["text"].values)
+    valid_sequences = tokenizer.texts_to_sequences(valid_data["text"].values)
+    test_sequences = tokenizer.texts_to_sequences(test_data["text"].values)
+
+    max_length = 128
+    train_inputs = pad_sequences(train_sequences, maxlen=max_length, padding="post")
+    valid_inputs = pad_sequences(valid_sequences, maxlen=max_length, padding="post")
+    test_inputs = pad_sequences(test_sequences, maxlen=max_length, padding="post")
+
+    train_outputs = train_data["ended"].values
+    valid_outputs = valid_data["ended"].values
+    test_outputs = test_data["ended"].values
+
+    print(f"{Fr.BLUE}{dataset} TRAIN INPUTS SHAPE:{Sr.RESET_ALL}", train_inputs.shape)
+    print(f"{Fr.BLUE}{dataset} VALID INPUTS SHAPE:{Sr.RESET_ALL}", valid_inputs.shape)
+    print(f"{Fr.BLUE}{dataset} TEST INPUTS SHAPE:{Sr.RESET_ALL}", test_inputs.shape)
+    print(f"{Fr.BLUE}{dataset} TRAIN OUTPUTS SHAPE:{Sr.RESET_ALL}", train_outputs.shape)
+    print(f"{Fr.BLUE}{dataset} VALID OUTPUTS SHAPE:{Sr.RESET_ALL}", valid_outputs.shape)
+    print(f"{Fr.BLUE}{dataset} TEST OUTPUTS SHAPE:{Sr.RESET_ALL}", test_outputs.shape)
 
 
-def build_model(hp):
-    model = keras.Sequential()
-    model.add(
-        layers.Dense(
-            units=hp.Int("units", min_value=32, max_value=512, step=32),
-            activation=hp.Choice("activation", values=["relu", "sigmoid"]),
-            input_shape=[max_length],
+class CustomModelBuilder:
+    def __init__(
+        self, input_shape, use_L1_regularization=False, use_L2_regularization=False
+    ):
+        self.input_shape = input_shape
+        self.use_L1_regularization = use_L1_regularization
+        self.use_L2_regularization = use_L2_regularization
+
+    def build_model(self, hp):
+        model = models.Sequential()
+        model.add(
+            layers.Dense(
+                units=hp.Int("units_1", min_value=32, max_value=512, step=32),
+                activation=hp.Choice(
+                    "activation_1", values=["relu", "sigmoid", "tanh"]
+                ),
+                kernel_regularizer=l1(
+                    hp.Choice("l1_regularization", values=[0.0, 1e-5, 1e-4])
+                )
+                if self.use_L1_regularization
+                else None,
+                bias_regularizer=l2(
+                    hp.Choice("l2_regularization", values=[0.0, 1e-5, 1e-4])
+                )
+                if self.use_L2_regularization
+                else None,
+                input_shape=self.input_shape,
+            )
         )
-    )
-    model.add(layers.Dense(1))
 
-    model.compile(
-        optimizer=keras.optimizers.Adam(
-            hp.Choice("learning_rate", values=[1e-2, 1e-3, 1e-4])
-        ),
-        loss="mse",
-        metrics=["mae"],
-    )
+        for i in range(hp.Int("num_layers", 1, 4)):
+            model.add(
+                layers.Dense(
+                    units=hp.Int(f"units_{i+2}", min_value=32, max_value=512, step=32),
+                    activation=hp.Choice(
+                        f"activation_{i+2}", values=["relu", "sigmoid", "tanh"]
+                    ),
+                    kernel_regularizer=l1(
+                        hp.Choice(f"l1_regularization_{i+1}", values=[0.0, 1e-5, 1e-4])
+                    )
+                    if self.use_L1_regularization
+                    else None,
+                    bias_regularizer=l2(
+                        hp.Choice(f"l2_regularization_{i+1}", values=[0.0, 1e-5, 1e-4])
+                    )
+                    if self.use_L2_regularization
+                    else None,
+                )
+            )
 
-    return model
+        model.add(layers.Dense(1, activation="sigmoid"))
+
+        learning_rate = ExponentialDecay(
+            initial_learning_rate=hp.Float(
+                "initial_learning_rate", min_value=1e-5, max_value=1e-3, sampling="log"
+            ),
+            decay_steps=10000,
+            decay_rate=hp.Float(
+                "decay_rate", min_value=0.1, max_value=1, sampling="log"
+            ),
+        )
+        optimizer = keras.optimizers.Adam(learning_rate)
+
+        model.compile(
+            optimizer=optimizer,
+            loss="categorical_crossentropy",
+            metrics=["accuracy", "mae"],
+        )
+
+        return model
 
 
 tuner = RandomSearch(
-    build_model, objective="val_mae", max_trials=5, executions_per_trial=3
+    CustomModelBuilder,
+    objective="val_accuracy",
+    max_trials=5,
+    executions_per_trial=3,
+    directory="my_dir",
+    project_name="gpt2_tuning",
+    hyperparameters=HyperParameters(),
+    overwrite=True,
 )
 
 tuner.search(
     train_inputs, train_outputs, epochs=5, validation_data=(valid_inputs, valid_outputs)
 )
 
-Final_model = tuner.get_best_models(num_models=1)[0]
-test_loss, test_mae = Final_model.evaluate(test_inputs, test_outputs)
+best_model = tuner.get_best_models(num_models=1)[0]
+test_loss, test_acc, test_mae = best_model.evaluate(test_inputs, test_outputs)
 
 print("Best Model Summary:")
-print(Final_model.summary())
+print(best_model.summary())
 print("Best Hyperparameters:")
 print(tuner.get_best_hyperparameters(num_trials=1)[0].values)
-Final_model.save("gpt2_model.h5")
-
-
-def generate_response(input_str, model):
-    input_data = pd.Series([input_str])
-    prediction = model.predict(input_data)[0][0]
-    return prediction
-
-
-gpt2_model = joblib.load("gpt2_model.joblib")
-print("Hello! I am a chatbot. How can I help you today?")
-while True:
-    user_input = input("> ")
-    if user_input.lower() == "quit":
-        print("Goodbye!")
-        break
-    response = generate_response(user_input, gpt2_model)
-    print("Model response:", response)
+best_model.save("gpt2_model.h5")
