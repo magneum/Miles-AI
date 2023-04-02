@@ -88,27 +88,33 @@ for dataset in datasets:
     name = dataset["name"]
 
     # Load and preprocess data
-    with open(train_file, "r") as f:
+    with open(train_file, "r", encoding="utf-8") as f:
         train_data = f.read().splitlines()
 
-    with open(valid_file, "r") as f:
+    with open(valid_file, "r", encoding="utf-8") as f:
         valid_data = f.read().splitlines()
 
-    with open(test_file, "r") as f:
+    with open(test_file, "r", encoding="utf-8") as f:
         test_data = f.read().splitlines()
 
-    train_data = np.array([np.fromstring(s, dtype=np.int, sep=" ") for s in train_data])
-    valid_data = np.array([np.fromstring(s, dtype=np.int, sep=" ") for s in valid_data])
-    test_data = np.array([np.fromstring(s, dtype=np.int, sep=" ") for s in test_data])
+    train_data = np.loadtxt(
+        train_file,
+        delimiter=",",
+        dtype=np.int,
+        skiprows=1,
+        converters={2: lambda x: int(float(x))},
+    )
+    valid_data = np.loadtxt(valid_file, delimiter=" ", dtype=np.int, skiprows=1)
+    test_data = np.loadtxt(test_file, delimiter=" ", dtype=np.int, skiprows=1)
 
-    train_labels = np.array(train_data[:, 1:])
-    train_data = np.array(train_data[:, :-1])
+    train_labels = train_data[:, 1:]
+    train_data = train_data[:, :-1]
 
-    valid_labels = np.array(valid_data[:, 1:])
-    valid_data = np.array(valid_data[:, :-1])
+    valid_labels = valid_data[:, 1:]
+    valid_data = valid_data[:, :-1]
 
-    test_labels = np.array(test_data[:, 1:])
-    test_data = np.array(test_data[:, :-1])
+    test_labels = test_data[:, 1:]
+    test_data = test_data[:, :-1]
 
     # Define and train hypermodel
     hypermodel = GPT2HyperModel(max_length=max_length, vocab_size=vocab_size)
