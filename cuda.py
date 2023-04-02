@@ -97,15 +97,15 @@ for dataset in datasets:
     with open(test_file, "r", encoding="utf-8") as f:
         test_data = f.read().splitlines()
 
-    train_data = np.loadtxt(
-        train_file,
-        delimiter=",",
-        dtype=np.int,
-        skiprows=1,
-        converters={2: lambda x: int(float(x))},
+    train_data = np.genfromtxt(
+        train_file, delimiter=",", dtype=np.int, skip_header=1, filling_values=0
     )
-    valid_data = np.loadtxt(valid_file, delimiter=" ", dtype=np.int, skiprows=1)
-    test_data = np.loadtxt(test_file, delimiter=" ", dtype=np.int, skiprows=1)
+    valid_data = np.genfromtxt(
+        valid_file, delimiter=" ", dtype=np.int, skip_header=1, filling_values=0
+    )
+    test_data = np.genfromtxt(
+        test_file, delimiter=" ", dtype=np.int, skip_header=1, filling_values=0
+    )
 
     train_labels = train_data[:, 1:]
     train_data = train_data[:, :-1]
