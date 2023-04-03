@@ -1,6 +1,7 @@
 import os
 import torch
 import numpy as np
+import tensorflow as tf
 from tensorflow import keras
 from keras_tuner import HyperModel
 from keras_tuner.tuners import RandomSearch
@@ -13,6 +14,12 @@ if device.type == "cuda":
     print("Memory Usage:")
     print("Allocated:", round(torch.cuda.memory_allocated(0) / 1024**3, 1), "GB")
     print("Cached:   ", round(torch.cuda.memory_reserved(0) / 1024**3, 1), "GB")
+
+
+if tf.test.gpu_device_name():
+    print("Default GPU Device: {}".format(tf.test.gpu_device_name()))
+else:
+    print("Please install GPU version of TF")
 
 
 class GPT2HyperModel(HyperModel):
