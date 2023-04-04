@@ -1,1 +1,1 @@
-from .hyperModel import hyperModel
+from . import *
