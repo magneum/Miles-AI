@@ -1,4 +1,4 @@
-import simpleaudio
+# import simpleaudio
 from components import *
 import speech_recognition
 from .speaker import speaker
@@ -11,11 +11,11 @@ def commander():
     with microphone as source:
         recognizer.adjust_for_ambient_noise(source)
         print(f"{Fore.YELLOW}MÌLΣƧ. ΛI: {Style.RESET_ALL}listening...")
-        simpleaudio.WaveObject.from_wave_file("src/Tone_.wav").play()
+        # simpleaudio.WaveObject.from_wave_file("src/Tone_.wav").play()
         audio = recognizer.listen(source, timeout=4)
 
     try:
-        simpleaudio.WaveObject.from_wave_file("src/_Tone.wav").play()
+        # simpleaudio.WaveObject.from_wave_file("src/_Tone.wav").play()
         print(
             f"{Fore.BLUE}MÌLΣƧ. ΛI: {Style.RESET_ALL}recognizing {len(audio.frame_data)} bytes of audio"
         )
