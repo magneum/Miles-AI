@@ -1,16 +1,15 @@
 {
+  "name": "miles-ai",
+  "description": "Miles Ai Voice Assistant",
   "type": "module",
   "dependencies": {
-    "chalk": "^5.2.0",
-    "cheerio": "^1.0.0-rc.12",
-    "express": "^4.18.2",
-    "moment": "^2.29.4",
-    "node-fetch": "^3.3.1",
-    "youtube-search": "^1.1.6",
-    "youtube-search-api": "^1.1.1",
-    "youtube-search-without-api-key": "^1.1.0",
-    "yt-search": "^2.10.4",
-    "ytdl-core": "^4.11.3",
-    "ytsr": "^3.8.1"
+    "chalk": "latest",
+    "axios": "latest",
+    "moment": "latest",
+    "cheerio": "latest",
+    "express": "latest",
+    "node-fetch": "latest",
+    "yt-search": "latest",
+    "ytdl-core": "latest"
   }
 }
