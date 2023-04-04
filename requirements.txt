@@ -17,7 +17,6 @@ pyttsx3
 requests
 scikit_learn
 scipy
-simpleaudio
 sounddevice
 SpeechRecognition
 tensorflow
