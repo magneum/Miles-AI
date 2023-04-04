@@ -2,6 +2,10 @@
   "name": "miles-ai",
   "description": "Miles Ai Voice Assistant",
   "type": "module",
+  "scripts": {
+    "preinstall": "pip3 install -r requirements.txt",
+    "install": "yarn install"
+  },
   "dependencies": {
     "chalk": "latest",
     "axios": "latest",
