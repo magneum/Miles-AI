@@ -4,16 +4,16 @@
   "type": "module",
   "scripts": {
     "preinstall": "pip3 install -r requirements.txt",
-    "install": "yarn install"
+    "install": "yarn"
   },
   "dependencies": {
-    "chalk": "latest",
     "axios": "latest",
-    "moment": "latest",
+    "chalk": "latest",
     "cheerio": "latest",
     "express": "latest",
+    "moment": "latest",
     "node-fetch": "latest",
-    "yt-search": "latest",
+    "yt-search": "^2.10.4",
     "ytdl-core": "latest"
   }
 }
