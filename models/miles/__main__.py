@@ -27,6 +27,8 @@ import tensorflow
 from tensorflow import keras
 from keras_tuner import HyperModel
 
+print("Num GPUs Available: ", len(tensorflow.config.list_physical_devices("GPU")))
+
 
 class hyperModel(HyperModel):
     def __init__(
