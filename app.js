@@ -2,11 +2,8 @@ import express from "express";
 import {
   searchVideo,
   getVideoDetails,
-  getPlaylistDetails,
   searchVideosByGenre,
   getVideosFromChannel,
-  getVideoDetailsByUrl,
-  getRelatedVideos,
 } from "./searchYoutube.js";
 
 const app = express();
@@ -23,12 +20,6 @@ app.get("/getVideoDetails", async (req, res) => {
   res.send(video);
 });
 
-app.get("/getPlaylistDetails", async (req, res) => {
-  const { playlistId, numVideos } = req.query;
-  const playlists = await getPlaylistDetails(playlistId, numVideos);
-  res.send(playlists);
-});
-
 app.get("/searchVideosByGenre", async (req, res) => {
   const { genre, numVideos } = req.query;
   const videos = await searchVideosByGenre(genre, numVideos);
@@ -38,18 +29,6 @@ app.get("/searchVideosByGenre", async (req, res) => {
 app.get("/getVideosFromChannel", async (req, res) => {
   const { channelId, numVideos } = req.query;
   const videos = await getVideosFromChannel(channelId, numVideos);
-  res.send(videos);
-});
-
-app.get("/getVideoDetailsByUrl", async (req, res) => {
-  const { url } = req.query;
-  const video = await getVideoDetailsByUrl(url);
-  res.send(video);
-});
-
-app.get("/getRelatedVideos", async (req, res) => {
-  const { relatedToVideoId, numVideos } = req.query;
-  const videos = await getRelatedVideos(relatedToVideoId, numVideos);
   res.send(videos);
 });
 
