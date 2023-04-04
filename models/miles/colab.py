@@ -51,7 +51,6 @@ class hyperModel(HyperModel):
             embedding_vector = self.embeddings_index.get(word)
             if embedding_vector is not None:
                 embedding_matrix[i] = embedding_vector
-
         embedding_layer = keras.layers.Embedding(
             len(self.words),
             embedding_dim,
@@ -59,13 +58,11 @@ class hyperModel(HyperModel):
             input_length=self.input_shape[0],
             trainable=False,
         )
-
         lstm_units = hp.Int("lstm_units", min_value=32, max_value=512, step=32)
         model.add(embedding_layer)
         model.add(
             keras.layers.LSTM(units=lstm_units, dropout=0.2, recurrent_dropout=0.2)
         )
-
         num_layers = hp.Int("num_layers", 1, 8)
         for i in range(num_layers):
             units = hp.Int(f"dense_{i+1}_units", min_value=128, max_value=512, step=32)
@@ -89,7 +86,6 @@ class hyperModel(HyperModel):
             optimizer = keras.optimizers.RMSprop(learning_rate=hp_learning_rate)
         else:
             optimizer = keras.optimizers.SGD(learning_rate=hp_learning_rate)
-
         if hp.Boolean("use_L1_regularization", default=True):
             L1_rate = hp.Float(
                 "L1_rate", min_value=1e-5, max_value=1e-2, sampling="LOG", default=1e-5
@@ -101,7 +97,6 @@ class hyperModel(HyperModel):
                     kernel_regularizer=keras.regularizers.L1(L1_rate),
                 )
             )
-
         if hp.Boolean("use_L2_regularization", default=True):
             L2_rate = hp.Float(
                 "L2_rate", min_value=1e-5, max_value=1e-2, sampling="LOG"
@@ -115,7 +110,6 @@ class hyperModel(HyperModel):
             )
 
         model.add(keras.layers.Dense(self.num_classes, activation="softmax"))
-
         model.compile(
             optimizer=keras.optimizers.Adam(
                 hp.Choice("learning_rate", values=[1e-2, 1e-3, 1e-4])
@@ -218,6 +212,7 @@ with open(glove_file, encoding="utf-8") as f:
     embeddings_index = load_glove_embeddings(f)
 print(Fore.GREEN + "GloVe embeddings loaded." + Style.RESET_ALL)
 words = sorted(list(embeddings_index.keys()))
+
 my_hyper_model = hyperModel(
     input_shape,
     num_classes,
