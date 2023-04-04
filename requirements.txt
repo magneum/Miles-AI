@@ -27,5 +27,5 @@ tqdm
 translate
 
 
-# python -m pip install -r .\requirements.txt
-# python -m pip uninstall -r .\requirements.txt -y
+# pip install -r .\requirements.txt
+# pip uninstall -r .\requirements.txt -y
