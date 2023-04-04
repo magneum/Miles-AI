@@ -12,6 +12,17 @@ from nltk.stem import WordNetLemmatizer
 from keras_tuner.tuners import RandomSearch
 from sklearn.model_selection import train_test_split
 
+# !pip install nltk tensorflow numpy colorama keras_tuner sklearn
+
+words = []
+classes = []
+documents = []
+words_path = "words.pkl"
+classes_path = "classes.pkl"
+model_path = "miles_model.h5"
+ignore_letters = ["?", ".", "!", ","]
+intents = json.loads(open("index.json").read())
+glove_file = "corpdata/glove/glove.6B.300d.txt"
 print("Num GPUs Available: ", len(tensorflow.config.list_physical_devices("GPU")))
 
 
@@ -129,16 +140,6 @@ class hyperModel(HyperModel):
         return callbacks
 
 
-words = []
-classes = []
-documents = []
-ignore_letters = ["?", ".", "!", ","]
-glove_file = "corpdata/glove/glove.6B.300d.txt"
-words_path = "models/miles/hyperModel/words.pkl"
-classes_path = "models/miles/hyperModel/classes.pkl"
-model_path = "models/miles/hyperModel/chatbot_model.h5"
-intents = json.loads(open("database/intents/index.json").read())
-
 for intent in intents["intents"]:
     for pattern in intent["patterns"]:
         word_list = nltk.tokenize.word_tokenize(pattern)
@@ -230,7 +231,7 @@ tuner = RandomSearch(
     objective="val_accuracy",
     max_trials=20,
     executions_per_trial=4,
-    directory="models/miles/hyperModel",
+    directory="hyperModel",
     project_name="hyperModel",
 )
 print(Fore.GREEN + "Tuner created." + Style.RESET_ALL)

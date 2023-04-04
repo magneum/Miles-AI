@@ -158,10 +158,10 @@ words = []
 classes = []
 documents = []
 ignore_letters = ["?", ".", "!", ","]
+words_path = "models/miles/words.pkl"
+classes_path = "models/miles/classes.pkl"
+model_path = "models/miles/miles_model.h5"
 glove_file = "corpdata/glove/glove.6B.300d.txt"
-words_path = "models/miles/hyperModel/words.pkl"
-classes_path = "models/miles/hyperModel/classes.pkl"
-model_path = "models/miles/hyperModel/chatbot_model.h5"
 intents = json.loads(open("database/intents/index.json").read())
 
 # Looping through each intent in the intents dictionary
