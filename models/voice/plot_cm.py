@@ -1,6 +1,6 @@
-import matplotlib.pyplot as plt
 import itertools
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def plot_confusion_matrix(

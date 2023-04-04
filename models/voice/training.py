@@ -1,14 +1,12 @@
-# Import necessary libraries
-from plot_cm import plot_confusion_matrix
-import os
 import numpy as np
 import pandas as pd
-from tensorflow.keras import Sequential
+from plot_cm import plot_confusion_matrix
+from tensorflow.python.keras import Sequential
 from sklearn.preprocessing import LabelEncoder
-from tensorflow.keras.utils import to_categorical
 from sklearn.model_selection import train_test_split
-from tensorflow.keras.layers import Dense, Activation, Dropout
+from tensorflow.python.keras.utils import to_categorical
 from sklearn.metrics import confusion_matrix, classification_report
+from tensorflow.python.keras.layers import Dense, Activation, Dropout
 
 # Load data from CSV file
 df = pd.read_pickle("models/voice/audio_data.csv")
