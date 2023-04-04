@@ -29,3 +29,15 @@ export const getVideosFromChannel = async (channelId, numVideos = 1) => {
   const { videos } = searchResults;
   return videos.slice(0, numVideos);
 };
+
+export const getVideoDetailsByUrl = async (url) => {
+  const searchResults = await ytSearch({ videoUrl: url });
+  const { videos } = searchResults;
+  return videos[0];
+};
+
+export const getRelatedVideos = async (relatedToVideoId, numVideos = 1) => {
+  const searchResults = await ytSearch({ related: relatedToVideoId });
+  const { videos } = searchResults;
+  return videos.slice(0, numVideos);
+};

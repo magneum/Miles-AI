@@ -1,0 +1,96 @@
+{
+    "intents": [
+        {
+            "tag": "searchVideo",
+            "patterns": [
+                "Search for \\{video\\}",
+                "Find \\{video\\}",
+                "Look for \\{video\\}"
+            ],
+            "responses": [
+                "Sure, searching for \\{video\\} on YouTube",
+                "Okay, let me see if I can find \\{video\\} for you"
+            ],
+            "function": "searchVideo"
+        },
+        {
+            "tag": "getVideoDetails",
+            "patterns": [
+                "Tell me about \\{video\\}",
+                "Details of \\{video\\}",
+                "What's \\{video\\} about"
+            ],
+            "responses": [
+                "Sure, here are the details of \\{video\\}",
+                "Okay, let me get the details of \\{video\\} for you"
+            ],
+            "function": "getVideoDetails"
+        },
+        {
+            "tag": "searchVideosByGenre",
+            "patterns": [
+                "Find me some \\{genre\\} videos",
+                "Search for \\{genre\\} videos",
+                "Look for \\{genre\\} videos"
+            ],
+            "responses": [
+                "Okay, let me see what I can find for \\{genre\\} videos",
+                "Sure, searching for \\{genre\\} videos on YouTube"
+            ],
+            "function": "searchVideosByGenre"
+        },
+        {
+            "tag": "getVideosFromChannel",
+            "patterns": [
+                "Get me some videos from \\{channel\\}",
+                "Search for videos from \\{channel\\}",
+                "Look for videos from \\{channel\\}",
+                "Can you find any videos from \\{channel\\}?",
+                "I'm interested in seeing some videos from \\{channel\\}",
+                "What are some videos from \\{channel\\}?",
+                "Show me videos from \\{channel\\}",
+                "I'd like to watch some videos from \\{channel\\}",
+                "Find me videos from \\{channel\\}",
+                "Get me videos from \\{channel\\}",
+                "Are there any good videos from \\{channel\\}?",
+                "Looking for videos from \\{channel\\}",
+                "What kind of videos does \\{channel\\} have?",
+                "I want to see videos from \\{channel\\}",
+                "Retrieve videos from \\{channel\\}",
+                "Can you give me videos from \\{channel\\}?",
+                "Find some videos from \\{channel\\} for me",
+                "Look up videos from \\{channel\\}",
+                "Fetch videos from \\{channel\\} for me",
+                "I'm curious about videos from \\{channel\\}",
+                "What videos are available from \\{channel\\}?",
+                "I need videos from \\{channel\\}",
+                "Please show me videos from \\{channel\\}"
+            ],
+            "responses": [
+                "Sure, getting some videos from \\{channel\\} for you",
+                "Okay, let me see if I can find some videos from \\{channel\\}",
+                "I'll do my best to find some videos from \\{channel\\} for you",
+                "Let me see if there are any videos from \\{channel\\} that I can find",
+                "Sure thing! I'll get some videos from \\{channel\\} for you",
+                "No problem, I'll search for videos from \\{channel\\} for you",
+                "Okay, let me look for some videos from \\{channel\\} for you",
+                "I'm on it! Searching for videos from \\{channel\\} now",
+                "Certainly, I'll get you some videos from \\{channel\\} right away",
+                "I'm happy to help you find videos from \\{channel\\}",
+                "Let's see what videos \\{channel\\} has to offer",
+                "Absolutely, let me fetch some videos from \\{channel\\} for you",
+                "I'll try my best to retrieve some videos from \\{channel\\} for you",
+                "Sure, let me see what videos I can find from \\{channel\\}",
+                "You got it! I'll get you some videos from \\{channel\\}",
+                "I'll do a search for videos from \\{channel\\} and see what I can find",
+                "Of course, let me see if there are any videos from \\{channel\\} available",
+                "Let me fetch some videos from \\{channel\\} and get back to you",
+                "I'm searching for videos from \\{channel\\} as we speak",
+                "Let's see what kind of videos \\{channel\\} has in store",
+                "I'm happy to show you videos from \\{channel\\}, let me find some",
+                "No problem, I'll show you some videos from \\{channel\\}"
+            ],
+            "function": "getVideosFromChannel"
+        }
+    ]
+}
