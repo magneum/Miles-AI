@@ -81,21 +81,3 @@ while True:
         res = get_response(ints, intents, message)
         print(Fore.YELLOW + "CLASS:" + str(ints) + Style.RESET_ALL)
         print(Fore.GREEN + "MILES:" + str(res) + Style.RESET_ALL)
-
-
-import nltk
-
-
-def searchVideo(song_name):
-    print("SEARCHING FOR: ", song_name)
-
-
-user_input = "suggest lofi"
-tokens = nltk.word_tokenize(user_input)
-pos_tags = nltk.pos_tag(tokens)
-
-for i in range(len(pos_tags)):
-    if pos_tags[i][1] == "NN":
-        song_name = pos_tags[i][0]
-        searchVideo(song_name)
-        break

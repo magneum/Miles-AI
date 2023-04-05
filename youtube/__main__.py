@@ -190,7 +190,7 @@ tuner = RandomSearch(
     my_hyper_model,
     objective="val_accuracy",
     max_trials=40,
-    executions_per_trial=10,
+    executions_per_trial=20,
     directory="youtube/model",
     project_name="youtube",
 )
@@ -200,7 +200,7 @@ print(Fore.GREEN + "Callbacks created." + Style.RESET_ALL)
 tuner.search(
     x=train_x,
     y=train_y,
-    epochs=100,
+    epochs=400,
     batch_size=8,
     validation_data=(val_x, val_y),
     verbose=1,
