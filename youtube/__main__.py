@@ -189,8 +189,8 @@ print(Fore.GREEN + "Creating tuner..." + Style.RESET_ALL)
 tuner = RandomSearch(
     my_hyper_model,
     objective="val_accuracy",
-    max_trials=20,
-    executions_per_trial=4,
+    max_trials=40,
+    executions_per_trial=10,
     directory="youtube/model",
     project_name="youtube",
 )
