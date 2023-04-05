@@ -83,32 +83,32 @@
 #         print(Fore.GREEN + "MILES:" + str(res) + Style.RESET_ALL)
 
 
-from tensorflow import keras
+# # from tensorflow import keras
 
 
-def extractSong(user_input):
-    words = user_input.lower().split()
-    video_index = None
-    for i, word in enumerate(words):
-        if word == "video":
-            video_index = i
-            break
+# # def extractSong(user_input):
+# #     words = user_input.lower().split()
+# #     video_index = None
+# #     for i, word in enumerate(words):
+# #         if word == "video":
+# #             video_index = i
+# #             break
 
-    if video_index is not None:
-        song_name = " ".join(words[video_index + 1 :])
-        print(f"Song name: {song_name}")
-    else:
-        print("Song name not found")
-
-
-def chatbot_response(user_input):
-    model = keras.models.load_model("youtube_model.h5")
-    prediction = model.predict([user_input])
-    extractSong(user_input)
-    return prediction[0]
+# #     if video_index is not None:
+# #         song_name = " ".join(words[video_index + 1 :])
+# #         print(f"Song name: {song_name}")
+# #     else:
+# #         print("Song name not found")
 
 
-while True:
-    user_input = input("You: ")
-    response = chatbot_response(user_input)
-    print("Bot:", response)
+# # def chatbot_response(user_input):
+# #     model = keras.models.load_model("youtube_model.h5")
+# #     prediction = model.predict([user_input])
+# #     extractSong(user_input)
+# #     return prediction[0]
+
+
+# # while True:
+# #     user_input = input("You: ")
+# #     response = chatbot_response(user_input)
+# #     print("Bot:", response)

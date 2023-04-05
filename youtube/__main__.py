@@ -200,7 +200,7 @@ print(Fore.GREEN + "Callbacks created." + Style.RESET_ALL)
 tuner.search(
     x=train_x,
     y=train_y,
-    epochs=1000,
+    epochs=100,
     batch_size=8,
     validation_data=(val_x, val_y),
     verbose=1,
