@@ -25,6 +25,7 @@ termcolor
 torch
 tqdm
 translate
+wikipedia
 
 
 # pip install -r .\requirements.txt

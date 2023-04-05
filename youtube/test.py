@@ -49,11 +49,23 @@ def predict_class(sentence, model):
     return return_list
 
 
-def get_response(intents_list, intents_json):
+def searchVideo(song_name):
+    print(song_name)
+    pass
+
+
+def get_response(intents_list, intents_json, song_name):
     tag = intents_list[0]["intent"]
     list_of_intents = intents_json["intents"]
     for i in list_of_intents:
         if i["tag"] == tag:
+            if "function" in i:
+                function_name = i["function"]
+                if function_name in globals():
+                    globals()[function_name](song_name)
+                else:
+                    print("Error: Function not found")
+                    break
             result = random.choice(i["responses"])
             break
     return result
@@ -66,6 +78,24 @@ while True:
         break
     else:
         ints = predict_class(message, model)
-        res = get_response(ints, intents)
+        res = get_response(ints, intents, message)
         print(Fore.YELLOW + "CLASS:" + str(ints) + Style.RESET_ALL)
         print(Fore.GREEN + "MILES:" + str(res) + Style.RESET_ALL)
+
+
+import nltk
+
+
+def searchVideo(song_name):
+    print("SEARCHING FOR: ", song_name)
+
+
+user_input = "suggest lofi"
+tokens = nltk.word_tokenize(user_input)
+pos_tags = nltk.pos_tag(tokens)
+
+for i in range(len(pos_tags)):
+    if pos_tags[i][1] == "NN":
+        song_name = pos_tags[i][0]
+        searchVideo(song_name)
+        break
