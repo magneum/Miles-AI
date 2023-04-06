@@ -4,7 +4,11 @@
 // > CUSTOMTRACK() function takes a search query and a number of desired search results as inputs, and returns an array of videos that match the search query.
 
 import chalk from "chalk";
+import express from "express";
 import ytSearch from "yt-search";
+
+const app = express();
+const PORT = 3000;
 
 const musicGenres = [
   { genre: "pop", query: "pop music" },
@@ -24,77 +28,106 @@ const musicGenres = [
   { genre: "indie", query: "indie music" },
 ];
 
-export async function singleTrack(songName) {
-  const results = await ytSearch(songName);
-  return results.videos[0];
-}
+app.get("/singleTrack", async (req, res) => {
+  try {
+    const songName = req.query.songName;
+    const results = await ytSearch(songName);
+    const video = results.videos[0];
+    res.status(200).send(video);
+  } catch (error) {
+    console.error(chalk.red(error));
+    res.status(500).send("Internal Server Error");
+  }
+});
 
-export async function randomTrack() {
-  const genreIndex = Math.floor(Math.random() * musicGenres.length);
-  const { genre, query } = musicGenres[genreIndex];
-  const results = await ytSearch(query);
-  const videoIndex = Math.floor(Math.random() * results.videos.length);
-  return { genre: genre, video: results.videos[videoIndex] };
-}
+app.get("/randomTrack", async (req, res) => {
+  try {
+    const genreIndex = Math.floor(Math.random() * musicGenres.length);
+    const { genre, query } = musicGenres[genreIndex];
+    const results = await ytSearch(query);
+    const videoIndex = Math.floor(Math.random() * results.videos.length);
+    const video = results.videos[videoIndex];
+    res.status(200).send(video);
+  } catch (error) {
+    console.error(chalk.red(error));
+    res.status(500).send("Internal Server Error");
+  }
+});
 
-export async function randomGenreTrack(genre) {
-  const { query } = musicGenres.find(
-    (musicGenre) => musicGenre.genre === genre.toLowerCase()
-  );
-  const results = await ytSearch(query);
-  const videoIndex = Math.floor(Math.random() * results.videos.length);
-  return { genre, video: results.videos[videoIndex] };
-}
+app.get("/customTrack", async (req, res) => {
+  try {
+    const query = req.query.query;
+    const totalTracks = req.query.totalTracks;
+    const results = await ytSearch(query);
+    const videos = results.videos.slice(0, totalTracks);
+    res.status(200).send(videos);
+  } catch (error) {
+    console.error(chalk.red(error));
+    res.status(500).send("Internal Server Error");
+  }
+});
 
-export async function customTrack(query, totalTracks) {
-  const results = await ytSearch(query);
-  const videos = results.videos.slice(0, totalTracks);
-  return videos;
-}
-
-singleTrack("Bohemian Rhapsody")
-  .then((video) => {
-    console.log(
-      `Single track result for ${chalk.green(
-        "Bohemian Rhapsody"
-      )}: ${chalk.yellow(video.title)}`
+app.get("/randomGenreTrack", async (req, res) => {
+  try {
+    const genre = req.query.genre;
+    const { query } = musicGenres.find(
+      (musicGenre) => musicGenre.genre === genre.toLowerCase()
     );
-  })
-  .catch((err) => {
-    console.error(chalk.red(err));
-  });
+    const results = await ytSearch(query);
+    const videoIndex = Math.floor(Math.random() * results.videos.length);
+    const video = results.videos[videoIndex];
+    res.status(200).send(video);
+  } catch (error) {
+    console.error(chalk.red(error));
+    res.status(500).send("Internal Server Error");
+  }
+});
 
-randomTrack()
-  .then((result) => {
-    console.log(
-      `Random track result for ${chalk.green(result.genre)}: ${chalk.yellow(
-        result.video.title
-      )}`
-    );
-  })
-  .catch((err) => {
-    console.error(chalk.red(err));
-  });
+app.get("/google", async (req, res) => {
+  try {
+    const query = req.query.query;
+    res.status(200).send(query);
+  } catch (error) {
+    console.error(chalk.red(error));
+    res.status(500).send("Internal Server Error");
+  }
+});
 
-randomGenreTrack("hip hop")
-  .then((result) => {
-    console.log(
-      `Random track result for ${chalk.green(result.genre)}: ${chalk.yellow(
-        result.video.title
-      )}`
-    );
-  })
-  .catch((err) => {
-    console.error(chalk.red(err));
-  });
+app.get("/wikipedia", async (req, res) => {
+  try {
+    const query = req.query.query;
+    res.status(200).send(query);
+  } catch (error) {
+    console.error(chalk.red(error));
+    res.status(500).send("Internal Server Error");
+  }
+});
 
-customTrack("guitar solos", 5)
-  .then((tracks) => {
-    console.log(chalk.green("Custom tracks found:"));
-    tracks.forEach((track, index) => {
-      console.log(chalk.yellow(`${index + 1}. ${track.title}`));
-    });
-  })
-  .catch((error) => {
-    console.error(chalk.red(`Error: ${error}`));
-  });
+app.get("/jokes", async (req, res) => {
+  try {
+    const query = req.query.query;
+    res.status(200).send(query);
+  } catch (error) {
+    console.error(chalk.red(error));
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/datetime", async (req, res) => {
+  try {
+    const query = req.query.query;
+    res.status(200).send(query);
+  } catch (error) {
+    console.error(chalk.red(error));
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
+// http://localhost:3000/randomTrack
+// http://localhost:3000/randomGenreTrack?genre=hip hop
+// http://localhost:3000/singleTrack?songName=Bohemian Rhapsody
+// http://localhost:3000/customTrack?query=guitar solos&totalTracks=5
