@@ -24,7 +24,7 @@ def player(usersaid, volume=None):
                     random.choice(string.ascii_lowercase) for _ in range(10)
                 )
                 query = match.group("query")
-                speaker(f"Wait for download to finish for: {query}")
+                speak(f"Wait for download to finish for: {query}")
                 response = requests.get(
                     "http://localhost:3000/youtube", params={"q": query}
                 )
@@ -36,7 +36,7 @@ def player(usersaid, volume=None):
                     pygame.mixer.music.load(filename)
                     pygame.mixer.music.play()
                     print(f"Now playing: {name}")
-                    speaker(f"Now playing: {name}")
+                    speak(f"Now playing: {name}")
                 else:
                     raise ValueError("Unable to fetch audio file")
 
@@ -45,15 +45,15 @@ def player(usersaid, volume=None):
                     if match.group("stop") == "pause":
                         pygame.mixer.music.pause()
                         print("Pausing the music")
-                        speaker("Pausing the music")
+                        speak("Pausing the music")
                     elif match.group("stop") == "resume":
                         pygame.mixer.music.unpause()
                         print("Resuming the music")
-                        speaker("Resuming the music")
+                        speak("Resuming the music")
                     else:
                         pygame.mixer.music.stop()
                         print("Stopping the music")
-                        speaker("Stopping the music")
+                        speak("Stopping the music")
                         if os.path.exists(filename):
                             os.remove(filename)
 
@@ -71,12 +71,12 @@ def player(usersaid, volume=None):
                         print(
                             f"Increasing the volume. Current volume: {new_volume:.2f}"
                         )
-                        speaker(
+                        speak(
                             f"Increasing the volume. Current volume: {new_volume:.2f}"
                         )
                     else:
                         print("Volume is already at maximum.")
-                        speaker("Volume is already at maximum.")
+                        speak("Volume is already at maximum.")
                 elif match.group("direction") == "down":
                     if new_volume - 0.1 >= 0:
                         new_volume -= 0.1
@@ -84,12 +84,12 @@ def player(usersaid, volume=None):
                         print(
                             f"Decreasing the volume. Current volume: {new_volume:.2f}"
                         )
-                        speaker(
+                        speak(
                             f"Decreasing the volume. Current volume: {new_volume:.2f}"
                         )
                     else:
                         print("Volume is already at minimum.")
-                        speaker("Volume is already at minimum.")
+                        speak("Volume is already at minimum.")
     except Exception as e:
         print(e)
-        speaker("Unable to play music")
+        speak("Unable to play music")

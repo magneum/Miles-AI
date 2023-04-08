@@ -1,1 +1,1 @@
-from . import *
+__add = ["genre"]

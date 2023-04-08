@@ -3,16 +3,29 @@ import json
 import glob
 import struct
 import random
+import pyttsx3
 import pyaudio
 import asyncio
 import threading
-from app import *
 import pvporcupine
 from dotenv import load_dotenv
 from colorama import Fore, Style
 
-data_load_dotenv = load_dotenv()
-print(".env", data_load_dotenv)
+load_dotenv()
+from app import play_notif, userReq
+
+
+def milesVoice(usersaid):
+    try:
+        engine = pyttsx3.init("sapi5")
+        engine.setProperty("rate", 140)
+        voices = engine.getProperty("voices")
+        engine.setProperty("voice", voices[0].id)
+        print(f"{Fore.BLUE}MÌLΣƧ. ΛI: {Style.RESET_ALL}{usersaid}")
+        engine.say(usersaid)
+        engine.runAndWait()
+    except Exception as e:
+        print(f"{Fore.RED}Error: {e}")
 
 
 def wakeLoop(porcupine, audio_stream):
@@ -32,8 +45,10 @@ def listenLoop(porcupine, audio_stream):
     wake_index = porcupine.process(pcm)
     if wake_index == 0:
         print(f"{Fore.YELLOW}MÌLΣƧ. ΛI: {Style.RESET_ALL}wake word detected.")
-        userReq(porcupine)
+        play_notif(700, 0.2)
+        userReq(milesVoice)
         print(f"{Fore.MAGENTA}MÌLΣƧ. ΛI: {Style.RESET_ALL}waiting for command.")
+        play_notif(600, 0.2)
     else:
         pass
 
@@ -44,16 +59,15 @@ async def my_coroutine():
         porcupine = None
         audio_stream = None
 
-        speaker(
-            random.choice(json.load(open("database/json/greeting.json"))["responses"])
-        )
+        # milesVoice(random.choice(json.load(open("database/json/greeting.json"))["responses"]))
+        milesVoice("hello, how can i assist you?")
         play_notif(800, 0.2)
         print(f"{Fore.YELLOW}MÌLΣƧ. ΛI: {Style.RESET_ALL}Ready...")
 
         try:
             porcupine = pvporcupine.create(
                 access_key=os.getenv("PORCUPINE_KEY"),
-                keyword_paths=["models/cupine/evo-windows.ppn"],
+                keyword_paths=["models/cupine/hey-miles.ppn"],
             )
             paud = pyaudio.PyAudio()
             audio_stream = paud.open(
@@ -63,6 +77,7 @@ async def my_coroutine():
                 rate=porcupine.sample_rate,
                 frames_per_buffer=porcupine.frame_length,
             )
+            print(audio_stream, paud)
             thrd = threading.Thread(
                 target=wakeLoop, args=(porcupine, audio_stream), daemon=True
             )
@@ -70,18 +85,20 @@ async def my_coroutine():
             while True:
                 listenLoop(porcupine, audio_stream)
         except Exception as e:
-            speaker(
+            milesVoice(
                 random.choice(json.load(open("database/json/error.json"))["responses"])
             )
             print(f"{Fore.RED}MÌLΣƧ. ΛI: {Style.RESET_ALL}{e}")
 
     except KeyboardInterrupt:
-        speaker(
+        milesVoice(
             random.choice(json.load(open("database/json/goodbye.json"))["responses"])
         )
 
     except Exception as e:
-        speaker(random.choice(json.load(open("database/json/error.json"))["responses"]))
+        milesVoice(
+            random.choice(json.load(open("database/json/error.json"))["responses"])
+        )
         print(f"{Fore.RED}MÌLΣƧ. ΛI: {Style.RESET_ALL}{e}")
 
     finally:

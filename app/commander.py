@@ -1,7 +1,6 @@
 # import simpleaudio
 from components import *
 import speech_recognition
-from .speaker import speaker
 from colorama import Fore, Style
 
 
@@ -34,6 +33,5 @@ def commander():
 
     except speech_recognition.PlaybackError as e:
         print(f"{Fore.RED}MÌLΣƧ. ΛI: {Style.RESET_ALL}Could not play sound; {e}")
-        speaker(f"Could not play sound; {e}")
         return ""
     return user_input.lower()
