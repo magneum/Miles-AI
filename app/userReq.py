@@ -1,14 +1,29 @@
+import re
 from .gptres import gptres
 from .commander import commander
+from routes.python import player
 
 
 def userReq(milesVoice):
-    global stop_event
     usersaid = commander()
     if not usersaid:
         pass
+    # Check if the user's input is related to music commands
+    elif "play" in usersaid or "music" in usersaid or "sing" in usersaid:
+        mathed = re.match(
+            r"(?P<play>play)(ing)?(?P<artist>\s+[a-zA-Z]+)?(\s+by)?(\s+(the\s+)?(?P<song>[a-zA-Z]+))?|(?P<stop>stop|pause|resume)|(?P<volume>volume(\s+(?P<amount>[0-9]+(\.[0-9]+)?))?\s+(?P<direction>up|down))",
+            usersaid,
+        )
+        if mathed:
+            player(usersaid)
+        else:
+            pass
     else:
-        milesVoice(gptres(usersaid))
+        try:
+            milesVoice(gptres(usersaid))
+        except Exception as e:
+            print(str(e))
+            milesVoice("Sorry i can't do that yet!")
 
 
 # small_talk_model = load_model("models/final/small_talk_model.h5")
