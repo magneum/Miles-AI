@@ -2,47 +2,33 @@ import sounddevice as sd
 from scipy.io.wavfile import write
 
 
-# Define a function to record user audio
 def record_user_audio(n_times=100):
-    # Set the filepath where the recorded audio will be saved
     filepath = "public/audio/user_audio/"
-    # Prompt the user to start recording
     input("Press Enter to record voice.")
-    # Loop n_times to record user audio
     for i in range(n_times):
-        fs = 44100  # Set the sampling frequency
-        duration = 0.5  # Set the duration of the recording
-        # Record audio using the sounddevice module
+        fs = 44100
+        duration = 0.5
         myrecording = sd.rec(int(fs * duration), samplerate=fs, channels=2)
-        sd.wait()  # Wait until the recording is finished
-        # Save the recorded audio to a WAV file
+        sd.wait()
         write(filepath + str(i) + ".wav", fs, myrecording)
-        # Print progress
         input(f"Currently at: {i + 1}/{n_times}")
 
 
-# Define a function to record background noise
 def record_background_noise(n_times=100):
-    # Set the filepath where the recorded audio will be saved
     filepath = "public/audio/bg_noises/"
-    # Loop n_times to record background noise
     for i in range(n_times):
-        fs = 44100  # Set the sampling frequency
-        duration = 0.5  # Set the duration of the recording
-        # Record audio using the sounddevice module
+        fs = 44100
+        duration = 0.5
         myrecording = sd.rec(int(fs * duration), samplerate=fs, channels=2)
-        sd.wait()  # Wait until the recording is finished
-        # Save the recorded audio to a WAV file
+        sd.wait()
         write(filepath + str(i) + ".wav", fs, myrecording)
-        # Print progress
         print(f"Currently at: {i + 1/n_times}")
 
 
-# Prompt the user to select a recording option
 value = input("> 1 for record_user_audio()\n> 2 for record_background_noise()\n\n:")
 if value == "1":
-    record_user_audio()  # Record user audio
+    record_user_audio()
 elif value == "2":
-    record_background_noise()  # Record background noise
+    record_background_noise()
 else:
-    print("Invalid input")  # Display error message for invalid input
+    print("Invalid input")
