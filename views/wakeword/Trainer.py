@@ -121,7 +121,7 @@ def modelBuilder(hp):
     return model
 
 
-num_epochs = 1000
+num_epochs = 10
 
 df = pd.read_pickle("models/wakeword/wakeword_data.csv")
 print(f"Dataframe: {df}")
@@ -141,89 +141,36 @@ print(f"X_test shape: {Fore.CYAN}{X_test.shape}{Style.RESET_ALL}")
 print(f"y_test shape: {Fore.CYAN}{y_test.shape}{Style.RESET_ALL}")
 
 
-class SaveHistoryCallback(Callback):
-    def on_epoch_end(self, epoch, logs=None):
-        filename = "models/wakeword/History/Epoch_{}.pickle".format(epoch)
-        with open(filename, "wb") as file:
-            pickle.dump(logs, file)
-
-
-checkpoint_val_accuracy = ModelCheckpoint(
-    filepath="models/wakeword/Trails/Epoch_{epoch:02d}_vAcuu_{val_accuracy:.2f}.h5",
-    save_weights_only=False,
-    monitor="val_accuracy",
-    save_best_only=True,
-    save_freq="epoch",
-    mode="max",
-    verbose=1,
-)
-checkpoint_accuracy = ModelCheckpoint(
-    filepath="models/wakeword/Trails/Epoch_{epoch:02d}_Acuu_{val_accuracy:.2f}.h5",
-    save_weights_only=False,
-    save_best_only=True,
-    monitor="accuracy",
-    save_freq="epoch",
-    mode="max",
-    verbose=1,
-)
-checkpoint_val_loss = ModelCheckpoint(
-    filepath="models/wakeword/Trails/Epoch_{epoch:02d}_vLoss_{val_loss:.2f}.h5",
-    save_weights_only=False,
-    save_best_only=True,
-    monitor="val_loss",
-    save_freq="epoch",
-    mode="min",
-    verbose=1,
-)
-checkpoint_loss = ModelCheckpoint(
-    filepath="models/wakeword/Trails/Epoch_{epoch:02d}_Loss_{val_loss:.2f}.h5",
-    save_weights_only=False,
-    save_best_only=True,
-    save_freq="epoch",
-    monitor="loss",
-    mode="min",
-    verbose=1,
-)
-
-
-save_history = SaveHistoryCallback()
+# Create the RandomSearch tuner
 hyperTuner = RandomSearch(
     modelBuilder,
     max_trials=5,
+    overwrite=True,
     executions_per_trial=3,
     objective="val_accuracy",
     project_name="hyperModel",
     directory="models/wakeword",
 )
+
+# Search for best hyperparameters
 hyperTuner.search(
     X_train,
     y_train,
+    verbose=1,
     epochs=num_epochs,
     validation_split=0.2,
-    verbose=1,
-    callbacks=[
-        checkpoint_val_accuracy,
-        checkpoint_accuracy,
-        checkpoint_val_loss,
-        checkpoint_loss,
-        save_history,
-    ],
 )
 
+# Get the best model from the tuner
 hyperModel = hyperTuner.get_best_models(num_models=1)[0]
+
+# Fit the best model
 hyperModel.fit(
     X_train,
     y_train,
     epochs=num_epochs,
     validation_split=0.2,
     verbose=1,
-    callbacks=[
-        checkpoint_val_accuracy,
-        checkpoint_accuracy,
-        checkpoint_val_loss,
-        checkpoint_loss,
-        save_history,
-    ],
 )
 
 
@@ -233,16 +180,12 @@ hyperHistory = hyperModel.fit(
 
 print(f"{Fore.CYAN}HyperModel Summary:{Style.RESET_ALL}")
 hyperModel.summary()
-
-hyperModel.save("models/wakeword/BestWakeModel.h5")
-np.save("models/wakeword/WakeWordHistory.npy", hyperHistory.history)
-
+np.save("models/wakeword/hyperModel/WakeWordHistory.npy", hyperHistory.history)
+hyperModel.save("models/wakeword/hyperModel")
 score = hyperModel.evaluate(X_test, y_test)
 print(f"{Fore.YELLOW}Score: {score}{Style.RESET_ALL}")
-
 print(f"{Fore.GREEN}Model Classification Report:{Style.RESET_ALL}")
 y_pred = np.argmax(hyperModel.predict(X_test), axis=1)
 cm = confusion_matrix(np.argmax(y_test, axis=1), y_pred)
 print(classification_report(np.argmax(y_test, axis=1), y_pred))
-
-plot_confusion_matrix(cm, classes=["Does not have Wake Word", "Has Wake Word"])
+plot_confusion_matrix(cm, classes=["No Wake Word", "Has Wake Word"])
