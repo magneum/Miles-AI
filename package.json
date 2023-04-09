@@ -2,9 +2,6 @@
   "name": "miles-ai",
   "description": "Miles Ai Voice Assistant",
   "type": "module",
-  "scripts": {
-    "start": "concurrently \"node server/index.js\" \"python main.py\""
-  },
   "dependencies": {
     "axios": "latest",
     "chalk": "latest",
@@ -14,7 +11,8 @@
     "moment": "latest",
     "node-fetch": "latest",
     "yt-search": "latest",
-    "ytdl-core": "latest"
+    "ytdl-core": "latest",
+    "yt-dlp": "latest"
   },
   "devDependencies": {
     "concurrently": "latest"

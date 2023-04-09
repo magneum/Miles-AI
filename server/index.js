@@ -71,9 +71,7 @@ app.get("/youtube", async (req, res) => {
           url: r.url,
         });
       })
-      .catch((error) =>
-        console.log(chalk.bgRed("ERROR: "), chalk.gray(error.message))
-      );
+      .catch((error) => console.log(chalk.bgRed("ERROR: "), chalk.gray(error)));
   });
 });
 
