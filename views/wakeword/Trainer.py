@@ -102,41 +102,6 @@ def build_model(hp):
     return model
 
 
-# def build_model(hp):
-#     model = Sequential()
-#     model.add(
-#         Dense(
-#             units=hp.Int("units1", min_value=32, max_value=512, step=32),
-#             input_shape=X_train[0].shape,
-#             activation=hp.Choice("activation1", values=["relu", "tanh", "sigmoid"]),
-#         )
-#     )
-#     model.add(Dropout(hp.Float("dropout1", min_value=0.1, max_value=0.5, step=0.1)))
-#     model.add(
-#         Dense(
-#             units=hp.Int("units2", min_value=32, max_value=512, step=32),
-#             activation=hp.Choice("activation2", values=["relu", "tanh", "sigmoid"]),
-#             kernel_regularizer=l2(
-#                 hp.Float("l2_regularizer", min_value=0.001, max_value=0.01, step=0.001)
-#             ),
-#         )
-#     )
-#     model.add(Dropout(hp.Float("dropout2", min_value=0.1, max_value=0.5, step=0.1)))
-#     model.add(Dense(len(np.unique(df["class_label"].tolist())), activation="softmax"))
-#     optimizer = hp.Choice("optimizer", values=["adam", "rmsprop"])
-#     learning_rate = hp.Float(
-#         "learning_rate", min_value=0.001, max_value=0.01, step=0.001
-#     )
-#     if optimizer == "adam":
-#         optimizer = Adam(learning_rate=learning_rate)
-#     elif optimizer == "rmsprop":
-#         optimizer = RMSprop(learning_rate=learning_rate)
-#     model.compile(
-#         loss="categorical_crossentropy", optimizer=optimizer, metrics=["accuracy"]
-#     )
-#     return model
-
-
 df = pd.read_pickle("models/wakeword/audio_data.csv")
 
 X = np.concatenate(df["feature"].values, axis=0).reshape(len(df), 40)
