@@ -2,29 +2,18 @@ import os
 import librosa
 import numpy as np
 import pandas as pd
-import librosa.display
-import matplotlib.pyplot as plt
+from colorama import Fore, Style
 
-print(librosa.__version__)
+Style.RESET_ALL = ""
 
-# Loading a sample audio file
 sample = "public/audio/bg_noises/0.wav"
-data, sample_rate = librosa.load(sample)
+try:
+    data, sample_rate = librosa.load(sample)
+    mfccs = librosa.feature.mfcc(y=data, sr=sample_rate, n_mfcc=40)
+except Exception as e:
+    print(Fore.RED + f"Error: Failed to load sample audio file: {e}")
+    exit(1)
 
-# Visualizing the waveform
-plt.title("Waveform")
-librosa.display.waveplot(data, sr=sample_rate)
-plt.show()
-
-# Extracting MFCC features
-mfccs = librosa.feature.mfcc(y=data, sr=sample_rate, n_mfcc=40)
-
-# Visualizing MFCC features
-plt.title("MFCC")
-librosa.display.specshow(mfccs, sr=sample_rate, x_axis="time")
-plt.show()
-
-# Preprocessing and extracting features from all audio files
 all_data = []
 data_path_dict = {
     0: [
@@ -39,18 +28,22 @@ data_path_dict = {
 
 for class_label, list_of_files in data_path_dict.items():
     for single_file in list_of_files:
-        # Loading the audio file
-        audio, sample_rate = librosa.load(single_file)
+        try:
+            audio, sample_rate = librosa.load(single_file)
+            mfcc = librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=40)
+            mfcc_processed = np.mean(mfcc.T, axis=0)
+            all_data.append([mfcc_processed, class_label])
+        except Exception as e:
+            print(Fore.YELLOW + f"Warning: Failed to process file {single_file}: {e}")
 
-        # Applying MFCC and preprocessing
-        mfcc = librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=40)
-        mfcc_processed = np.mean(mfcc.T, axis=0)
+    print(Fore.GREEN + f"Info: Successfully preprocessed class label {class_label}")
 
-        # Appending the processed features and class label to a list
-        all_data.append([mfcc_processed, class_label])
-
-    print(f"Info: Successfully preprocessed class label {class_label}")
-
-# Creating a pandas dataframe from the processed data and saving it for future use
-df = pd.DataFrame(all_data, columns=["feature", "class_label"])
-df.to_pickle("models/wakeword/audio_data.csv")
+if all_data:
+    df = pd.DataFrame(all_data, columns=["feature", "class_label"])
+    df.to_pickle("models/wakeword/audio_data.csv")
+    print(
+        Fore.GREEN
+        + "Info: Successfully saved preprocessed audio data to models/wakeword/audio_data.csv"
+    )
+else:
+    print(Fore.RED + "Error: No audio data processed. Failed to save audio_data.csv")

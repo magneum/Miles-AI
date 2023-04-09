@@ -1,12 +1,14 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from keras.regularizers import l1, l2
+from tensorflow.keras import Sequential
+from keras.optimizers import Adam, RMSprop
 from keras_tuner.tuners import RandomSearch
-from tensorflow.python.keras import Sequential
 from sklearn.preprocessing import LabelEncoder
 from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.layers import Dense, Dropout
 from sklearn.model_selection import train_test_split
-from tensorflow.python.keras.layers import Dense, Dropout
 from sklearn.metrics import confusion_matrix, classification_report
 
 
@@ -44,26 +46,95 @@ def plot_confusion_matrix(
 
 def build_model(hp):
     model = Sequential()
+
     model.add(
         Dense(
             units=hp.Int("units1", min_value=32, max_value=512, step=32),
             input_shape=X_train[0].shape,
-            activation="relu",
+            activation=hp.Choice("activation1", values=["relu", "tanh", "sigmoid"]),
         )
     )
     model.add(Dropout(hp.Float("dropout1", min_value=0.1, max_value=0.5, step=0.1)))
-    model.add(
-        Dense(
-            units=hp.Int("units2", min_value=32, max_value=512, step=32),
-            activation="relu",
+
+    num_layers = hp.Choice("num_layers", values=[1, 2, 3])
+    for i in range(num_layers):
+        model.add(
+            Dense(
+                units=hp.Int(
+                    "units{}".format(i + 2), min_value=32, max_value=512, step=32
+                ),
+                activation=hp.Choice(
+                    "activation{}".format(i + 2), values=["relu", "tanh", "sigmoid"]
+                ),
+                kernel_regularizer=l2(
+                    hp.Float(
+                        "l2_regularizer{}".format(i + 2),
+                        min_value=0.001,
+                        max_value=0.01,
+                        step=0.001,
+                    )
+                ),
+            )
         )
-    )
-    model.add(Dropout(hp.Float("dropout2", min_value=0.1, max_value=0.5, step=0.1)))
+        model.add(
+            Dropout(
+                hp.Float(
+                    "dropout{}".format(i + 2), min_value=0.1, max_value=0.5, step=0.1
+                )
+            )
+        )
+
     model.add(Dense(len(np.unique(df["class_label"].tolist())), activation="softmax"))
-    model.compile(
-        loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"]
+
+    optimizer = hp.Choice("optimizer", values=["adam", "rmsprop"])
+    learning_rate = hp.Float(
+        "learning_rate", min_value=0.001, max_value=0.01, step=0.001
     )
+    if optimizer == "adam":
+        optimizer = Adam(learning_rate=learning_rate)
+    elif optimizer == "rmsprop":
+        optimizer = RMSprop(learning_rate=learning_rate)
+
+    model.compile(
+        loss="categorical_crossentropy", optimizer=optimizer, metrics=["accuracy"]
+    )
+
     return model
+
+
+# def build_model(hp):
+#     model = Sequential()
+#     model.add(
+#         Dense(
+#             units=hp.Int("units1", min_value=32, max_value=512, step=32),
+#             input_shape=X_train[0].shape,
+#             activation=hp.Choice("activation1", values=["relu", "tanh", "sigmoid"]),
+#         )
+#     )
+#     model.add(Dropout(hp.Float("dropout1", min_value=0.1, max_value=0.5, step=0.1)))
+#     model.add(
+#         Dense(
+#             units=hp.Int("units2", min_value=32, max_value=512, step=32),
+#             activation=hp.Choice("activation2", values=["relu", "tanh", "sigmoid"]),
+#             kernel_regularizer=l2(
+#                 hp.Float("l2_regularizer", min_value=0.001, max_value=0.01, step=0.001)
+#             ),
+#         )
+#     )
+#     model.add(Dropout(hp.Float("dropout2", min_value=0.1, max_value=0.5, step=0.1)))
+#     model.add(Dense(len(np.unique(df["class_label"].tolist())), activation="softmax"))
+#     optimizer = hp.Choice("optimizer", values=["adam", "rmsprop"])
+#     learning_rate = hp.Float(
+#         "learning_rate", min_value=0.001, max_value=0.01, step=0.001
+#     )
+#     if optimizer == "adam":
+#         optimizer = Adam(learning_rate=learning_rate)
+#     elif optimizer == "rmsprop":
+#         optimizer = RMSprop(learning_rate=learning_rate)
+#     model.compile(
+#         loss="categorical_crossentropy", optimizer=optimizer, metrics=["accuracy"]
+#     )
+#     return model
 
 
 df = pd.read_pickle("models/wakeword/audio_data.csv")
@@ -80,7 +151,7 @@ tuner = RandomSearch(
     objective="val_accuracy",
     max_trials=5,
     executions_per_trial=3,
-    directory="tuner_dir",
+    directory="views/wakeword",
     project_name="wake_word_tuner",
 )
 
