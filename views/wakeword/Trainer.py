@@ -124,7 +124,7 @@ tuner.search(X_train, y_train, epochs=1000, validation_split=0.2, verbose=2)
 best_model = tuner.get_best_models(num_models=1)[0]
 best_model.summary()
 
-history = best_model.fit(X_train, y_train, epochs=1000, validation_split=0.2, verbose=2)
+history = best_model.fit(X_train, y_train, epochs=100, validation_split=0.2, verbose=1)
 
 best_model.save("models/wakeword/wake_word.h5")
 np.save("models/wakeword/wake_word_history.npy", history.history)
