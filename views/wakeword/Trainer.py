@@ -180,12 +180,16 @@ hyperHistory = hyperModel.fit(
 
 print(f"{Fore.CYAN}HyperModel Summary:{Style.RESET_ALL}")
 hyperModel.summary()
-np.save("models/wakeword/hyperModel/WakeWordHistory.npy", hyperHistory.history)
-hyperModel.save("models/wakeword/hyperModel")
+
+np.save("models/wakeword/wake_word_history.npy", hyperHistory.history)
+hyperModel.save("models/wakeword/best_hyper_model.h5")
+
 score = hyperModel.evaluate(X_test, y_test)
 print(f"{Fore.YELLOW}Score: {score}{Style.RESET_ALL}")
+
 print(f"{Fore.GREEN}Model Classification Report:{Style.RESET_ALL}")
 y_pred = np.argmax(hyperModel.predict(X_test), axis=1)
 cm = confusion_matrix(np.argmax(y_test, axis=1), y_pred)
 print(classification_report(np.argmax(y_test, axis=1), y_pred))
+
 plot_confusion_matrix(cm, classes=["No Wake Word", "Has Wake Word"])
