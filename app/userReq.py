@@ -8,14 +8,13 @@ def userReq(milesVoice):
     usersaid = commander()
     if not usersaid:
         pass
-    # Check if the user's input is related to music commands
     elif "play" in usersaid or "music" in usersaid or "sing" in usersaid:
         mathed = re.match(
             r"(?P<play>play)(ing)?(?P<artist>\s+[a-zA-Z]+)?(\s+by)?(\s+(the\s+)?(?P<song>[a-zA-Z]+))?|(?P<stop>stop|pause|resume)|(?P<volume>volume(\s+(?P<amount>[0-9]+(\.[0-9]+)?))?\s+(?P<direction>up|down))",
             usersaid,
         )
         if mathed:
-            player(usersaid)
+            player(usersaid, milesVoice)
         else:
             pass
     else:

@@ -6,10 +6,9 @@ import string
 import pygame
 import requests
 import subprocess
-from main import milesVoice
 
 
-def player(usersaid, volume=None):
+def player(usersaid, milesVoice, volume=None):
     try:
         pygame.mixer.init()
         usersaid = html.escape(usersaid).strip()

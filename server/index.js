@@ -1,32 +1,108 @@
-// > SINGLETRACK() function takes a song name as input and returns the first video search result for that song.
-// > RANDOMGENRETRACK() function takes a music genre as input and returns a random video search result for that genre.
-// > RANDOMTRACK() function selects a random music genre from a predefined list and returns a random video search result for that genre.
-// > CUSTOMTRACK() function takes a search query and a number of desired search results as inputs, and returns an array of videos that match the search query.
-
+import cors from "cors";
+import axios from "axios";
 import chalk from "chalk";
 import express from "express";
+import { ytdlp } from "yt-dlp";
+import Fetch from "node-fetch";
 import ytSearch from "yt-search";
 
 const app = express();
 const PORT = 3000;
+app.use(express.json());
+app.use(cors());
 
 const musicGenres = [
+  { genre: "r&b", query: "r&b music" },
   { genre: "pop", query: "pop music" },
   { genre: "rock", query: "rock music" },
-  { genre: "hip hop", query: "hip hop music" },
   { genre: "jazz", query: "jazz music" },
-  { genre: "blues", query: "blues music" },
-  { genre: "classical", query: "classical music" },
-  { genre: "country", query: "country music" },
-  { genre: "reggae", query: "reggae music" },
-  { genre: "electronic", query: "electronic music" },
-  { genre: "metal", query: "metal music" },
   { genre: "punk", query: "punk music" },
   { genre: "folk", query: "folk music" },
-  { genre: "r&b", query: "r&b music" },
+  { genre: "blues", query: "blues music" },
+  { genre: "metal", query: "metal music" },
   { genre: "latin", query: "latin music" },
   { genre: "indie", query: "indie music" },
+  { genre: "reggae", query: "reggae music" },
+  { genre: "hip hop", query: "hip hop music" },
+  { genre: "country", query: "country music" },
+  { genre: "classical", query: "classical music" },
+  { genre: "electronic", query: "electronic music" },
 ];
+
+app.get("/news", async (req, res) => {
+  const response = await axios.get(
+    "https://newsapi.org/v2/top-headlines?country=in&apiKey=" + apiKey
+  );
+  console.log(response.data.articles[0]);
+  res.send(response.data.articles[0]);
+  console.log("Completed...");
+});
+
+app.get("/youtube", async (req, res) => {
+  Fetch("https://magneum.vercel.app/api/youtube_sr?q=" + req.query.q, {
+    method: "get",
+    headers: {
+      accept: "*/*",
+      "accept-language": "en-US,en;q=0.9",
+      "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+    },
+  }).then(async function (response) {
+    const api_data = await response.json();
+    console.log(api_data);
+    ytdlp.audio
+      .Auto_Sorted_Data({
+        yturl: api_data.youtube_search[0].LINK,
+        quality: "highest-possible",
+      })
+      .then((r) => {
+        console.log(
+          chalk.bgGreen("[PROMISE]:"),
+          chalk.bgGrey("Auto_Sorted_Data()")
+        );
+        console.log(chalk.blue("Quality:"), chalk.gray(r.quality));
+        console.log(chalk.blue("Resolution:"), chalk.gray(r.resolution));
+        console.log(chalk.blue("Filesize:"), chalk.gray(r.filesize));
+        console.log(chalk.blue("Audiochannels:"), chalk.gray(r.audiochannels));
+        console.log(chalk.blue("Extensions:"), chalk.gray(r.extensions));
+        console.log(chalk.blue("Audiocodec:"), chalk.gray(r.acodec));
+        console.log(chalk.blue("Url:"), chalk.gray(r.url));
+        res.send({
+          name: api_data.youtube_search[0].TITLE,
+          url: r.url,
+        });
+      })
+      .catch((error) =>
+        console.log(chalk.bgRed("ERROR: "), chalk.gray(error.message))
+      );
+  });
+});
+
+app.get("/weather", async (req, res) => {
+  try {
+    const response = await axios.get(
+      "http://api.openweathermap.org/data/2.5/weather?q=siliguri&appid=" +
+        oapi_key
+    );
+    const temperature = Math.round(response.data.main.temp - 273.15);
+    const humidity = response.data.main.humidity;
+    const wind_speed = response.data.wind.speed;
+    const weather_description = response.data.weather[0].description;
+    console.log(`Temperature: ${temperature}°C`);
+    console.log(`Humidity: ${humidity}%`);
+    console.log(`Wind Speed: ${wind_speed} m/s`);
+    console.log(`Weather Description: ${weather_description}`);
+    res.send([
+      {
+        temperature: temperature + "°C",
+        humidity: humidity + "%",
+        wind_speed: wind_speed + "m/s",
+        weather_description: weather_description,
+      },
+    ]);
+  } catch (error) {
+    console.error(error);
+  }
+});
 
 app.get("/singleTrack", async (req, res) => {
   try {

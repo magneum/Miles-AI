@@ -3,17 +3,20 @@
   "description": "Miles Ai Voice Assistant",
   "type": "module",
   "scripts": {
-    "preinstall": "pip3 install -r requirements.txt",
-    "install": "yarn"
+    "start": "concurrently \"node server/index.js\" \"python main.py\""
   },
   "dependencies": {
     "axios": "latest",
     "chalk": "latest",
     "cheerio": "latest",
+    "cors": "^2.8.5",
     "express": "latest",
     "moment": "latest",
     "node-fetch": "latest",
-    "yt-search": "^2.10.4",
+    "yt-search": "latest",
     "ytdl-core": "latest"
+  },
+  "devDependencies": {
+    "concurrently": "latest"
   }
 }
