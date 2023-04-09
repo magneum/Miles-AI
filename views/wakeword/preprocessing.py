@@ -40,10 +40,10 @@ for class_label, list_of_files in data_path_dict.items():
 
 if all_data:
     df = pd.DataFrame(all_data, columns=["feature", "class_label"])
-    df.to_pickle("models/wakeword/audio_data.csv")
+    df.to_pickle("models/wakeword/wakeword_data.csv")
     print(
         Fore.GREEN
-        + "Info: Successfully saved preprocessed audio data to models/wakeword/audio_data.csv"
+        + "Info: Successfully saved preprocessed audio data to models/wakeword/wakeword_data.csv"
     )
 else:
-    print(Fore.RED + "Error: No audio data processed. Failed to save audio_data.csv")
+    print(Fore.RED + "Error: No audio data processed. Failed to save wakeword_data.csv")
