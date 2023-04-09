@@ -1,8 +1,9 @@
+import speech_recognition as sr
 from keras.models import load_model
 import sounddevice as sd
 import numpy as np
 
-model = load_model("models/wakeword/hyperModel")
+model = load_model("models/wakeword/best_hyper_model.h5")
 
 
 def audio_callback(indata, frames, time, status):
@@ -11,7 +12,18 @@ def audio_callback(indata, frames, time, status):
     indata = indata[:, :40]
     prediction = model.predict(indata)
     if np.any(prediction[0] > 0.8):
-        print(f"Wake Word Found: {prediction}")
+        print("Wake Word Found")
+        recognizer = sr.Recognizer()
+        with sr.Microphone() as source:
+            print("Listening for speech...")
+            audio = recognizer.listen(source)
+            try:
+                text = recognizer.recognize_google(audio)
+                print("Speech detected: ", text)
+            except sr.UnknownValueError:
+                print("Unable to recognize speech.")
+            except sr.RequestError:
+                print("Speech recognition service unavailable.")
     else:
         print("Wake Word not detected.")
 
