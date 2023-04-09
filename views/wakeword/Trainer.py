@@ -1,5 +1,6 @@
 import os
 import pickle
+import tensorflow
 import numpy as np
 import pandas as pd
 from keras import regularizers
@@ -117,11 +118,10 @@ def modelBuilder(hp):
     model.compile(
         loss="categorical_crossentropy", optimizer=optimizer, metrics=["accuracy"]
     )
-
     return model
 
 
-num_epochs = 10
+num_epochs = 1000
 
 df = pd.read_pickle("models/wakeword/wakeword_data.csv")
 print(f"Dataframe: {df}")
