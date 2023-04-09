@@ -1,19 +1,15 @@
-import os
-import pickle
-import tensorflow
 import numpy as np
 import pandas as pd
+from keras import Sequential
 from keras import regularizers
 import matplotlib.pyplot as plt
 from colorama import Fore, Style
-from tensorflow.keras import Sequential
+from keras.utils import to_categorical
+from keras.layers import Dense, Dropout
 from keras.optimizers import Adam, RMSprop
 from keras_tuner.tuners import RandomSearch
 from sklearn.preprocessing import LabelEncoder
-from tensorflow.keras.utils import to_categorical
-from tensorflow.keras.layers import Dense, Dropout
 from sklearn.model_selection import train_test_split
-from keras.callbacks import ModelCheckpoint, Callback
 from sklearn.metrics import confusion_matrix, classification_report
 
 
@@ -121,7 +117,7 @@ def modelBuilder(hp):
     return model
 
 
-num_epochs = 10
+num_epochs = 60
 
 df = pd.read_pickle("models/wakeword/wakeword_data.csv")
 print(f"Dataframe: {df}")
