@@ -11,7 +11,7 @@ def record_user_audio(n_times=100):
     # Loop n_times to record user audio
     for i in range(n_times):
         fs = 44100  # Set the sampling frequency
-        duration = 1  # Set the duration of the recording
+        duration = 0.5  # Set the duration of the recording
         # Record audio using the sounddevice module
         myrecording = sd.rec(int(fs * duration), samplerate=fs, channels=2)
         sd.wait()  # Wait until the recording is finished
@@ -28,7 +28,7 @@ def record_background_noise(n_times=100):
     # Loop n_times to record background noise
     for i in range(n_times):
         fs = 44100  # Set the sampling frequency
-        duration = 1  # Set the duration of the recording
+        duration = 0.5  # Set the duration of the recording
         # Record audio using the sounddevice module
         myrecording = sd.rec(int(fs * duration), samplerate=fs, channels=2)
         sd.wait()  # Wait until the recording is finished

@@ -117,7 +117,7 @@ def modelBuilder(hp):
     return model
 
 
-num_epochs = 60
+num_epochs = 1000
 
 df = pd.read_pickle("models/wakeword/wakeword_data.csv")
 print(f"Dataframe: {df}")
