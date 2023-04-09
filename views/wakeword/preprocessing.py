@@ -53,4 +53,4 @@ for class_label, list_of_files in data_path_dict.items():
 
 # Creating a pandas dataframe from the processed data and saving it for future use
 df = pd.DataFrame(all_data, columns=["feature", "class_label"])
-df.to_pickle("models/voice/audio_data.csv")
+df.to_pickle("models/wakeword/audio_data.csv")
