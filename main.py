@@ -10,15 +10,15 @@ import threading
 import pvporcupine
 from dotenv import load_dotenv
 from colorama import Fore, Style
+from app import play_notif, userReq
 
 load_dotenv()
-from app import play_notif, userReq
 
 
 def milesVoice(usersaid):
     try:
         engine = pyttsx3.init("sapi5")
-        engine.setProperty("rate", 140)
+        engine.setProperty("rate", 125)
         voices = engine.getProperty("voices")
         engine.setProperty("voice", voices[0].id)
         print(f"{Fore.BLUE}MÌLΣƧ. ΛI: {Style.RESET_ALL}{usersaid}")
