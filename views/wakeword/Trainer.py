@@ -140,9 +140,9 @@ print(f"y_test shape: {Fore.CYAN}{y_test.shape}{Style.RESET_ALL}")
 # Create the RandomSearch tuner
 hyperTuner = RandomSearch(
     modelBuilder,
-    max_trials=5,
+    max_trials=10,
     overwrite=True,
-    executions_per_trial=3,
+    executions_per_trial=4,
     objective="val_accuracy",
     project_name="hyperModel",
     directory="models/wakeword",
