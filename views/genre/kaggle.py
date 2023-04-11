@@ -17,12 +17,12 @@ from sklearn.model_selection import train_test_split
 words = []
 classes = []
 documents = []
-words_path = "words.pkl"
-classes_path = "classes.pkl"
-model_path = "miles_model.h5"
+words_path = "models/genre/words.pkl"
 ignore_letters = ["?", ".", "!", ","]
-intents = json.loads(open("index.json").read())
-glove_file = "corpdata/glove/glove.6B.300d.txt"
+classes_path = "models/genre/classes.pkl"
+model_path = "models/genre/genre_model.h5"
+glove_file = "corpdata/glove/glove.6B.50d.txt"
+intents = json.loads(open("database/intents/genre.json").read())
 print("Num GPUs Available: ", len(tensorflow.config.list_physical_devices("GPU")))
 
 
@@ -32,37 +32,17 @@ class hyperModel(HyperModel):
         input_shape,
         num_classes,
         use_early_stopping=False,
-        embeddings_index=None,
         words=None,
         hp=None,
     ):
         self.input_shape = input_shape
         self.num_classes = num_classes
         self.use_early_stopping = use_early_stopping
-        self.embeddings_index = embeddings_index
         self.words = words
         self.hp = hp
 
     def build(self, hp):
         model = keras.Sequential()
-        embedding_dim = 300
-        embedding_matrix = np.zeros((len(self.words), embedding_dim))
-        for i, word in enumerate(self.words):
-            embedding_vector = self.embeddings_index.get(word)
-            if embedding_vector is not None:
-                embedding_matrix[i] = embedding_vector
-        embedding_layer = keras.layers.Embedding(
-            len(self.words),
-            embedding_dim,
-            weights=[embedding_matrix],
-            input_length=self.input_shape[0],
-            trainable=False,
-        )
-        lstm_units = hp.Int("lstm_units", min_value=32, max_value=512, step=32)
-        model.add(embedding_layer)
-        model.add(
-            keras.layers.LSTM(units=lstm_units, dropout=0.2, recurrent_dropout=0.2)
-        )
         num_layers = hp.Int("num_layers", 1, 8)
         for i in range(num_layers):
             units = hp.Int(f"dense_{i+1}_units", min_value=128, max_value=512, step=32)
@@ -197,27 +177,10 @@ input_shape = (len(train_x[0]),)
 num_classes = len(classes)
 
 
-def load_glove_embeddings(file):
-    embeddings_index = {}
-    for line in file:
-        values = line.split()
-        word = values[0]
-        coefs = np.asarray(values[1:], dtype="float32")
-        embeddings_index[word] = coefs
-    return embeddings_index
-
-
-print(Fore.GREEN + "Loading GloVe embeddings..." + Style.RESET_ALL)
-with open(glove_file, encoding="utf-8") as f:
-    embeddings_index = load_glove_embeddings(f)
-print(Fore.GREEN + "GloVe embeddings loaded." + Style.RESET_ALL)
-words = sorted(list(embeddings_index.keys()))
-
 my_hyper_model = hyperModel(
     input_shape,
     num_classes,
     use_early_stopping=True,
-    embeddings_index=embeddings_index,
     words=words,
 )
 print(Fore.GREEN + "Creating tuner..." + Style.RESET_ALL)
@@ -226,7 +189,7 @@ tuner = RandomSearch(
     objective="val_accuracy",
     max_trials=20,
     executions_per_trial=4,
-    directory="hyperModel",
+    directory="models/talks/hyperModel",
     project_name="hyperModel",
 )
 print(Fore.GREEN + "Tuner created." + Style.RESET_ALL)
@@ -235,7 +198,7 @@ print(Fore.GREEN + "Callbacks created." + Style.RESET_ALL)
 tuner.search(
     x=train_x,
     y=train_y,
-    epochs=10,
+    epochs=100,
     batch_size=8,
     validation_data=(val_x, val_y),
     verbose=1,

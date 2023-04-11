@@ -7,10 +7,10 @@ from colorama import Fore, Style
 from keras.models import load_model
 from nltk.stem import WordNetLemmatizer
 
-model = load_model("views/genre/genre_model.h5")
-words = pickle.load(open("views/genre/words.pkl", "rb"))
-intents = json.loads(open("views/genre/index.json").read())
-classes = pickle.load(open("views/genre/classes.pkl", "rb"))
+model = load_model("models/genre/genre_model.h5")
+words = pickle.load(open("models/genre/words.pkl", "rb"))
+intents = json.loads(open("database/intents/genre.json").read())
+classes = pickle.load(open("models/genre/classes.pkl", "rb"))
 
 
 def preprocess_sentiment(sentiment):
@@ -56,12 +56,12 @@ def get_genre(intents_list, intents_json):
     return result
 
 
-# while True:
-#     userInput = input(Fore.BLUE + "Enter or ('q' to quit): " + Style.RESET_ALL)
-#     if userInput.lower() == "q":
-#         break
-#     else:
-#         predicted_mood = predict_mood(userInput)
-#         predicted_genre = get_genre([{"intent": predicted_mood}], intents)
-#         print(Fore.GREEN + f"Predicted mood: {predicted_mood}" + Style.RESET_ALL)
-#         print(Fore.GREEN + f"Predicted genre: {predicted_genre}" + Style.RESET_ALL)
+while True:
+    userInput = input(Fore.BLUE + "Enter or ('q' to quit): " + Style.RESET_ALL)
+    if userInput.lower() == "q":
+        break
+    else:
+        predicted_mood = predict_mood(userInput)
+        predicted_genre = get_genre([{"intent": predicted_mood}], intents)
+        print(Fore.GREEN + f"Predicted mood: {predicted_mood}" + Style.RESET_ALL)
+        print(Fore.GREEN + f"Predicted genre: {predicted_genre}" + Style.RESET_ALL)

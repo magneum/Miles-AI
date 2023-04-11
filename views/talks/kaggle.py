@@ -12,17 +12,27 @@ from nltk.stem import WordNetLemmatizer
 from keras_tuner.tuners import RandomSearch
 from sklearn.model_selection import train_test_split
 
-# !pip install nltk tensorflow numpy colorama keras_tuner sklearn
+
+# nltk.download("brown")
+# nltk.download("reuters")
+# nltk.download("wordnet")
+# nltk.download("treebank")
+# nltk.download("stopwords")
+# nltk.download("inaugural")
+# nltk.download("maxent_ne_chunker")
+# !unzip /usr/share/nltk_data/corpora/wordnet.zip -d /usr/share/nltk_data/corpora/
+
 
 words = []
 classes = []
 documents = []
-words_path = "models/genre/words.pkl"
 ignore_letters = ["?", ".", "!", ","]
-classes_path = "models/genre/classes.pkl"
-model_path = "models/genre/genre_model.h5"
-glove_file = "corpdata/glove/glove.6B.50d.txt"
-intents = json.loads(open("database/intents/genre.json").read())
+words_path = "words.pkl"
+classes_path = "classes.pkl"
+model_path = "model.h5"
+glove_file = "/kaggle/input/glove6b/glove.6B.300d.txt"
+intents = json.loads(open("/kaggle/input/milesai/talks.json").read())
+
 print("Num GPUs Available: ", len(tensorflow.config.list_physical_devices("GPU")))
 
 
@@ -45,12 +55,13 @@ class hyperModel(HyperModel):
 
     def build(self, hp):
         model = keras.Sequential()
-        embedding_dim = 50
+        embedding_dim = 300
         embedding_matrix = np.zeros((len(self.words), embedding_dim))
         for i, word in enumerate(self.words):
             embedding_vector = self.embeddings_index.get(word)
             if embedding_vector is not None:
                 embedding_matrix[i] = embedding_vector
+
         embedding_layer = keras.layers.Embedding(
             len(self.words),
             embedding_dim,
@@ -58,6 +69,7 @@ class hyperModel(HyperModel):
             input_length=self.input_shape[0],
             trainable=False,
         )
+
         lstm_units = hp.Int("lstm_units", min_value=32, max_value=512, step=32)
         model.add(embedding_layer)
         model.add(
@@ -86,6 +98,7 @@ class hyperModel(HyperModel):
             optimizer = keras.optimizers.RMSprop(learning_rate=hp_learning_rate)
         else:
             optimizer = keras.optimizers.SGD(learning_rate=hp_learning_rate)
+
         if hp.Boolean("use_L1_regularization", default=True):
             L1_rate = hp.Float(
                 "L1_rate", min_value=1e-5, max_value=1e-2, sampling="LOG", default=1e-5
@@ -97,6 +110,7 @@ class hyperModel(HyperModel):
                     kernel_regularizer=keras.regularizers.L1(L1_rate),
                 )
             )
+
         if hp.Boolean("use_L2_regularization", default=True):
             L2_rate = hp.Float(
                 "L2_rate", min_value=1e-5, max_value=1e-2, sampling="LOG"
@@ -110,6 +124,7 @@ class hyperModel(HyperModel):
             )
 
         model.add(keras.layers.Dense(self.num_classes, activation="softmax"))
+
         model.compile(
             optimizer=keras.optimizers.Adam(
                 hp.Choice("learning_rate", values=[1e-2, 1e-3, 1e-4])
@@ -147,7 +162,6 @@ print(Fore.GREEN + "Done processing intents." + Style.RESET_ALL)
 pos_tags = nltk.pos_tag(words)
 lemmatizer = WordNetLemmatizer()
 print(Fore.BLUE + "Lemmatizing words..." + Style.RESET_ALL)
-
 
 words = [
     lemmatizer.lemmatize(word, pos=wordnet.ADJ)
@@ -211,6 +225,7 @@ print(Fore.GREEN + "Loading GloVe embeddings..." + Style.RESET_ALL)
 with open(glove_file, encoding="utf-8") as f:
     embeddings_index = load_glove_embeddings(f)
 print(Fore.GREEN + "GloVe embeddings loaded." + Style.RESET_ALL)
+
 words = sorted(list(embeddings_index.keys()))
 
 my_hyper_model = hyperModel(
@@ -220,33 +235,34 @@ my_hyper_model = hyperModel(
     embeddings_index=embeddings_index,
     words=words,
 )
+
 print(Fore.GREEN + "Creating tuner..." + Style.RESET_ALL)
 tuner = RandomSearch(
     my_hyper_model,
     objective="val_accuracy",
-    max_trials=10,
-    executions_per_trial=10,
-    directory="models/genre/hyperModel",
+    max_trials=40,
+    executions_per_trial=8,
+    directory="models/talks/hyperModel",
     project_name="hyperModel",
 )
 print(Fore.GREEN + "Tuner created." + Style.RESET_ALL)
+
 callbacks = my_hyper_model.get_callbacks()
 print(Fore.GREEN + "Callbacks created." + Style.RESET_ALL)
+
 tuner.search(
     x=train_x,
     y=train_y,
-    epochs=10,
+    epochs=1000,
     batch_size=8,
     validation_data=(val_x, val_y),
     verbose=1,
     callbacks=callbacks,
 )
 print(Fore.GREEN + "Tuning completed." + Style.RESET_ALL)
-
 best_model = tuner.get_best_models(num_models=1)[0]
 _, val_acc = best_model.evaluate(val_x, val_y)
 print(f"\nBest validation accuracy: {val_acc*100:.2f}%")
-
 best_model.save(model_path)
 pickle.dump(words, open(words_path, "wb"))
 pickle.dump(classes, open(classes_path, "wb"))

@@ -158,11 +158,11 @@ words = []
 classes = []
 documents = []
 ignore_letters = ["?", ".", "!", ","]
-words_path = "models/miles/words.pkl"
-classes_path = "models/miles/classes.pkl"
-model_path = "models/miles/miles_model.h5"
+words_path = "models/talks/words.pkl"
+classes_path = "models/talks/classes.pkl"
+model_path = "models/talks/talks_model.h5"
 glove_file = "corpdata/glove/glove.6B.300d.txt"
-intents = json.loads(open("database/intents/index.json").read())
+intents = json.loads(open("database/intents/talks.json").read())
 
 # Looping through each intent in the intents dictionary
 for intent in intents["intents"]:
@@ -293,7 +293,7 @@ tuner = RandomSearch(
     objective="val_accuracy",
     max_trials=20,
     executions_per_trial=4,
-    directory="models/miles/hyperModel",
+    directory="models/talks/hyperModel",
     project_name="hyperModel",
 )
 print(Fore.GREEN + "Tuner created." + Style.RESET_ALL)

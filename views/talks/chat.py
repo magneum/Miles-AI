@@ -8,10 +8,10 @@ from colorama import Fore, Style
 from nltk.stem import WordNetLemmatizer
 
 
-words_path = "models/miles/hyperModelwords.pkl"
-classes_path = "models/miles/hyperModelclasses.pkl"
-model_path = "models/miles/hyperModelchatbot_model.h5"
-intents = json.loads(open("database/intents/index.json").read())
+model_path = "models/talks/hyperModel"
+words_path = "models/talks/hyperModel/words.pkl"
+classes_path = "models/talks/hyperModel/classes.pkl"
+intents = json.loads(open("database/intents/talks.json").read())
 words = pickle.load(open(words_path, "rb"))
 classes = pickle.load(open(classes_path, "rb"))
 model = keras.models.load_model(model_path)
