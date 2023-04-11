@@ -1,3 +1,14 @@
+# import nltk
+# nltk.download("brown")
+# nltk.download("reuters")
+# nltk.download("wordnet")
+# nltk.download("treebank")
+# nltk.download("stopwords")
+# nltk.download("inaugural")
+# nltk.download("maxent_ne_chunker")
+# !unzip /usr/share/nltk_data/corpora/wordnet.zip -d /usr/share/nltk_data/corpora/
+
+
 import json
 import nltk
 import pickle
@@ -13,25 +24,15 @@ from keras_tuner.tuners import RandomSearch
 from sklearn.model_selection import train_test_split
 
 
-# nltk.download("brown")
-# nltk.download("reuters")
-# nltk.download("wordnet")
-# nltk.download("treebank")
-# nltk.download("stopwords")
-# nltk.download("inaugural")
-# nltk.download("maxent_ne_chunker")
-# !unzip /usr/share/nltk_data/corpora/wordnet.zip -d /usr/share/nltk_data/corpora/
-
-
 words = []
 classes = []
 documents = []
 ignore_letters = ["?", ".", "!", ","]
 words_path = "words.pkl"
-classes_path = "classes.pkl"
 model_path = "model.h5"
-glove_file = "/kaggle/input/glove6b/glove.6B.300d.txt"
-intents = json.loads(open("/kaggle/input/milesai/talks.json").read())
+classes_path = "classes.pkl"
+glove_file = "/kaggle/input/pickled-glove840b300d-for-10sec-loading/glove.840B.300d.pkl"
+intents = json.loads(open("/kaggle/input/small-talks/talks.json").read())
 
 print("Num GPUs Available: ", len(tensorflow.config.list_physical_devices("GPU")))
 
