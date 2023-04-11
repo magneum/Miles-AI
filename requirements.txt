@@ -27,6 +27,7 @@ tqdm
 translate
 wikipedia-api
 
+# pip install beautifulsoup4 colorama colorlog keras keras_tuner librosa matplotlib nltk numpy openai pandas pvporcupine PyAudio pygame python-dotenv pyttsx3 spacy requests scikit_learn scipy sounddevice SpeechRecognition tensorflow termcolor torch tqdm translate wikipedia-api
 
 # pip install -r .\requirements.txt
 # pip uninstall -r .\requirements.txt -y
