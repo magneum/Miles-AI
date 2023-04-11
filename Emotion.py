@@ -1,5 +1,5 @@
+from kerastuner.tuners import RandomSearch, Hyperband
 from sklearn.model_selection import train_test_split
-from kerastuner.tuners import RandomSearch
 from keras.models import Sequential
 from sklearn.utils import shuffle
 from keras import layers
@@ -84,13 +84,21 @@ X_train, X_val, y_train, y_val = train_test_split(
     X_train, y_train, test_size=0.2, random_state=42
 )
 
+tuner = Hyperband(
+    MyHyperModel,
+    objective="val_accuracy",
+    max_epochs=10,
+    hyperband_iterations=2,
+    directory="Emotion_mnist",
+    project_name="Emotion_mnist",
+)
 
 tuner = RandomSearch(
     MyHyperModel,
     objective="val_accuracy",
     max_trials=10,
-    directory="my_dir",
-    project_name="emotion_detection",
+    directory="Emotion_mnist",
+    project_name="Emotion_mnist",
 )
 
 tuner.search(
