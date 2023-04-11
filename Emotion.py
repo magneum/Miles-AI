@@ -1,115 +1,79 @@
-from kerastuner.tuners import RandomSearch, Hyperband
-from sklearn.model_selection import train_test_split
-from keras.models import Sequential
-from sklearn.utils import shuffle
-from keras import layers
-import tensorflow as tf
 import numpy as np
+import pandas as pd
+from keras import layers
+from tensorflow import keras
+from keras_tuner.tuners import RandomSearch, Hyperband
+
+X = []
+y = []
+num_epocs = 1000
+num_val_split = 0.2
+fer2013 = pd.read_csv("corpdata/csv/fer2013.csv")
+for index, row in fer2013.iterrows():
+    pixels = np.fromstring(row["pixels"], dtype="uint8", sep=" ")
+    image = pixels.reshape((48, 48, 1)).astype("float32") / 255.0
+    label = row["emotion"]
+    X.append(image)
+    y.append(label)
+X = np.array(X)
+y = np.array(y)
 
 
-class MyHyperModel(tf.keras.Model):
-    def __init__(self, hp):
-        super(MyHyperModel, self).__init__()
-        self.hp = hp
-
-    def build(self, hp):
-        model = Sequential()
+def build_model(hp):
+    model = keras.Sequential()
+    model.add(
+        layers.Conv2D(
+            filters=hp.Int("filters_1", 32, 128, step=32),
+            kernel_size=hp.Choice("kernel_size_1", values=[3, 5]),
+            activation="relu",
+            input_shape=(48, 48, 1),
+        )
+    )
+    model.add(layers.MaxPooling2D(pool_size=hp.Choice("pool_size_1", values=[2, 3])))
+    for i in range(hp.Int("num_blocks", 1, 4)):
         model.add(
             layers.Conv2D(
-                filters=self.hp.Int(
-                    "conv1_filters", min_value=32, max_value=128, step=32
-                ),
-                kernel_size=self.hp.Choice("conv1_kernel", values=[3, 5]),
-                activation="relu",
-                input_shape=(28, 28, 1),
-            )
-        )
-        model.add(layers.MaxPooling2D(pool_size=(2, 2)))
-        model.add(layers.BatchNormalization())
-
-        model.add(
-            layers.Conv2D(
-                filters=self.hp.Int(
-                    "conv2_filters", min_value=64, max_value=256, step=64
-                ),
-                kernel_size=self.hp.Choice("conv2_kernel", values=[3, 5]),
-                activation="relu",
-            )
-        )
-        model.add(layers.MaxPooling2D(pool_size=(2, 2)))
-        model.add(layers.BatchNormalization())
-
-        model.add(layers.Flatten())
-        model.add(
-            layers.Dense(
-                units=self.hp.Int(
-                    "dense_units", min_value=128, max_value=512, step=128
-                ),
+                filters=hp.Int("filters_" + str(i + 2), 32, 128, step=32),
+                kernel_size=hp.Choice("kernel_size_" + str(i + 2), values=[3, 5]),
                 activation="relu",
             )
         )
         model.add(
-            layers.Dropout(
-                rate=self.hp.Float("dropout", min_value=0.2, max_value=0.5, step=0.1)
+            layers.MaxPooling2D(
+                pool_size=hp.Choice("pool_size_" + str(i + 2), values=[2, 3])
             )
         )
-        model.add(layers.Dense(10, activation="softmax"))
+    model.add(layers.Flatten())
+    model.add(layers.Dense(units=hp.Int("units", 128, 512, step=32), activation="relu"))
+    model.add(layers.Dense(7, activation="softmax"))
+    model.compile(
+        optimizer=keras.optimizers.Adam(
+            hp.Choice("learning_rate", values=[1e-2, 1e-3, 1e-4])
+        ),
+        loss="sparse_categorical_crossentropy",
+        metrics=["accuracy"],
+    )
+    return model
 
-        model.compile(
-            optimizer=tf.keras.optimizers.Adam(
-                learning_rate=self.hp.Float(
-                    "learning_rate", min_value=1e-4, max_value=1e-2, sampling="log"
-                )
-            ),
-            loss="sparse_categorical_crossentropy",
-            metrics=["accuracy"],
-        )
-        return model
-
-
-def load_and_preprocess_dataset():
-    mnist = tf.keras.datasets.mnist
-    (X_train, y_train), (X_test, y_test) = mnist.load_data()
-    X_train = np.expand_dims(X_train, axis=-1)
-    X_test = np.expand_dims(X_test, axis=-1)
-    X_train = X_train.astype(np.float32) / 255.0
-    X_test = X_test.astype(np.float32) / 255.0
-    X_train, y_train = shuffle(X_train, y_train, random_state=42)
-    return X_train, y_train, X_test, y_test
-
-
-X_train, y_train, X_test, y_test = load_and_preprocess_dataset()
-
-X_train, X_val, y_train, y_val = train_test_split(
-    X_train, y_train, test_size=0.2, random_state=42
-)
 
 tuner = Hyperband(
-    MyHyperModel,
-    objective="val_accuracy",
-    max_epochs=10,
+    build_model,
+    max_epochs=num_epocs,
     hyperband_iterations=2,
-    directory="Emotion_mnist",
-    project_name="Emotion_mnist",
-)
-
-tuner = RandomSearch(
-    MyHyperModel,
     objective="val_accuracy",
-    max_trials=10,
-    directory="Emotion_mnist",
-    project_name="Emotion_mnist",
+    directory="Fer2013_Recognition",
+    project_name="Fer2013_Recognition",
 )
-
-tuner.search(
-    X_train,
-    y_train,
-    epochs=20,
-    validation_data=(X_val, y_val),
+tuner = RandomSearch(
+    build_model,
+    max_trials=40,
+    objective="val_accuracy",
+    directory="Fer2013_Recognition",
+    project_name="Fer2013_Recognition",
 )
+tuner.search(X, y, epochs=num_epocs, validation_split=num_val_split)
 
-best_model = tuner.get_best_models(num_models=1)[0]
-best_hyperparameters = tuner.get_best_hyperparameters(num_trials=1)[0]
-print(f"Best hyperparameters: {best_hyperparameters}")
-best_model.fit(X_train, y_train, epochs=20)
-best_model.save("emotion_detection_model.h5")
+best_hp = tuner.get_best_hyperparameters(1)[0]
+best_model = build_model(best_hp)
+best_model.fit(X, y, epochs=num_epocs, validation_split=num_val_split)
+best_model.save("Fer2013_Recognition.h5")

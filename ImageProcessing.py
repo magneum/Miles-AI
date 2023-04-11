@@ -1,7 +1,7 @@
 from keras.layers import Conv2D, MaxPooling2D, Dense, Dropout, Flatten
 from keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from sklearn.utils.class_weight import compute_class_weight
-from kerastuner import HyperModel, Hyperband, RandomSearch
+from keras_tuner import HyperModel, Hyperband, RandomSearch
 from sklearn.model_selection import train_test_split
 from keras.datasets import fashion_mnist
 from keras.regularizers import l1, l2
