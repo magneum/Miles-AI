@@ -7,7 +7,7 @@ from keras.callbacks import EarlyStopping
 from keras_tuner.tuners import RandomSearch
 from routes.exports.CodeSeparator import CodeSeparator
 
-
+# ============================================================ [ CREATED BY MAGNEUM ] ============================================================
 print(f"{Fore.YELLOW}{Style.BRIGHT}Code Description: FaceProcessing.py")
 print(f"{Fore.WHITE}{Style.BRIGHT}------------------")
 print(
@@ -30,14 +30,9 @@ print(
 )
 print(f"{Style.RESET_ALL}")
 
+# ============================================================ [ CREATED BY MAGNEUM ] ============================================================
 file_path = os.path.abspath(__file__)
 file_name = os.path.basename(file_path)
-
-print(f"File Path: {Fore.CYAN}{Style.BRIGHT}{file_path}{Style.RESET_ALL}")
-print(f"File Name: {Fore.CYAN}{Style.BRIGHT}{file_name}{Style.RESET_ALL}")
-print(f"{Style.RESET_ALL}")
-
-
 X_Index = []
 Y_Index = []
 nEpochs = 50
@@ -46,6 +41,7 @@ dataset_path = "corpdata/csv/Fer2013.csv"
 hyper_directory = "models/FaceEmo/Emotion"
 model_save_path = "models/FaceEmo/Face_Emotion_Model.h5"
 
+# ============================================================ [ CREATED BY MAGNEUM ] ============================================================
 CodeSeparator("# Check if folder exists")
 print(Style.RESET_ALL)
 _path = "models/FaceEmo"
@@ -55,16 +51,18 @@ if not os.path.exists(_path):
 else:
     print(f"{Fore.YELLOW}{Style.BRIGHT}Folder already exists: {_path}{Style.RESET_ALL}")
 
-
+# ============================================================ [ CREATED BY MAGNEUM ] ============================================================
 CodeSeparator("# Print loaded data information")
 print(f"{Style.RESET_ALL}")
 Fer2013 = pandas.read_csv(dataset_path)
 print(f"{Fore.GREEN}{Style.BRIGHT}Loaded Data Information:")
 print(f"{Fore.YELLOW}{Style.BRIGHT}• Data shape: {str(Fer2013.shape)}")
 print(f"{Fore.YELLOW}{Style.BRIGHT}• Columns: {', '.join(Fer2013.columns)}")
+print(f"File Path: {Fore.CYAN}{Style.BRIGHT}{file_path}{Style.RESET_ALL}")
+print(f"File Name: {Fore.CYAN}{Style.BRIGHT}{file_name}{Style.RESET_ALL}")
 print(f"{Style.RESET_ALL}")
 
-
+# ============================================================ [ CREATED BY MAGNEUM ] ============================================================
 for index, row in Fer2013.iterrows():
     pixels = numpy.fromstring(row["pixels"], dtype="uint8", sep=" ")
     image = pixels.reshape((48, 48, 1)).astype("float32") / 255.0
@@ -85,6 +83,7 @@ print(f"{Fore.CYAN}{Style.BRIGHT}• Validation split: {nValsplit}")
 print(f"{Style.RESET_ALL}")
 
 
+# ============================================================ [ CREATED BY MAGNEUM ] ============================================================
 def Hyper_Builder(hp):
     model = keras.Sequential()
     model.add(
@@ -164,6 +163,7 @@ def Hyper_Builder(hp):
     return model
 
 
+# ============================================================ [ CREATED BY MAGNEUM ] ============================================================
 CodeSeparator("# Create RandomSearch tuner")
 print(Style.RESET_ALL)
 Hyper_Tuner = RandomSearch(
@@ -187,12 +187,13 @@ Hyper_Tuner.search(
         EarlyStopping(monitor="val_loss", patience=5, restore_best_weights=True)
     ],
 )
+# ============================================================ [ CREATED BY MAGNEUM ] ============================================================
 
 BestHP = Hyper_Tuner.get_best_hyperparameters(1)[0]
 Hyper_Model = Hyper_Builder(BestHP)
 Hyper_Model.fit(X_Index, Y_Index, epochs=nEpochs, validation_split=0.2)
 Hyper_Model.save(model_save_path)
-
+# ============================================================ [ CREATED BY MAGNEUM ] ============================================================
 CodeSeparator("# Print best hyperparameters")
 print(Style.RESET_ALL)
 print(Fore.GREEN + Style.BRIGHT + "Best Hyperparameters:")
