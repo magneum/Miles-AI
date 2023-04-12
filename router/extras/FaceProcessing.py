@@ -37,8 +37,8 @@ X_Index = []
 Y_Index = []
 nEpochs = 50
 nValsplit = 0.2
-dataset_path = "corpdata/csv/Fer2013.csv"
 hyper_directory = "models/FaceEmo/Emotion"
+dataset_path = "corpdata/csv/fer2013/fer2013.csv"
 model_save_path = "models/FaceEmo/Face_Emotion_Model.h5"
 
 # ============================================================ [ CREATED BY MAGNEUM ] ============================================================
