@@ -1,11 +1,11 @@
 import os
 import numpy
 import keras
-import random
 import pandas
 from colorama import Fore, Style
 from keras.callbacks import EarlyStopping
 from keras_tuner.tuners import RandomSearch
+from routes.exports.code_separator import code_separator
 
 
 print(Fore.YELLOW + Style.BRIGHT + "Code Description: FaceProcessing.py")
@@ -54,36 +54,6 @@ print("File Name: {}{}{}".format(Fore.CYAN, Style.BRIGHT, file_name, Style.RESET
 print(Style.RESET_ALL)
 
 try:
-
-    def print_code_separator(section_name):
-        separator_width = 50
-        separator_char = "*"
-        section_label = f" {section_name} "
-        section_label_width = separator_width - 2
-        section_label_padding = (section_label_width - len(section_label)) // 2
-        separator_line = separator_char * separator_width
-        available_colors = [
-            Fore.RED,
-            Fore.GREEN,
-            Fore.YELLOW,
-            Fore.BLUE,
-            Fore.MAGENTA,
-            Fore.CYAN,
-            Fore.WHITE,
-        ]
-        random_color = random.choice(available_colors)
-        section_label_line = (
-            separator_char
-            + " " * section_label_padding
-            + f"{random_color}{Style.BRIGHT}{section_name}{Style.RESET_ALL}"
-            + " " * section_label_padding
-            + separator_char
-        )
-
-        print(separator_line)
-        print(section_label_line)
-        print(separator_line)
-
     X_Index = []
     Y_Index = []
     nEpochs = 50
@@ -92,7 +62,7 @@ try:
     hyper_directory = "models/FaceEmo/Emotion"
     model_save_path = "models/FaceEmo/Face_Emotion_Model.h5"
 
-    print_code_separator("# Check if folder exists")
+    code_separator("# Check if folder exists")
     print(Style.RESET_ALL)
     _path = "models/FaceEmo"
     if not os.path.exists(_path):
@@ -106,7 +76,7 @@ try:
             + Style.RESET_ALL
         )
 
-    print_code_separator("# Print loaded data information")
+    code_separator("# Print loaded data information")
     print(Style.RESET_ALL)
     Fer2013 = pandas.read_csv(dataset_path)
     print(Fore.GREEN + Style.BRIGHT + "Loaded Data Information:")
@@ -123,7 +93,7 @@ try:
     X_Index = numpy.array(X_Index)
     Y_Index = numpy.array(Y_Index)
 
-    print_code_separator(
+    code_separator(
         "# Print each statement using colorama with reset to default text color"
     )
     print(Style.RESET_ALL)
@@ -240,7 +210,7 @@ try:
 
         return model
 
-    print_code_separator("# Create RandomSearch tuner")
+    code_separator("# Create RandomSearch tuner")
     print(Style.RESET_ALL)
     Hyper_Tuner = RandomSearch(
         Hyper_Builder,
@@ -250,7 +220,7 @@ try:
         directory=hyper_directory,
     )
 
-    print_code_separator("# Start hyperparameter search")
+    code_separator("# Start hyperparameter search")
     print(Style.RESET_ALL)
     Hyper_Tuner.search(
         x=X_Index,
@@ -269,7 +239,7 @@ try:
     Hyper_Model.fit(X_Index, Y_Index, epochs=nEpochs, validation_split=0.2)
     Hyper_Model.save(model_save_path)
 
-    print_code_separator("# Print best hyperparameters")
+    code_separator("# Print best hyperparameters")
     print(Style.RESET_ALL)
     print(Fore.GREEN + Style.BRIGHT + "Best Hyperparameters:")
     print(Fore.YELLOW + Style.BRIGHT + "• filters_1: " + str(BestHP.get("filters_1")))
