@@ -6,7 +6,7 @@ from keras_tuner.tuners import RandomSearch
 
 X = []
 y = []
-num_epocs = 100
+num_epocs = 10
 num_val_split = 0.2
 fer2013 = pd.read_csv("corpdata/csv/Fer2013.csv")
 for index, row in fer2013.iterrows():
