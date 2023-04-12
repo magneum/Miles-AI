@@ -8,7 +8,7 @@ X = []
 y = []
 num_epocs = 100
 num_val_split = 0.2
-fer2013 = pd.read_csv("corpdata/csv/fer2013.csv")
+fer2013 = pd.read_csv("corpdata/csv/Fer2013.csv")
 for index, row in fer2013.iterrows():
     pixels = np.fromstring(row["pixels"], dtype="uint8", sep=" ")
     image = pixels.reshape((48, 48, 1)).astype("float32") / 255.0
