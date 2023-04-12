@@ -132,11 +132,9 @@ Hyper_Tuner = Hyperband(
     seed=44,
     max_epochs=100,
     hyperband_iterations=22,
-    max_retries_per_trial=2,
     project_name="Emotion",
     objective="val_accuracy",
     directory="models/Face_Emo_Fer",
-    max_consecutive_failed_trials=2,
 )
 
 print(f"{F.YELLOW}Starting hyperparameter search...{S.RESET_ALL}")
