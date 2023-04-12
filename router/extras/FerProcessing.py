@@ -76,8 +76,8 @@ else:
     print(f"{F.YELLOW}{S.BRIGHT}Folder already exists: {_path}{S.RESET_ALL}")
 
 
-num_epochs = 60
 batch_size = 32
+num_epochs = 100
 target_size = (64, 64)
 Test_dir = "corpdata/Fer2013-img/Test_Images"
 Train_dir = "corpdata/Fer2013-img/Train_Images"
