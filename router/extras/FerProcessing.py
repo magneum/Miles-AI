@@ -68,7 +68,7 @@ for i, layer in enumerate(Hyper_Builder(hp).layers):
 file_path = os.path.abspath(__file__)
 file_name = os.path.basename(file_path)
 print(S.RESET_ALL)
-_path = "models/Face_Emo_Fer"
+_path = "models/FaceEmo"
 if not os.path.exists(_path):
     os.makedirs(_path)
     print(f"{F.GREEN}{S.BRIGHT}Folder created: {_path}{S.RESET_ALL}")
@@ -131,9 +131,9 @@ Hyper_Tuner = RandomSearch(
     Hyper_Builder,
     seed=44,
     max_trials=22,
-    project_name="Emotion",
     objective="val_accuracy",
-    directory="models/Face_Emo_Fer",
+    project_name="Fer_Emotion",
+    directory="models/FaceEmo",
 )
 
 print(f"{F.YELLOW}Starting hyperparameter search...{S.RESET_ALL}")
@@ -146,4 +146,4 @@ Evaluation = Hyper_Best.evaluate(Test_Generator)
 Test_Loss, Test_Acc = Evaluation[0], Evaluation[1]
 print(F.GREEN + f"Test Loss: {Test_Loss:.4f}" + S.RESET_ALL)
 print(F.GREEN + f"Test Accuracy: {Test_Acc:.4f}" + S.RESET_ALL)
-Hyper_Best.save("models/Face_Emo_Fer/Hyper_Best.h5")
+Hyper_Best.save("models/FaceEmo/Fer_model.h5")
