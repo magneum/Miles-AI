@@ -49,13 +49,10 @@ print(Style.RESET_ALL)
 file_path = os.path.abspath(__file__)
 file_name = os.path.basename(file_path)
 
-print(
-    "File Path: {}{}{}".format(Fore.CYAN, Style.BRIGHT, file_path, Style.RESET_ALL)
-)
-print(
-    "File Name: {}{}{}".format(Fore.CYAN, Style.BRIGHT, file_name, Style.RESET_ALL)
-)
+print("File Path: {}{}{}".format(Fore.CYAN, Style.BRIGHT, file_path, Style.RESET_ALL))
+print("File Name: {}{}{}".format(Fore.CYAN, Style.BRIGHT, file_name, Style.RESET_ALL))
 print(Style.RESET_ALL)
+
 
 def print_code_separator(section_name):
     try:
@@ -90,10 +87,14 @@ def print_code_separator(section_name):
     except Exception as e:
         print(f"An error occurred: {e}")
 
+
 X_Index = []
 Y_Index = []
 nEpochs = 50
 nValsplit = 0.2
+dataset_path = "corpdata/csv/Fer2013.csv"
+hyper_directory = "models/FaceEmo/Emotion"
+model_save_path = "models/FaceEmo/Face_Emotion_Model.h5"
 
 try:
     print_code_separator("# Check if folder exists")
@@ -101,9 +102,7 @@ try:
     _path = "models/FaceEmo"
     if not os.path.exists(_path):
         os.makedirs(_path)
-        print(
-            Fore.GREEN + Style.BRIGHT + f"Folder created: {_path}" + Style.RESET_ALL
-        )
+        print(Fore.GREEN + Style.BRIGHT + f"Folder created: {_path}" + Style.RESET_ALL)
     else:
         print(
             Fore.YELLOW
@@ -117,7 +116,7 @@ except Exception as e:
 try:
     print_code_separator("# Print loaded data information")
     print(Style.RESET_ALL)
-    Fer2013 = pandas.read_csv("corpdata/csv/Fer2013.csv")
+    Fer2013 = pandas.read_csv(dataset_path)
     print(Fore.GREEN + Style.BRIGHT + "Loaded Data Information:")
     print(Fore.YELLOW + Style.BRIGHT + "• Data shape: " + str(Fer2013.shape))
     print(Fore.YELLOW + Style.BRIGHT + "• Columns: " + ", ".join(Fer2013.columns))
@@ -161,6 +160,7 @@ try:
 except Exception as e:
     print(f"Error occurred: {e}")
 
+
 def Hyper_Builder(hp):
     try:
         model = keras.Sequential()
@@ -173,17 +173,13 @@ def Hyper_Builder(hp):
             )
         )
         model.add(
-            keras.layers.MaxPooling2D(
-                pool_size=hp.Choice("pool_size_1", values=[4, 5])
-            )
+            keras.layers.MaxPooling2D(pool_size=hp.Choice("pool_size_1", values=[4, 5]))
         )
         for i in range(hp.Int("nblocks", 1, 4)):
             model.add(
                 keras.layers.Conv2D(
                     filters=hp.Int("filters_" + str(i + 2), 32, 128, step=32),
-                    kernel_size=hp.Choice(
-                        "kernel_size_" + str(i + 2), values=[3, 5]
-                    ),
+                    kernel_size=hp.Choice("kernel_size_" + str(i + 2), values=[3, 5]),
                     activation="relu",
                     padding="same",
                 )
@@ -222,12 +218,7 @@ def Hyper_Builder(hp):
             + "• kernel_size_1: "
             + str(hp.get("kernel_size_1"))
         )
-        print(
-            Fore.CYAN
-            + Style.BRIGHT
-            + "• pool_size_1: "
-            + str(hp.get("pool_size_1"))
-        )
+        print(Fore.CYAN + Style.BRIGHT + "• pool_size_1: " + str(hp.get("pool_size_1")))
         for i in range(1, hp.get("nblocks") + 1):
             print(
                 Fore.CYAN
@@ -266,6 +257,7 @@ def Hyper_Builder(hp):
     except Exception as e:
         print(f"Error occurred: {e}")
 
+
 try:
     print_code_separator("# Create RandomSearch tuner")
     print(Style.RESET_ALL)
@@ -274,7 +266,7 @@ try:
         max_trials=20,
         project_name="Emotion",
         objective="val_accuracy",
-        directory="models/FaceEmo/Emotion",
+        directory=hyper_directory,
     )
 
     print_code_separator("# Start hyperparameter search")
@@ -294,10 +286,10 @@ try:
     BestHP = Hyper_Tuner.get_best_hyperparameters(1)[0]
     Hyper_Model = Hyper_Builder(BestHP)
     Hyper_Model.fit(X_Index, Y_Index, epochs=nEpochs, validation_split=0.2)
-    Hyper_Model.save("Face_Emotion_Model.h5")
+    Hyper_Model.save(model_save_path)
 except Exception as e:
     print(f"Error occurred: {e}")
-    
+
 
 try:
     print_code_separator("# Print best hyperparameters")
