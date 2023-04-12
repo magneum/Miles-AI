@@ -1,7 +1,8 @@
 import Jimp from "jimp";
 import { promisify } from "util";
 import terminalImage from "terminal-image";
-import tensorflow from "@tensorflow/tfjs-node";
+import * as tf from "@tensorflow/tfjs-node";
+import fs from "fs";
 
 const modelPath = "models/FaceEmo/Face_Emotion_Model.h5";
 const emotions = [
@@ -15,7 +16,11 @@ const emotions = [
 ];
 
 const main = async () => {
-  const model = await tensorflow.loadLayersModel(modelPath);
+  const modelBuffer = fs.readFileSync(modelPath);
+  const model = await tf.loadLayersModel(
+    tf.io.fromJSON(JSON.parse(modelBuffer))
+  );
+
   if (!model) {
     console.error("Failed to load the emotion detection model.");
     return;
@@ -31,7 +36,7 @@ const main = async () => {
     const resizedFrame = await grayFrame.clone().resize(28, 28);
     const normalizedFrame = await resizedFrame.clone().normalize();
 
-    const tensorFrame = tensorflow.tensor4d(
+    const tensorFrame = tf.tensor4d(
       [normalizedFrame.bitmap.data],
       [
         1,

@@ -3,13 +3,17 @@
   "description": "Miles Ai Voice Assistant",
   "type": "module",
   "dependencies": {
+    "@tensorflow/tfjs-node": "^4.4.0",
     "axios": "latest",
     "chalk": "latest",
     "cheerio": "latest",
     "cors": "^2.8.5",
     "express": "latest",
+    "jimp": "^0.22.7",
     "moment": "latest",
     "node-fetch": "latest",
+    "terminal-image": "^2.0.0",
+    "util": "^0.12.5",
     "yt-search": "latest",
     "ytdl-core": "latest"
   },
