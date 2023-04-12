@@ -2,44 +2,46 @@ import os
 import requests
 from colorama import Fore, Style
 
-dataset_urls = {
-    "IMDb movie review dataset": "https://ai.stanford.edu/~amaas/data/sentiment/aclImdb_v1.tar.gz",
-    "Twitter sentiment analysis dataset": "https://www.kaggle.com/datasets/kazanova/sentiment140/download?datasetVersionNumber=2",
-}
 
-if not os.path.exists("dataset_csv"):
-    os.makedirs("dataset_csv")
+def download_datasets(dataset_urls, folder_path="dataset_csv"):
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
 
-total_datasets = len(dataset_urls)
-downloaded_datasets = 0
+    total_datasets = len(dataset_urls)
+    downloaded_datasets = 0
 
-for dataset_name, dataset_url in dataset_urls.items():
-    try:
-        response = requests.get(dataset_url, stream=True)
-        response.raise_for_status()
-        file_name = "{}.csv".format(dataset_name)
-        file_path = os.path.join("dataset_csv", file_name)
-        with open(file_path, "wb") as file:
-            for chunk in response.iter_content(chunk_size=8192):
-                file.write(chunk)
-        downloaded_datasets += 1
-        print(
-            Fore.GREEN
-            + "{} downloaded and saved as {}".format(dataset_name, file_path)
-            + Style.RESET_ALL
-        )
-    except Exception as e:
-        print(
-            Fore.RED
-            + "Failed to download {}. Error: {}".format(dataset_name, str(e))
-            + Style.RESET_ALL
-        )
-    finally:
-        progress = (downloaded_datasets / total_datasets) * 100
-        print("Progress: {:.2f}%".format(progress))
+    for dataset_name, dataset_url in dataset_urls.items():
+        try:
+            response = requests.get(dataset_url, stream=True)
+            response.raise_for_status()
+            file_name = "{}.csv".format(dataset_name)
+            file_path = os.path.join(folder_path, file_name)
+            with open(file_path, "wb") as file:
+                for chunk in response.iter_content(chunk_size=8192):
+                    file.write(chunk)
+            downloaded_datasets += 1
+            print(
+                Fore.GREEN
+                + "{} downloaded and saved as {}".format(dataset_name, file_path)
+                + Style.RESET_ALL
+            )
+        except Exception as e:
+            print(
+                Fore.RED
+                + "Failed to download {}. Error: {}".format(dataset_name, str(e))
+                + Style.RESET_ALL
+            )
+        finally:
+            progress = (downloaded_datasets / total_datasets) * 100
+            print("Progress: {:.2f}%".format(progress))
 
-print("All datasets downloaded.")
+    print("All datasets downloaded.")
 
+
+# dataset_urls = {
+#     "IMDb movie review dataset": "https://ai.stanford.edu/~amaas/data/sentiment/aclImdb_v1.tar.gz",
+#     "Twitter sentiment analysis dataset": "https://www.kaggle.com/datasets/kazanova/sentiment140/download?datasetVersionNumber=2",
+# }
 
 # Sentiment Analysis:
 # IMDb movie review dataset: https://ai.stanford.edu/~amaas/data/sentiment/aclImdb_v1.tar.gz
