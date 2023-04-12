@@ -5,7 +5,7 @@ import pandas
 from colorama import Fore, Style
 from keras.callbacks import EarlyStopping
 from keras_tuner.tuners import RandomSearch
-from routes.exports.code_separator import code_separator
+from routes.exports.CodeSeparator import CodeSeparator
 
 
 print(Fore.YELLOW + Style.BRIGHT + "Code Description: FaceProcessing.py")
@@ -62,7 +62,7 @@ try:
     hyper_directory = "models/FaceEmo/Emotion"
     model_save_path = "models/FaceEmo/Face_Emotion_Model.h5"
 
-    code_separator("# Check if folder exists")
+    CodeSeparator("# Check if folder exists")
     print(Style.RESET_ALL)
     _path = "models/FaceEmo"
     if not os.path.exists(_path):
@@ -76,7 +76,7 @@ try:
             + Style.RESET_ALL
         )
 
-    code_separator("# Print loaded data information")
+    CodeSeparator("# Print loaded data information")
     print(Style.RESET_ALL)
     Fer2013 = pandas.read_csv(dataset_path)
     print(Fore.GREEN + Style.BRIGHT + "Loaded Data Information:")
@@ -93,7 +93,7 @@ try:
     X_Index = numpy.array(X_Index)
     Y_Index = numpy.array(Y_Index)
 
-    code_separator(
+    CodeSeparator(
         "# Print each statement using colorama with reset to default text color"
     )
     print(Style.RESET_ALL)
@@ -210,7 +210,7 @@ try:
 
         return model
 
-    code_separator("# Create RandomSearch tuner")
+    CodeSeparator("# Create RandomSearch tuner")
     print(Style.RESET_ALL)
     Hyper_Tuner = RandomSearch(
         Hyper_Builder,
@@ -220,7 +220,7 @@ try:
         directory=hyper_directory,
     )
 
-    code_separator("# Start hyperparameter search")
+    CodeSeparator("# Start hyperparameter search")
     print(Style.RESET_ALL)
     Hyper_Tuner.search(
         x=X_Index,
@@ -239,7 +239,7 @@ try:
     Hyper_Model.fit(X_Index, Y_Index, epochs=nEpochs, validation_split=0.2)
     Hyper_Model.save(model_save_path)
 
-    code_separator("# Print best hyperparameters")
+    CodeSeparator("# Print best hyperparameters")
     print(Style.RESET_ALL)
     print(Fore.GREEN + Style.BRIGHT + "Best Hyperparameters:")
     print(Fore.YELLOW + Style.BRIGHT + "• filters_1: " + str(BestHP.get("filters_1")))

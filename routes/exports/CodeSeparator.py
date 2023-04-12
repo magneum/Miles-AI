@@ -2,7 +2,7 @@ import random
 from colorama import Fore, Style
 
 
-def code_separator(section_name):
+def CodeSeparator(section_name):
     separator_width = 50
     separator_char = "*"
     section_label = f" {section_name} "

@@ -1,3 +1,3 @@
-from .code_separator import code_separator
+from .CodeSeparator import CodeSeparator
 from .DatasetDowload import download_datasets
 from .SplitDataset import get_encoding, split_dataset
