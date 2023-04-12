@@ -1,5 +1,7 @@
-import cv from "opencv4nodejs"; // yarn add opencv4nodejs
-import tf from "@tensorflow/tfjs-node"; // yarn add @tensorflow/tfjs-node
+import Jimp from "jimp";
+import { promisify } from "util";
+import tf from "@tensorflow/tfjs-node";
+import terminalImage from "terminal-image";
 
 const modelPath = "models/FaceEmo/Face_Emotion_Model.h5";
 const emotions = [
@@ -12,53 +14,49 @@ const emotions = [
   "Neutral",
 ];
 
-async function main() {
+const main = async () => {
   const model = await tf.loadLayersModel(modelPath);
   if (!model) {
     console.error("Failed to load the emotion detection model.");
     return;
   }
 
-  const camera = new cv.VideoCapture(0);
-  camera.set(cv.CAP_PROP_FPS, 30);
-  cv.namedWindow("Emotion Detection", cv.WINDOW_NORMAL);
+  const camera = await Jimp.create(640, 480);
+  const frame = await promisify(camera.getBuffer.bind(camera))(
+    Jimp.MIME_JPEG
+  );
+  const image = await Jimp.read(frame);
+  const window = Jimp.create(640, 480);
 
   while (true) {
-    const frame = camera.read();
-    if (frame.empty) {
-      console.error("Failed to read frame from the camera.");
-      continue;
-    }
+    const grayFrame = await image.clone().grayscale();
+    const resizedFrame = await grayFrame.clone().resize(28, 28);
+    const normalizedFrame = await resizedFrame.clone().normalize();
 
-    const grayFrame = frame.cvtColor(cv.COLOR_BGR2GRAY);
-    const resizedFrame = grayFrame.resize(new cv.Size(28, 28));
-    const normalizedFrame = resizedFrame.normalize(
-      0,
-      255,
-      cv.NORM_MINMAX,
-      cv.CV_32F
-    );
-    const tensorFrame = tf.tensor4d([normalizedFrame.getDataAsArray()]);
-    const prediction = model.predict(tensorFrame);
-    const predictionArray = prediction.arraySync()[0];
-    const maxIndex = predictionArray.indexOf(Math.max(...predictionArray));
-    const predictedEmotion = emotions[maxIndex];
-    frame.putText(
-      predictedEmotion,
-      new cv.Point(10, 50),
-      cv.FONT_HERSHEY_SIMPLEX,
+    const tensorFrame = tf.tensor4d([normalizedFrame.bitmap.data], [
       1,
-      new cv.Vec(0, 0, 255),
-      2
+      normalizedFrame.bitmap.height,
+      normalizedFrame.bitmap.width,
+      normalizedFrame.bitmap.channels,
+    ]);
+    const prediction = model.predict(tensorFrame);
+    const predictionArray = await prediction.array();
+    const maxIndex = predictionArray[0].indexOf(
+      Math.max(...predictionArray[0])
     );
-    cv.imshow("Emotion Detection", frame);
-    const key = cv.waitKey(100);
-    if (key === 113) {
-      break;
-    }
-  }
+    const predictedEmotion = emotions[maxIndex];
+    window.clone().print(
+      Jimp.loadFont(Jimp.FONT_SANS_16_WHITE),
+      10,
+      50,
+      predictedEmotion
+    );
 
-  camera.release();
-  cv.destroyAllWindows();
-}
+    const buffer = await promisify(window.getBuffer.bind(window))(Jimp.MIME_JPEG);
+    frame.data = Buffer.from(buffer);
+    console.log(await terminalImage.buffer(frame.bitmap.data));
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+};
+
 main();
