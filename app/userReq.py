@@ -1,7 +1,7 @@
 import re
 from .gptres import gptres
 from .commander import commander
-from routes.python import player
+from router.python import player
 
 
 def userReq(milesVoice):

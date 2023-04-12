@@ -5,7 +5,7 @@ import pandas
 from colorama import Fore, Style
 from keras.callbacks import EarlyStopping
 from keras_tuner.tuners import RandomSearch
-from routes.exports.CodeSeparator import CodeSeparator
+from router.exports.CodeSeparator import CodeSeparator
 
 # ============================================================ [ CREATED BY MAGNEUM ] ============================================================
 print(f"{Fore.YELLOW}{Style.BRIGHT}Code Description: FaceProcessing.py")
