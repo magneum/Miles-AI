@@ -53,9 +53,9 @@ print("File Path: {}{}{}".format(Fore.CYAN, Style.BRIGHT, file_path, Style.RESET
 print("File Name: {}{}{}".format(Fore.CYAN, Style.BRIGHT, file_name, Style.RESET_ALL))
 print(Style.RESET_ALL)
 
+try:
 
-def print_code_separator(section_name):
-    try:
+    def print_code_separator(section_name):
         separator_width = 50
         separator_char = "*"
         section_label = f" {section_name} "
@@ -84,19 +84,14 @@ def print_code_separator(section_name):
         print(section_label_line)
         print(separator_line)
 
-    except Exception as e:
-        print(f"An error occurred: {e}")
+    X_Index = []
+    Y_Index = []
+    nEpochs = 50
+    nValsplit = 0.2
+    dataset_path = "corpdata/csv/Fer2013.csv"
+    hyper_directory = "models/FaceEmo/Emotion"
+    model_save_path = "models/FaceEmo/Face_Emotion_Model.h5"
 
-
-X_Index = []
-Y_Index = []
-nEpochs = 50
-nValsplit = 0.2
-dataset_path = "corpdata/csv/Fer2013.csv"
-hyper_directory = "models/FaceEmo/Emotion"
-model_save_path = "models/FaceEmo/Face_Emotion_Model.h5"
-
-try:
     print_code_separator("# Check if folder exists")
     print(Style.RESET_ALL)
     _path = "models/FaceEmo"
@@ -110,10 +105,7 @@ try:
             + f"Folder already exists: {_path}"
             + Style.RESET_ALL
         )
-except Exception as e:
-    print(f"Error occurred: {e}")
 
-try:
     print_code_separator("# Print loaded data information")
     print(Style.RESET_ALL)
     Fer2013 = pandas.read_csv(dataset_path)
@@ -157,12 +149,8 @@ try:
     print(Fore.CYAN + Style.BRIGHT + "• Number of epochs: " + str(nEpochs))
     print(Fore.CYAN + Style.BRIGHT + "• Validation split: " + str(nValsplit))
     print(Style.RESET_ALL)
-except Exception as e:
-    print(f"Error occurred: {e}")
 
-
-def Hyper_Builder(hp):
-    try:
+    def Hyper_Builder(hp):
         model = keras.Sequential()
         model.add(
             keras.layers.Conv2D(
@@ -205,11 +193,8 @@ def Hyper_Builder(hp):
             loss="sparse_categorical_crossentropy",
             metrics=["accuracy"],
         )
-
-        # Add early stopping
         EarlyStopping(monitor="val_loss", patience=5, restore_best_weights=True)
 
-        # Print hyperparameters used in the model
         print(Fore.BLUE + Style.BRIGHT + "Hyperparameters:")
         print(Fore.CYAN + Style.BRIGHT + "• filters_1: " + str(hp.get("filters_1")))
         print(
@@ -254,11 +239,7 @@ def Hyper_Builder(hp):
         print(Style.RESET_ALL)
 
         return model
-    except Exception as e:
-        print(f"Error occurred: {e}")
 
-
-try:
     print_code_separator("# Create RandomSearch tuner")
     print(Style.RESET_ALL)
     Hyper_Tuner = RandomSearch(
@@ -287,11 +268,7 @@ try:
     Hyper_Model = Hyper_Builder(BestHP)
     Hyper_Model.fit(X_Index, Y_Index, epochs=nEpochs, validation_split=0.2)
     Hyper_Model.save(model_save_path)
-except Exception as e:
-    print(f"Error occurred: {e}")
 
-
-try:
     print_code_separator("# Print best hyperparameters")
     print(Style.RESET_ALL)
     print(Fore.GREEN + Style.BRIGHT + "Best Hyperparameters:")
