@@ -11,8 +11,7 @@
     "moment": "latest",
     "node-fetch": "latest",
     "yt-search": "latest",
-    "ytdl-core": "latest",
-    "yt-dlp": "latest"
+    "ytdl-core": "latest"
   },
   "devDependencies": {
     "concurrently": "latest"
