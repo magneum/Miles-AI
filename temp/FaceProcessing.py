@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from keras import layers
 from tensorflow import keras
-from keras_tuner.tuners import RandomSearch, Hyperband
+from keras_tuner.tuners import RandomSearch
 
 X = []
 y = []
