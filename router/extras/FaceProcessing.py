@@ -151,6 +151,7 @@ CodeSeparator("# Create RandomSearch tuner")
 print(Style.RESET_ALL)
 Hyper_Tuner = RandomSearch(
     Hyper_Builder,
+    seed=44,
     max_trials=20,
     project_name="Emotion",
     objective="val_accuracy",

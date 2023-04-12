@@ -4,8 +4,8 @@ from keras.optimizers import Adam
 from keras.models import Sequential
 from keras.models import Sequential
 from keras_tuner import HyperParameters
-from keras_tuner.tuners import Hyperband
 from colorama import Fore as F, Style as S
+from keras_tuner.tuners import RandomSearch
 from keras.preprocessing.image import ImageDataGenerator
 
 
@@ -126,12 +126,11 @@ print(f"{F.YELLOW}{S.BRIGHT}Target Size: {target_size}{S.RESET_ALL}")
 print(f"{F.YELLOW}{S.BRIGHT}Batch Size: {batch_size}{S.RESET_ALL}")
 print(f"{F.YELLOW}{S.BRIGHT}Class Mode: categorical{S.RESET_ALL}")
 
-# Define Hyper_Tuner with Hyperband configuration
-Hyper_Tuner = Hyperband(
+# Define Hyper_Tuner with RandomSearch configuration
+Hyper_Tuner = RandomSearch(
     Hyper_Builder,
     seed=44,
-    max_epochs=100,
-    hyperband_iterations=22,
+    max_trials=22,
     project_name="Emotion",
     objective="val_accuracy",
     directory="models/Face_Emo_Fer",
