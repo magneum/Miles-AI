@@ -25,7 +25,7 @@ def split_dataset(dataset_path, test_size=0.2, random_state=42):
     return x_train, y_train, x_test, y_test
 
 
-dataset_path = "corpdata/csv/Sentiment 140.csv"
+dataset_path = "corpdata/csv/IMDB_Dataset.csv"
 X_train, Y_train, X_test, Y_test = split_dataset(dataset_path)
 
 print(Fore.GREEN + Style.BRIGHT + "X_train: " + str(X_train))
