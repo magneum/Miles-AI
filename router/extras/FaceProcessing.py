@@ -126,40 +126,23 @@ def Hyper_Builder(hp):
         metrics=["accuracy"],
     )
     EarlyStopping(monitor="val_loss", patience=5, restore_best_weights=True)
+    for i in range(1, hp.get("nblocks") + 1):
+        print(
+            f"{Fore.CYAN}{Style.BRIGHT}• filters_{i + 1}: {hp.get('filters_' + str(i + 1))}"
+        )
+        print(
+            f"{Fore.CYAN}{Style.BRIGHT}• kernel_size_{i + 1}: {hp.get('kernel_size_' + str(i + 1))}"
+        )
+        print(
+            f"{Fore.CYAN}{Style.BRIGHT}• pool_size_{i + 1}: {hp.get('pool_size_' + str(i + 1))}"
+        )
     print(f"{Fore.BLUE}{Style.BRIGHT}Hyperparameters:")
     print(f"{Fore.CYAN}{Style.BRIGHT}• filters_1: {hp.get('filters_1')}")
     print(f"{Fore.CYAN}{Style.BRIGHT}• kernel_size_1: {hp.get('kernel_size_1')}")
     print(f"{Fore.CYAN}{Style.BRIGHT}• pool_size_1: {hp.get('pool_size_1')}")
-
-    for i in range(1, hp.get("nblocks") + 1):
-        print(
-            Fore.CYAN
-            + Style.BRIGHT
-            + "• filters_"
-            + str(i + 1)
-            + ": "
-            + str(hp.get("filters_" + str(i + 1)))
-        )
-        print(
-            Fore.CYAN
-            + Style.BRIGHT
-            + "• kernel_size_"
-            + str(i + 1)
-            + ": "
-            + str(hp.get("kernel_size_" + str(i + 1)))
-        )
-        print(
-            Fore.CYAN
-            + Style.BRIGHT
-            + "• pool_size_"
-            + str(i + 1)
-            + ": "
-            + str(hp.get("pool_size_" + str(i + 1)))
-        )
     print(Fore.CYAN + Style.BRIGHT + "• units: " + str(hp.get("units")))
     print(Fore.CYAN + Style.BRIGHT + "• learning_rate: " + str(hp.get("learning_rate")))
     print(Style.RESET_ALL)
-
     return model
 
 
@@ -196,40 +179,21 @@ Hyper_Model.save(model_save_path)
 # ============================================================ [ CREATED BY MAGNEUM ] ============================================================
 CodeSeparator("# Print best hyperparameters")
 print(Style.RESET_ALL)
-print(Fore.GREEN + Style.BRIGHT + "Best Hyperparameters:")
-print(Fore.YELLOW + Style.BRIGHT + "• filters_1: " + str(BestHP.get("filters_1")))
-print(
-    Fore.YELLOW + Style.BRIGHT + "• kernel_size_1: " + str(BestHP.get("kernel_size_1"))
-)
-print(Fore.YELLOW + Style.BRIGHT + "• pool_size_1: " + str(BestHP.get("pool_size_1")))
-print(Fore.YELLOW + Style.BRIGHT + "• nblocks: " + str(BestHP.get("nblocks")))
+print(f"{Fore.GREEN}{Style.BRIGHT}Best Hyperparameters:")
+print(f"{Fore.YELLOW}{Style.BRIGHT}• filters_1: {BestHP.get('filters_1')}")
+print(f"{Fore.YELLOW}{Style.BRIGHT}• kernel_size_1: {BestHP.get('kernel_size_1')}")
+print(f"{Fore.YELLOW}{Style.BRIGHT}• pool_size_1: {BestHP.get('pool_size_1')}")
+print(f"{Fore.YELLOW}{Style.BRIGHT}• nblocks: {BestHP.get('nblocks')}")
 for i in range(BestHP.get("nblocks")):
     print(
-        Fore.YELLOW
-        + Style.BRIGHT
-        + "• filters_"
-        + str(i + 2)
-        + ": "
-        + str(BestHP.get("filters_" + str(i + 2)))
+        f"{Fore.YELLOW}{Style.BRIGHT}• filters_{i+2}: {BestHP.get('filters_'+str(i+2))}"
     )
     print(
-        Fore.YELLOW
-        + Style.BRIGHT
-        + "• kernel_size_"
-        + str(i + 2)
-        + ": "
-        + str(BestHP.get("kernel_size_" + str(i + 2)))
+        f"{Fore.YELLOW}{Style.BRIGHT}• kernel_size_{i+2}: {BestHP.get('kernel_size_'+str(i+2))}"
     )
     print(
-        Fore.YELLOW
-        + Style.BRIGHT
-        + "• pool_size_"
-        + str(i + 2)
-        + ": "
-        + str(BestHP.get("pool_size_" + str(i + 2)))
+        f"{Fore.YELLOW}{Style.BRIGHT}• pool_size_{i+2}: {BestHP.get('pool_size_'+str(i+2))}"
     )
-print(Fore.YELLOW + Style.BRIGHT + "• units: " + str(BestHP.get("units")))
-print(
-    Fore.YELLOW + Style.BRIGHT + "• learning_rate: " + str(BestHP.get("learning_rate"))
-)
+    print(f"{Fore.YELLOW}{Style.BRIGHT}• units: {BestHP.get('units')}")
+    print(f"{Fore.YELLOW}{Style.BRIGHT}• learning_rate: {BestHP.get('learning_rate')}")
 print(Style.RESET_ALL)
