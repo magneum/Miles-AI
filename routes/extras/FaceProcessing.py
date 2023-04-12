@@ -1,10 +1,10 @@
-import os
 import numpy
 import keras
 import pandas
 from colorama import Fore, Style
 from keras.callbacks import EarlyStopping
 from keras_tuner.tuners import RandomSearch
+from routes.exports.SplitDataset import get_encoding
 from routes.exports.CodeSeparator import CodeSeparator
 
 
@@ -30,30 +30,16 @@ print(
 )
 print(f"{Style.RESET_ALL}")
 
-file_path = os.path.abspath(__file__)
-file_name = os.path.basename(file_path)
-
-print(f"File Path: {Fore.CYAN}{Style.BRIGHT}{file_path}{Style.RESET_ALL}")
-print(f"File Name: {Fore.CYAN}{Style.BRIGHT}{file_name}{Style.RESET_ALL}")
-print(f"{Style.RESET_ALL}")
-
 
 X_Index = []
 Y_Index = []
-nEpochs = 50
+nEpochs = 100
+glove_dim = 300
 nValsplit = 0.2
 dataset_path = "corpdata/csv/Fer2013.csv"
 hyper_directory = "models/FaceEmo/Emotion"
+GloVe_Path = "corpdata/glove/glove.6B.50d.txt"
 model_save_path = "models/FaceEmo/Face_Emotion_Model.h5"
-
-CodeSeparator("# Check if folder exists")
-print(Style.RESET_ALL)
-_path = "models/FaceEmo"
-if not os.path.exists(_path):
-    os.makedirs(_path)
-    print(f"{Fore.GREEN}{Style.BRIGHT}Folder created: {_path}{Style.RESET_ALL}")
-else:
-    print(f"{Fore.YELLOW}{Style.BRIGHT}Folder already exists: {_path}{Style.RESET_ALL}")
 
 
 CodeSeparator("# Print loaded data information")
@@ -85,14 +71,22 @@ print(f"{Fore.CYAN}{Style.BRIGHT}• Validation split: {nValsplit}")
 print(f"{Style.RESET_ALL}")
 
 
-def Hyper_Builder(hp):
+def Hyper_Builder(hp, embeddings_index):
     model = keras.Sequential()
+    model.add(
+        keras.layers.Embedding(
+            input_dim=hp.Choice("input_dim", values=[10000, 20000]),
+            output_dim=glove_dim,
+            input_length=48 * 48,
+            trainable=False,
+        )
+    )
     model.add(
         keras.layers.Conv2D(
             filters=hp.Int("filters_1", 32, 128, step=32),
             kernel_size=hp.Choice("kernel_size_1", values=[3, 5]),
             activation="relu",
-            input_shape=(48, 48, 1),
+            input_shape=(48, 48, glove_dim),
         )
     )
     model.add(
@@ -101,73 +95,63 @@ def Hyper_Builder(hp):
     for i in range(hp.Int("nblocks", 1, 4)):
         model.add(
             keras.layers.Conv2D(
-                filters=hp.Int("filters_" + str(i + 2), 32, 128, step=32),
-                kernel_size=hp.Choice("kernel_size_" + str(i + 2), values=[3, 5]),
+                filters=hp.Int(f"filters_{i + 2}", 32, 128, step=32),
+                kernel_size=hp.Choice(f"kernel_size_{i + 2}", values=[3, 5]),
                 activation="relu",
                 padding="same",
             )
         )
         model.add(
             keras.layers.MaxPooling2D(
-                pool_size=hp.Choice("pool_size_" + str(i + 2), values=[4, 5]),
+                pool_size=hp.Choice(f"pool_size_{i + 2}", values=[4, 5]),
                 padding="same",
             )
         )
-
     model.add(keras.layers.Flatten())
     model.add(
         keras.layers.Dense(units=hp.Int("units", 128, 512, step=32), activation="relu")
     )
     model.add(keras.layers.Dense(7, activation="softmax"))
+
+    early_stopping = keras.callbacks.EarlyStopping(
+        monitor="val_loss", patience=5, restore_best_weights=True
+    )
+
     model.compile(
         optimizer=keras.optimizers.Adam(
             hp.Choice("learning_rate", values=[1e-2, 1e-3, 1e-4])
         ),
         loss="sparse_categorical_crossentropy",
         metrics=["accuracy"],
+        callbacks=[early_stopping],
     )
-    EarlyStopping(monitor="val_loss", patience=5, restore_best_weights=True)
-    print(f"{Fore.BLUE}{Style.BRIGHT}Hyperparameters:")
-    print(f"{Fore.CYAN}{Style.BRIGHT}• filters_1: {hp.get('filters_1')}")
-    print(f"{Fore.CYAN}{Style.BRIGHT}• kernel_size_1: {hp.get('kernel_size_1')}")
-    print(f"{Fore.CYAN}{Style.BRIGHT}• pool_size_1: {hp.get('pool_size_1')}")
-
-    for i in range(1, hp.get("nblocks") + 1):
-        print(
-            Fore.CYAN
-            + Style.BRIGHT
-            + "• filters_"
-            + str(i + 1)
-            + ": "
-            + str(hp.get("filters_" + str(i + 1)))
-        )
-        print(
-            Fore.CYAN
-            + Style.BRIGHT
-            + "• kernel_size_"
-            + str(i + 1)
-            + ": "
-            + str(hp.get("kernel_size_" + str(i + 1)))
-        )
-        print(
-            Fore.CYAN
-            + Style.BRIGHT
-            + "• pool_size_"
-            + str(i + 1)
-            + ": "
-            + str(hp.get("pool_size_" + str(i + 1)))
-        )
-    print(Fore.CYAN + Style.BRIGHT + "• units: " + str(hp.get("units")))
-    print(Fore.CYAN + Style.BRIGHT + "• learning_rate: " + str(hp.get("learning_rate")))
-    print(Style.RESET_ALL)
-
     return model
+
+
+def Load_GloVe(file):
+    CodeSeparator("# Preparing GloVe Embeddings")
+    print(f"{Style.RESET_ALL}")
+    embeddings_index = {}
+    for line in file:
+        values = line.split()
+        word = values[0]
+        coefs = numpy.asarray(values[1:], dtype="float32")
+        embeddings_index[word] = coefs
+    return embeddings_index
+
+
+print(f"{Fore.GREEN}{Style.BRIGHT}Loading GloVe embeddings...")
+encoding = get_encoding(GloVe_Path)
+with open(GloVe_Path, encoding) as File:
+    embeddings_index = Load_GloVe(File)
+print(f"{Fore.GREEN}{Style.BRIGHT}GloVe embeddings loaded.")
+print(f"{Style.RESET_ALL}")
 
 
 CodeSeparator("# Create RandomSearch tuner")
 print(Style.RESET_ALL)
 Hyper_Tuner = RandomSearch(
-    Hyper_Builder,
+    lambda hp: Hyper_Builder(hp, embeddings_index),
     max_trials=20,
     project_name="Emotion",
     objective="val_accuracy",
@@ -189,7 +173,7 @@ Hyper_Tuner.search(
 )
 
 BestHP = Hyper_Tuner.get_best_hyperparameters(1)[0]
-Hyper_Model = Hyper_Builder(BestHP)
+Hyper_Model = Hyper_Builder(BestHP, embeddings_index)
 Hyper_Model.fit(X_Index, Y_Index, epochs=nEpochs, validation_split=0.2)
 Hyper_Model.save(model_save_path)
 
