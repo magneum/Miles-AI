@@ -1,7 +1,7 @@
 import cv from "opencv4nodejs"; // yarn add opencv4nodejs
 import tf from "@tensorflow/tfjs-node"; // yarn add @tensorflow/tfjs-node
 
-const modelPath = "emotion_detection_model.h5";
+const modelPath = "models/FaceEmo/Face_Emotion_Model.h5";
 const emotions = [
   "Angry",
   "Disgust",
