@@ -2,10 +2,10 @@ import os
 import numpy
 import keras
 import pandas
+import random
 from colorama import Fore, Style
 from keras.callbacks import EarlyStopping
 from keras_tuner.tuners import RandomSearch
-from routes.exports.CodeSeparator import CodeSeparator
 
 
 print(f"{Fore.YELLOW}{Style.BRIGHT}Code Description: FaceProcessing.py")
@@ -30,30 +30,44 @@ print(
 )
 print(f"{Style.RESET_ALL}")
 
-file_path = os.path.abspath(__file__)
-file_name = os.path.basename(file_path)
 
-print(f"File Path: {Fore.CYAN}{Style.BRIGHT}{file_path}{Style.RESET_ALL}")
-print(f"File Name: {Fore.CYAN}{Style.BRIGHT}{file_name}{Style.RESET_ALL}")
-print(f"{Style.RESET_ALL}")
+def CodeSeparator(section_name):
+    separator_width = 50
+    separator_char = "*"
+    section_label = f" {section_name} "
+    section_label_width = separator_width - 2
+    section_label_padding = (section_label_width - len(section_label)) // 2
+    separator_line = separator_char * separator_width
+    available_colors = [
+        Fore.RED,
+        Fore.GREEN,
+        Fore.YELLOW,
+        Fore.BLUE,
+        Fore.MAGENTA,
+        Fore.CYAN,
+        Fore.WHITE,
+    ]
+    random_color = random.choice(available_colors)
+    section_label_line = (
+        separator_char
+        + " " * section_label_padding
+        + f"{random_color}{Style.BRIGHT}{section_name}{Style.RESET_ALL}"
+        + " " * section_label_padding
+        + separator_char
+    )
+
+    print(separator_line)
+    print(section_label_line)
+    print(separator_line)
 
 
 X_Index = []
 Y_Index = []
-nEpochs = 50
+nEpochs = 100
 nValsplit = 0.2
-dataset_path = "corpdata/csv/Fer2013.csv"
-hyper_directory = "models/FaceEmo/Emotion"
-model_save_path = "models/FaceEmo/Face_Emotion_Model.h5"
-
-CodeSeparator("# Check if folder exists")
-print(Style.RESET_ALL)
-_path = "models/FaceEmo"
-if not os.path.exists(_path):
-    os.makedirs(_path)
-    print(f"{Fore.GREEN}{Style.BRIGHT}Folder created: {_path}{Style.RESET_ALL}")
-else:
-    print(f"{Fore.YELLOW}{Style.BRIGHT}Folder already exists: {_path}{Style.RESET_ALL}")
+hyper_directory = "Face_Emo/Emotion"
+model_save_path = "Face_Emo/Face_Emotion_Model.h5"
+dataset_path = "/kaggle/input/fer2013/fer2013.csv"
 
 
 CodeSeparator("# Print loaded data information")
@@ -113,7 +127,6 @@ def Hyper_Builder(hp):
                 padding="same",
             )
         )
-
     model.add(keras.layers.Flatten())
     model.add(
         keras.layers.Dense(units=hp.Int("units", 128, 512, step=32), activation="relu")
@@ -131,7 +144,6 @@ def Hyper_Builder(hp):
     print(f"{Fore.CYAN}{Style.BRIGHT}• filters_1: {hp.get('filters_1')}")
     print(f"{Fore.CYAN}{Style.BRIGHT}• kernel_size_1: {hp.get('kernel_size_1')}")
     print(f"{Fore.CYAN}{Style.BRIGHT}• pool_size_1: {hp.get('pool_size_1')}")
-
     for i in range(1, hp.get("nblocks") + 1):
         print(
             Fore.CYAN
@@ -160,7 +172,6 @@ def Hyper_Builder(hp):
     print(Fore.CYAN + Style.BRIGHT + "• units: " + str(hp.get("units")))
     print(Fore.CYAN + Style.BRIGHT + "• learning_rate: " + str(hp.get("learning_rate")))
     print(Style.RESET_ALL)
-
     return model
 
 
