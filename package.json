@@ -1,0 +1,20 @@
+{
+  "name": "miles-ai",
+  "description": "Miles Ai Voice Assistant",
+  "type": "module",
+  "dependencies": {
+    "axios": "latest",
+    "chalk": "latest",
+    "cheerio": "latest",
+    "cors": "^2.8.5",
+    "express": "latest",
+    "moment": "latest",
+    "node-fetch": "latest",
+    "yt-search": "latest",
+    "ytdl-core": "latest",
+    "yt-dlp": "latest"
+  },
+  "devDependencies": {
+    "concurrently": "latest"
+  }
+}
