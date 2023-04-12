@@ -4,9 +4,9 @@ from colorama import Fore, Style
 from sklearn.model_selection import train_test_split
 
 
-def get_encoding(file_path):
-    with open(file_path, "rb") as f:
-        result = chardet.detect(f.read())
+def get_encoding(File_path):
+    with open(File_path, "rb") as File:
+        result = chardet.detect(File.read())
     return result["encoding"]
 
 
