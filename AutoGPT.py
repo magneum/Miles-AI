@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import os
 import time
 import openai
@@ -14,14 +13,14 @@ load_dotenv()
 
 INITIAL_TASK = os.getenv("INITIAL_TASK", os.getenv("FIRST_TASK", ""))
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-3.5-turbo")
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 PINECONE_API = os.getenv("PINECONE_API", "")
 PINECONE_ENV = os.getenv("PINECONE_ENV", "")
+OPENAI_API = os.getenv("OPENAI_API", "")
 TABLE_NAME = os.getenv("TABLE_NAME", "")
 OBJECTIVE = os.getenv("OBJECTIVE", "")
 
 
-assert OPENAI_API_KEY, "OPENAI_API_KEY environment variable is missing from .env"
+assert OPENAI_API, "OPENAI_API environment variable is missing from .env"
 assert TABLE_NAME, "TABLE_NAME environment variable is missing from .env"
 assert PINECONE_ENV, "PINECONE_ENV environment variable is missing from .env"
 assert PINECONE_API, "PINECONE_API environment variable is missing from .env"
@@ -52,7 +51,7 @@ print(
     + f" {INITIAL_TASK}"
 )
 
-openai.api_key = OPENAI_API_KEY
+openai.api_key = OPENAI_API
 pinecone.init(api_key=PINECONE_API, environment=PINECONE_ENV)
 table_name = TABLE_NAME
 dimension = 1536
