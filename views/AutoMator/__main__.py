@@ -156,8 +156,8 @@ New Tasks:
         {"task_name": task_name, "task_description": task_description}
         for task_name, task_description in zip(task_names, task_descriptions)
     ]
-    with open("views/AutoMator/AutoMator.json", "w") as f:
-        json.dump(all_responses, f, indent=4)
+    with open("views/AutoMator/AutoMator.json", "w") as File:
+        json.dump(all_responses, File, indent=4)
     return new_tasks
 
 
