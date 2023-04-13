@@ -1,5 +1,6 @@
 import os
 import time
+import json
 import openai
 import pinecone
 import importlib
@@ -140,6 +141,16 @@ def Agent_TaskCreate(
     return [{"task_name": task_name} for task_name in new_tasks]
 
 
+def save_task_list_to_json(task_list, filename):
+    with open(filename, "w") as f:
+        json.dump(task_list, f)
+
+
+def load_task_list_from_json(filename):
+    with open(filename, "r") as f:
+        return json.load(f)
+
+
 def prioritization_agent(this_task_id: int):
     global task_list
     task_names = [t["task_name"] for t in task_list]
@@ -156,6 +167,7 @@ def prioritization_agent(this_task_id: int):
             task_id = task_parts[0].strip()
             task_name = task_parts[1].strip()
             task_list.append({"task_id": task_id, "task_name": task_name})
+    save_task_list_to_json(list(task_list), "task_list.json")
 
 
 def context_agent(query: str, n: int):
