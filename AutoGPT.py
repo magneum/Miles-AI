@@ -1,13 +1,9 @@
-import os
-import json
-import time
-import openai
-import pinecone
-import subprocess
+import os, json, time, openai, pinecone, subprocess
 from typing import Dict, List
 from collections import deque
 from dotenv import load_dotenv
 from colorama import Fore, Style
+
 
 load_dotenv()
 
@@ -21,11 +17,9 @@ TABLE_NAME = os.getenv("TABLE_NAME", "")
 OBJECTIVE = os.getenv("OBJECTIVE", "")
 
 
-assert OPENAI_API, "OPENAI_API environment variable is missing from .env"
-assert TABLE_NAME, "TABLE_NAME environment variable is missing from .env"
-assert PINECONE_ENV, "PINECONE_ENV environment variable is missing from .env"
-assert PINECONE_API, "PINECONE_API environment variable is missing from .env"
-assert OPENAI_MODEL, "OPENAI_MODEL environment variable is missing from .env"
+assert (
+    OPENAI_API and TABLE_NAME and PINECONE_ENV and PINECONE_API and OPENAI_MODEL
+), "One or more environment variables are missing from .env"
 
 
 # ============================================================ [ CREATED BY MAGNEUM ] ============================================================
