@@ -1,6 +1,6 @@
 import os
+import csv
 import time
-import json
 import openai
 import pinecone
 import importlib
@@ -145,9 +145,7 @@ def prioritization_agent(this_task_id: int):
     global task_list
     task_names = [t["task_name"] for t in task_list]
     next_task_id = int(this_task_id) + 1
-    prompt = f"""You are a task prioritization AI responsible for cleaning the formatting and reprioritizing the following tasks: {task_names}. 
-    Consider the ultimate objective of your team: {OBJECTIVE}. Do not remove any tasks. 
-    Return the result as a numbered list, starting with task number {next_task_id}."""
+    prompt = f"You are a task prioritization AI responsible for cleaning the formatting and reprioritizing the following tasks: {task_names}. Consider the ultimate objective of your team: {OBJECTIVE}. Do not remove any tasks. Return the result as a numbered list, starting with task number {next_task_id}."
     response = openai_response(prompt)
     new_tasks = response.split("\n") if "\n" in response else [response]
     task_list = deque()
@@ -156,7 +154,52 @@ def prioritization_agent(this_task_id: int):
         if len(task_parts) == 2:
             task_id = task_parts[0].strip()
             task_name = task_parts[1].strip()
-            task_list.append({"task_id": task_id, "task_name": task_name})
+            task_list.append(
+                {
+                    "task_id": task_id,
+                    "task_name": task_name,
+                    "task_description": "",
+                    "task_priority": "",
+                }
+            )
+
+    with open("output.csv", "w", newline="") as csvfile:
+        fieldnames = ["Task ID", "Task Name", "Task Description", "Task Priority"]
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        for task in task_list:
+            writer.writerow(
+                {
+                    "Task ID": task["task_id"],
+                    "Task Name": task["task_name"],
+                    "Task Description": task["task_description"],
+                    "Task Priority": task["task_priority"],
+                }
+            )
+        writer.writerow(
+            {
+                "Task ID": "",
+                "Task Name": "",
+                "Task Description": "",
+                "Task Priority": "",
+            }
+        )
+        writer.writerow(
+            {
+                "Task ID": "",
+                "Task Name": "Output:",
+                "Task Description": "",
+                "Task Priority": "",
+            }
+        )
+        writer.writerow(
+            {
+                "Task ID": "",
+                "Task Name": response,
+                "Task Description": "",
+                "Task Priority": "",
+            }
+        )
 
 
 def context_agent(query: str, n: int):
