@@ -162,7 +162,7 @@ New Tasks:
         {"task_name": task_name, "task_description": task_description}
         for task_name, task_description in zip(task_names, task_descriptions)
     ]
-    with open("responses.json", "w") as f:
+    with open("AutoGPT.json", "w") as f:
         json.dump(all_responses, f, indent=4)
     return new_tasks
 
