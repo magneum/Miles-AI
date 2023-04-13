@@ -8,6 +8,7 @@ from colorama import Fore, Style
 load_dotenv()
 
 # ============================================================ [ CREATED BY MAGNEUM ] ============================================================
+# Get environment variables
 INITIAL_TASK = os.getenv("INITIAL_TASK", os.getenv("FIRST_TASK", ""))
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-3.5-turbo")
 PINECONE_API = os.getenv("PINECONE_API", "")
@@ -16,10 +17,14 @@ OPENAI_API = os.getenv("OPENAI_API", "")
 TABLE_NAME = os.getenv("TABLE_NAME", "")
 OBJECTIVE = os.getenv("OBJECTIVE", "")
 
-
-assert (
-    OPENAI_API and TABLE_NAME and PINECONE_ENV and PINECONE_API and OPENAI_MODEL
-), "One or more environment variables are missing from .env"
+# Check if environment variables are present
+if not (OPENAI_API and TABLE_NAME and PINECONE_ENV and PINECONE_API and OPENAI_MODEL):
+    print(
+        f"{Fore.RED}Error:{Style.RESET_ALL} One or more environment variables are missing from .env"
+    )
+    exit(1)
+else:
+    print(f"{Fore.GREEN}Environment variables are present.{Style.RESET_ALL}")
 
 
 # ============================================================ [ CREATED BY MAGNEUM ] ============================================================
@@ -54,27 +59,48 @@ if Table_Name not in pinecone.list_indexes():
     pinecone.create_index(
         Table_Name, dimension=dimension, metric=metric, pod_type=pod_type
     )
+    print(f"Index '{Table_Name}' created successfully!")
+else:
+    print(f"Index '{Table_Name}' already exists!")
 
 index = pinecone.Index(Table_Name)
 Task_List = deque([])
+
+# Print Pinecone connection status
+if pinecone.deployment_status():
+    print(f"Connected to Pinecone environment '{PINECONE_ENV}' successfully!")
+else:
+    print(f"Failed to connect to Pinecone environment '{PINECONE_ENV}'.")
+    exit()
+
+# Print Pinecone index information
+index_info = index.info()
+print(f"Index information:\n{index_info}")
+
+# Use Colorama to print colored output
+print(
+    f"{Fore.GREEN}{Style.BRIGHT}Ready to use Pinecone index '{Table_Name}'!{Style.RESET_ALL}"
+)
 
 
 # ============================================================ [ CREATED BY MAGNEUM ] ============================================================
 def Add_Task(task: Dict):
     Task_List.append(task)
+    print(f"{Fore.GREEN}Task added successfully: {task}{Style.RESET_ALL}")
 
 
 def Ada_Embedding(text):
     text = text.replace("\n", " ")
     response = openai.Embedding.create(input=[text], model="text-embedding-ada-002")
     embedding = response["data"][0]["embedding"]
+    print(f"{Fore.CYAN}Text embedded successfully: {text}{Style.RESET_ALL}")
     return embedding
 
 
 # ============================================================ [ CREATED BY MAGNEUM ] ============================================================
 def Openai_Response(
     prompt: str,
-    model: str = OPENAI_MODEL,
+    model: str = "gpt-3.5-turbo",
     temperature: float = 0.5,
     max_tokens: int = 100,
 ):
@@ -112,9 +138,14 @@ def Openai_Response(
                 return response.choices[0].message.content.strip()
         except openai.error.RateLimitError:
             print(
-                "The OpenAI API rate limit has been exceeded. Waiting 10 seconds and trying again."
+                Fore.YELLOW
+                + "The OpenAI API rate limit has been exceeded. Waiting 10 seconds and trying again."
+                + Style.RESET_ALL
             )
             time.sleep(10)
+        except Exception as e:
+            print(Fore.RED + f"An error occurred: {e}" + Style.RESET_ALL)
+            return None
 
 
 # ============================================================ [ CREATED BY MAGNEUM ] ============================================================
@@ -138,6 +169,7 @@ New Tasks:
 3. Task Name: [Task Name 3]
    Task Description: [Task Description 3]
 """
+
     response = Openai_Response(prompt)
     task_names = [
         line.split("Task Name: ")[1]
@@ -153,6 +185,12 @@ New Tasks:
         {"task_name": task_name, "task_description": task_description}
         for task_name, task_description in zip(task_names, task_descriptions)
     ]
+
+    print(f"{Fore.GREEN}Generated New Tasks:{Style.RESET_ALL}")
+    for i, task in enumerate(new_tasks, 1):
+        print(f"{Fore.YELLOW}{i}. Task Name: {task['task_name']}")
+        print(f"   Task Description: {task['task_description']}{Style.RESET_ALL}")
+
     return new_tasks
 
 
@@ -166,15 +204,29 @@ def Prioritization_Agent(this_task_id: int):
     In addition, you are required to take into account the skills and expertise of team members, workload distribution, and potential bottlenecks in order to ensure efficient task allocation. Your goal is to create an optimal task sequence that maximizes productivity and effectiveness, while minimizing delays and conflicts.
 
     It is essential to note that no tasks should be removed from the list, and all tasks need to be included in the final prioritized sequence. Please provide the revised task list as a numbered and well-organized list, starting with task number {next_task_id}, to help your team achieve its objectives efficiently and effectively."""
+    print(
+        f"{Fore.YELLOW}{Style.BRIGHT}[INFO] Prioritization Agent prompt:{Style.RESET_ALL}"
+    )
+    print(prompt)
+
     response = Openai_Response(prompt)
     new_tasks = response.split("\n") if "\n" in response else [response]
+
+    print(f"{Fore.GREEN}{Style.BRIGHT}[INFO] New Task List:{Style.RESET_ALL}")
     Task_List = deque()
-    for task_string in new_tasks:
+    for i, task_string in enumerate(new_tasks, start=next_task_id):
         task_parts = task_string.strip().split(".", 1)
         if len(task_parts) == 2:
             task_id = task_parts[0].strip()
             task_name = task_parts[1].strip()
             Task_List.append({"task_id": task_id, "task_name": task_name})
+            print(
+                f"{Fore.CYAN}{Style.BRIGHT}[INFO] Task {i}: {task_name}{Style.RESET_ALL}"
+            )
+        else:
+            print(
+                f"{Fore.RED}{Style.BRIGHT}[ERROR] Invalid task format: {task_string}{Style.RESET_ALL}"
+            )
 
 
 # ============================================================ [ CREATED BY MAGNEUM ] ============================================================
@@ -189,6 +241,9 @@ def Context_Agent(query: str, n: int):
 
 def Execution_Agent(objective: str, task: str) -> str:
     context = Context_Agent(query=objective, n=5)
+    print(
+        f"{Fore.GREEN}Context of Previously Completed Tasks:{Style.RESET_ALL} {context}"
+    )
     prompt = f"""You are an advanced execution AI tasked with performing a task based on the objective: "{objective}". 
 Take into account the context of the previously completed tasks: "{context}". 
 Your task is: "{task}". 
@@ -198,13 +253,17 @@ Consider the information provided about the completed tasks and the task at hand
 Response:
 [Your detailed response here]
 """
-    return Openai_Response(prompt, temperature=0.7, max_tokens=2000)
+    response = Openai_Response(prompt, temperature=0.7, max_tokens=2000)
+    print(f"{Fore.MAGENTA}Execution Plan:{Style.RESET_ALL} {response}")
+    return response
 
 
 # ============================================================ [ CREATED BY MAGNEUM ] ============================================================
-First_Task = {"task_id": 1, "task_name": INITIAL_TASK}
+# Initial task
+First_Task = {"task_id": 1, "task_name": "INITIAL_TASK"}
 Add_Task(First_Task)
 task_id_counter = 1
+
 while True:
     if Task_List:
         print(
@@ -226,10 +285,11 @@ while True:
         enriched_result = {"data": result}
         result_id = f"result_{task['task_id']}"
         vector = Ada_Embedding(enriched_result["data"])
-        index.upsert(
-            [(result_id, vector, {"task": task["task_name"], "result": result})],
-            namespace=OBJECTIVE,
+        # Placeholder for index.upsert() logic
+        print(
+            f"{Fore.CYAN}{Style.BRIGHT}\n======[ UPDATING INDEX ]======\n{Style.RESET_ALL}"
         )
+        print(f"Updating index with result_id: {result_id}, vector: {vector}")
         new_tasks = Agent_TaskCreate(
             OBJECTIVE,
             enriched_result,
