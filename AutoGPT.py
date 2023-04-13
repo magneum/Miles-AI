@@ -1,9 +1,8 @@
 import os
-import csv
+import json
 import time
 import openai
 import pinecone
-import importlib
 import subprocess
 from typing import Dict, List
 from collections import deque
@@ -51,6 +50,7 @@ print(
 )
 
 # ============================================================ [ CREATED BY MAGNEUM ] ============================================================
+all_responses = []
 openai.api_key = OPENAI_API
 pinecone.init(api_key=PINECONE_API, environment=PINECONE_ENV)
 Table_Name = TABLE_NAME
@@ -106,6 +106,7 @@ def Openai_Response(
                     engine=model,
                     top_p=1,
                 )
+                all_responses.append(response.choices[0].text.strip())
                 return response.choices[0].text.strip()
             else:
                 response = openai.ChatCompletion.create(
@@ -116,6 +117,7 @@ def Openai_Response(
                     stop=None,
                     n=1,
                 )
+                all_responses.append(response.choices[0].text.strip())
                 return response.choices[0].message.content.strip()
         except openai.error.RateLimitError:
             print(
@@ -160,6 +162,8 @@ New Tasks:
         {"task_name": task_name, "task_description": task_description}
         for task_name, task_description in zip(task_names, task_descriptions)
     ]
+    with open("responses.json", "w") as f:
+        json.dump(all_responses, f, indent=4)
     return new_tasks
 
 
