@@ -12,7 +12,7 @@ from colorama import Fore, Style
 
 load_dotenv()
 
-
+# ============================================================ [ CREATED BY MAGNEUM ] ============================================================
 INITIAL_TASK = os.getenv("INITIAL_TASK", os.getenv("FIRST_TASK", ""))
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-3.5-turbo")
 PINECONE_API = os.getenv("PINECONE_API", "")
@@ -29,14 +29,7 @@ assert PINECONE_API, "PINECONE_API environment variable is missing from .env"
 assert OPENAI_MODEL, "OPENAI_MODEL environment variable is missing from .env"
 
 
-def can_import(module_name):
-    try:
-        importlib.import_module(module_name)
-        return True
-    except ImportError:
-        return False
-
-
+# ============================================================ [ CREATED BY MAGNEUM ] ============================================================
 if "gpt-4" in OPENAI_MODEL.lower():
     print(
         f"{Fore.RED}{Style.BRIGHT}"
@@ -57,33 +50,36 @@ print(
     + f" {INITIAL_TASK}"
 )
 
+# ============================================================ [ CREATED BY MAGNEUM ] ============================================================
 openai.api_key = OPENAI_API
 pinecone.init(api_key=PINECONE_API, environment=PINECONE_ENV)
-table_name = TABLE_NAME
+Table_Name = TABLE_NAME
 dimension = 1536
 metric = "cosine"
 pod_type = "p1"
-if table_name not in pinecone.list_indexes():
+if Table_Name not in pinecone.list_indexes():
     pinecone.create_index(
-        table_name, dimension=dimension, metric=metric, pod_type=pod_type
+        Table_Name, dimension=dimension, metric=metric, pod_type=pod_type
     )
 
-index = pinecone.Index(table_name)
-task_list = deque([])
+index = pinecone.Index(Table_Name)
+Task_List = deque([])
 
 
-def add_task(task: Dict):
-    task_list.append(task)
+# ============================================================ [ CREATED BY MAGNEUM ] ============================================================
+def Add_Task(task: Dict):
+    Task_List.append(task)
 
 
-def get_ada_embedding(text):
+def Ada_Embedding(text):
     text = text.replace("\n", " ")
-    return openai.Embedding.create(input=[text], model="text-embedding-ada-002")[
-        "data"
-    ][0]["embedding"]
+    response = openai.Embedding.create(input=[text], model="text-embedding-ada-002")
+    embedding = response["data"][0]["embedding"]
+    return embedding
 
 
-def openai_response(
+# ============================================================ [ CREATED BY MAGNEUM ] ============================================================
+def Openai_Response(
     prompt: str,
     model: str = OPENAI_MODEL,
     temperature: float = 0.5,
@@ -128,82 +124,69 @@ def openai_response(
             time.sleep(10)
 
 
+# ============================================================ [ CREATED BY MAGNEUM ] ============================================================
 def Agent_TaskCreate(
-    objective: str, result: Dict, task_description: str, task_list: List[str]
+    objective: str, result: Dict, task_description: str, Task_List: List[str]
 ):
-    prompt = f"""You are a task creation AI that uses the result of a completed task to create new tasks with the objective: {objective}. 
-    The last completed task had the result: {result}. 
-    The task description is: {task_description}. 
-    Incomplete tasks are: {', '.join(task_list)}. 
-    Generate new tasks based on the result."""
-    response = openai_response(prompt)
-    new_tasks = response.split("\n") if "\n" in response else [response]
-    return [{"task_name": task_name} for task_name in new_tasks]
+    prompt = f"""You are an advanced task creation AI that uses the result of a completed task to generate new tasks with the objective: "{objective}". 
+The last completed task had the result: "{result}". 
+The task description is: "{task_description}". 
+Incomplete tasks are: {', '.join(Task_List)}. 
+
+Based on the result of the completed task, generate at least 3 new tasks that align with the given objective. Each new task should have a unique name and a brief description. Make sure the new tasks are meaningful and relevant to the objective. Be creative and think outside the box!
+
+New Tasks:
+1. Task Name: [Task Name 1]
+   Task Description: [Task Description 1]
+
+2. Task Name: [Task Name 2]
+   Task Description: [Task Description 2]
+
+3. Task Name: [Task Name 3]
+   Task Description: [Task Description 3]
+"""
+    response = Openai_Response(prompt)
+    task_names = [
+        line.split("Task Name: ")[1]
+        for line in response.split("\n")
+        if "Task Name:" in line
+    ]
+    task_descriptions = [
+        line.split("Task Description: ")[1]
+        for line in response.split("\n")
+        if "Task Description:" in line
+    ]
+    new_tasks = [
+        {"task_name": task_name, "task_description": task_description}
+        for task_name, task_description in zip(task_names, task_descriptions)
+    ]
+    return new_tasks
 
 
-def prioritization_agent(this_task_id: int):
-    global task_list
-    task_names = [t["task_name"] for t in task_list]
+# ============================================================ [ CREATED BY MAGNEUM ] ============================================================
+def Prioritization_Agent(this_task_id: int):
+    global Task_List
+    task_names = [t["task_name"] for t in Task_List]
     next_task_id = int(this_task_id) + 1
-    prompt = f"You are a task prioritization AI responsible for cleaning the formatting and reprioritizing the following tasks: {task_names}. Consider the ultimate objective of your team: {OBJECTIVE}. Do not remove any tasks. Return the result as a numbered list, starting with task number {next_task_id}."
-    response = openai_response(prompt)
+    prompt = f"""As the advanced task prioritization AI, you are tasked with optimizing the order of tasks by cleaning up the formatting and strategically re-prioritizing the following list of tasks: {task_names}. Your objective is to align with the overall goal of your team: {OBJECTIVE}, while considering various factors such as deadlines, dependencies, and resources. You are also expected to consider the urgency and importance of each task, and balance short-term and long-term objectives.
+
+    In addition, you are required to take into account the skills and expertise of team members, workload distribution, and potential bottlenecks in order to ensure efficient task allocation. Your goal is to create an optimal task sequence that maximizes productivity and effectiveness, while minimizing delays and conflicts.
+
+    It is essential to note that no tasks should be removed from the list, and all tasks need to be included in the final prioritized sequence. Please provide the revised task list as a numbered and well-organized list, starting with task number {next_task_id}, to help your team achieve its objectives efficiently and effectively."""
+    response = Openai_Response(prompt)
     new_tasks = response.split("\n") if "\n" in response else [response]
-    task_list = deque()
+    Task_List = deque()
     for task_string in new_tasks:
         task_parts = task_string.strip().split(".", 1)
         if len(task_parts) == 2:
             task_id = task_parts[0].strip()
             task_name = task_parts[1].strip()
-            task_list.append(
-                {
-                    "task_id": task_id,
-                    "task_name": task_name,
-                    "task_description": "",
-                    "task_priority": "",
-                }
-            )
-
-    with open("output.csv", "w", newline="") as csvfile:
-        fieldnames = ["Task ID", "Task Name", "Task Description", "Task Priority"]
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        writer.writeheader()
-        for task in task_list:
-            writer.writerow(
-                {
-                    "Task ID": task["task_id"],
-                    "Task Name": task["task_name"],
-                    "Task Description": task["task_description"],
-                    "Task Priority": task["task_priority"],
-                }
-            )
-        writer.writerow(
-            {
-                "Task ID": "",
-                "Task Name": "",
-                "Task Description": "",
-                "Task Priority": "",
-            }
-        )
-        writer.writerow(
-            {
-                "Task ID": "",
-                "Task Name": "Output:",
-                "Task Description": "",
-                "Task Priority": "",
-            }
-        )
-        writer.writerow(
-            {
-                "Task ID": "",
-                "Task Name": response,
-                "Task Description": "",
-                "Task Priority": "",
-            }
-        )
+            Task_List.append({"task_id": task_id, "task_name": task_name})
 
 
-def context_agent(query: str, n: int):
-    query_embedding = get_ada_embedding(query)
+# ============================================================ [ CREATED BY MAGNEUM ] ============================================================
+def Context_Agent(query: str, n: int):
+    query_embedding = Ada_Embedding(query)
     results = index.query(
         query_embedding, top_k=n, include_metadata=True, namespace=OBJECTIVE
     )
@@ -211,31 +194,37 @@ def context_agent(query: str, n: int):
     return [(str(item.metadata["task"])) for item in sorted_results]
 
 
-def execution_agent(objective: str, task: str) -> str:
-    context = context_agent(query=objective, n=5)
-    prompt = f"""You are an execution AI tasked with performing a task based on the objective: {objective}. 
-    Take into account the previously completed tasks: {context}. 
-    Your task is: {task}. 
-    Provide a response."""
-    return openai_response(prompt, temperature=0.7, max_tokens=2000)
+def Execution_Agent(objective: str, task: str) -> str:
+    context = Context_Agent(query=objective, n=5)
+    prompt = f"""You are an advanced execution AI tasked with performing a task based on the objective: "{objective}". 
+Take into account the context of the previously completed tasks: "{context}". 
+Your task is: "{task}". 
+
+Consider the information provided about the completed tasks and the task at hand. Generate a detailed response outlining the steps and actions you will take to successfully complete the task. Provide a comprehensive plan or description of how you will approach the task, including any relevant information, resources, or strategies that you will utilize.
+
+Response:
+[Your detailed response here]
+"""
+    return Openai_Response(prompt, temperature=0.7, max_tokens=2000)
 
 
+# ============================================================ [ CREATED BY MAGNEUM ] ============================================================
 First_Task = {"task_id": 1, "task_name": INITIAL_TASK}
-add_task(First_Task)
+Add_Task(First_Task)
 task_id_counter = 1
 while True:
-    if task_list:
+    if Task_List:
         print(
             f"{Fore.MAGENTA}{Style.BRIGHT}\n======[ TASK LIST ]======\n{Style.RESET_ALL}"
         )
-        for t in task_list:
+        for t in Task_List:
             print(f"{t['task_id']}: {t['task_name']}")
-        task = task_list.popleft()
+        task = Task_List.popleft()
         print(
             f"{Fore.GREEN}{Style.BRIGHT}\n======[ NEXT TASK ]======\n{Style.RESET_ALL}"
         )
         print(f"{task['task_id']}: {task['task_name']}")
-        result = execution_agent(OBJECTIVE, task["task_name"])
+        result = Execution_Agent(OBJECTIVE, task["task_name"])
         this_task_id = int(task["task_id"])
         print(
             f"{Fore.YELLOW}{Style.BRIGHT}\n======[ TASK RESULT ]======\n{Style.RESET_ALL}"
@@ -243,7 +232,7 @@ while True:
         print(result)
         enriched_result = {"data": result}
         result_id = f"result_{task['task_id']}"
-        vector = get_ada_embedding(enriched_result["data"])
+        vector = Ada_Embedding(enriched_result["data"])
         index.upsert(
             [(result_id, vector, {"task": task["task_name"], "result": result})],
             namespace=OBJECTIVE,
@@ -252,13 +241,13 @@ while True:
             OBJECTIVE,
             enriched_result,
             task["task_name"],
-            [t["task_name"] for t in task_list],
+            [t["task_name"] for t in Task_List],
         )
 
         for new_task in new_tasks:
             task_id_counter += 1
             new_task.update({"task_id": task_id_counter})
-            add_task(new_task)
-        prioritization_agent(this_task_id)
+            Add_Task(new_task)
+        Prioritization_Agent(this_task_id)
 
     time.sleep(1)
