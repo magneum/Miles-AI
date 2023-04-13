@@ -245,7 +245,8 @@ while True:
         print(
             f"{Fore.CYAN}{Style.BRIGHT}\n======[ UPDATING INDEX ]======\n{Style.RESET_ALL}"
         )
-        print(f"Updating index with result_id: {result_id}, vector: {vector}")
+        print(f"Updating index with result_id: {result_id}")
+        # print(f"vector: {vector}")
         new_tasks = Agent_TaskCreate(
             OBJECTIVE,
             enriched_result,
