@@ -1,4 +1,5 @@
 import os
+import json
 import time
 import openai
 import pinecone
@@ -10,6 +11,7 @@ from dotenv import load_dotenv
 from colorama import Fore, Style
 
 load_dotenv()
+
 
 INITIAL_TASK = os.getenv("INITIAL_TASK", os.getenv("FIRST_TASK", ""))
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-3.5-turbo")
@@ -38,11 +40,15 @@ def can_import(module_name):
 if "gpt-4" in OPENAI_MODEL.lower():
     print(
         f"{Fore.RED}{Style.BRIGHT}"
-        + "\n*****USING GPT-4. POTENTIALLY EXPENSIVE. MONITOR YOUR COSTS*****"
+        + "\n======[ USING GPT-4. POTENTIALLY EXPENSIVE. MONITOR YOUR COSTS ]======\n"
         + f"{Style.RESET_ALL}"
     )
 
-print(f"{Fore.BLUE}{Style.BRIGHT}" + "\n*****OBJECTIVE*****\n" + f"{Style.RESET_ALL}")
+print(
+    f"{Fore.BLUE}{Style.BRIGHT}"
+    + "\n======[ OBJECTIVE ]======\n"
+    + f"{Style.RESET_ALL}"
+)
 print(f"{OBJECTIVE}")
 print(
     f"{Fore.YELLOW}{Style.BRIGHT}"
@@ -86,35 +92,33 @@ def openai_response(
     while True:
         try:
             if model.startswith("llama"):
-                cmd = ["llama/main", "-p", prompt]
                 result = subprocess.run(
-                    cmd,
-                    shell=True,
-                    stderr=subprocess.DEVNULL,
-                    stdout=subprocess.PIPE,
+                    ["llama/main", "-p", prompt],
                     text=True,
+                    shell=True,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.DEVNULL,
                 )
                 return result.stdout.strip()
             elif not model.startswith("gpt-"):
                 response = openai.Completion.create(
-                    engine=model,
-                    prompt=prompt,
                     temperature=temperature,
                     max_tokens=max_tokens,
-                    top_p=1,
                     frequency_penalty=0,
                     presence_penalty=0,
+                    prompt=prompt,
+                    engine=model,
+                    top_p=1,
                 )
                 return response.choices[0].text.strip()
             else:
-                messages = [{"role": "system", "content": prompt}]
                 response = openai.ChatCompletion.create(
-                    model=model,
-                    messages=messages,
                     temperature=temperature,
                     max_tokens=max_tokens,
-                    n=1,
+                    messages=[{"role": "system", "content": prompt}],
+                    model=model,
                     stop=None,
+                    n=1,
                 )
                 return response.choices[0].message.content.strip()
         except openai.error.RateLimitError:
@@ -178,15 +182,21 @@ add_task(First_Task)
 task_id_counter = 1
 while True:
     if task_list:
-        print(f"{Fore.MAGENTA}{Style.BRIGHT}\n*****TASK LIST*****\n{Style.RESET_ALL}")
+        print(
+            f"{Fore.MAGENTA}{Style.BRIGHT}\n======[ TASK LIST ]======\n{Style.RESET_ALL}"
+        )
         for t in task_list:
             print(f"{t['task_id']}: {t['task_name']}")
         task = task_list.popleft()
-        print(f"{Fore.GREEN}{Style.BRIGHT}\n*****NEXT TASK*****\n{Style.RESET_ALL}")
+        print(
+            f"{Fore.GREEN}{Style.BRIGHT}\n======[ NEXT TASK ]======\n{Style.RESET_ALL}"
+        )
         print(f"{task['task_id']}: {task['task_name']}")
         result = execution_agent(OBJECTIVE, task["task_name"])
         this_task_id = int(task["task_id"])
-        print(f"{Fore.YELLOW}{Style.BRIGHT}\n*****TASK RESULT*****\n{Style.RESET_ALL}")
+        print(
+            f"{Fore.YELLOW}{Style.BRIGHT}\n======[ TASK RESULT ]======\n{Style.RESET_ALL}"
+        )
         print(result)
         enriched_result = {"data": result}
         result_id = f"result_{task['task_id']}"
