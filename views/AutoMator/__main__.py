@@ -70,14 +70,14 @@ Task_List = deque([])
 # ============================================================ [ CREATED BY MAGNEUM ]
 def Add_Task(task: Dict):
     Task_List.append(task)
-    print(f"{Fore.GREEN}Task added successfully: {task}{Style.RESET_ALL}")
+    print(f"{Fore.GREEN}Task added successfully{Style.RESET_ALL}")
 
 
 def Ada_Embedding(text):
     text = text.replace("\n", " ")
     response = openai.Embedding.create(input=[text], model="text-embedding-ada-002")
     embedding = response["data"][0]["embedding"]
-    print(f"{Fore.CYAN}Text embedded successfully: {text}{Style.RESET_ALL}")
+    print(f"{Fore.CYAN}Text embedded successfully{Style.RESET_ALL}")
     return embedding
 
 
