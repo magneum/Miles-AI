@@ -47,7 +47,7 @@ print(
 all_responses = []
 openai.api_key = OPENAI_API
 pinecone.init(api_key=PINECONE_API, environment=PINECONE_ENV)
-Table_Name = TABLE_NAME
+Table_Name = TABLE_NAME.lower()
 dimension = 1536
 metric = "cosine"
 pod_type = "p1"
