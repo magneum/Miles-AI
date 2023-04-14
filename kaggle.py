@@ -202,15 +202,20 @@ First_Task = {"task_id": 1, "task_name": INITIAL_TASK}
 Add_Task(First_Task)
 task_id_counter = 1
 
+
+if not os.path.exists("views/AutoMator"):
+    os.makedirs("views/AutoMator")
+
 while True:
     if Task_List:
         print(Fore.MAGENTA + Style.BRIGHT + "\n============[ TASK LIST ]============\n")
+        print(Style.RESET_ALL)
         for t in Task_List:
-            print(t["task_id"] + ": " + t["task_name"])
+            print(str(t["task_id"]) + ": " + t["task_name"])
         task = Task_List.popleft()
         print(Fore.GREEN + Style.BRIGHT + "\n============[ NEXT TASK ]============\n")
         print(Style.RESET_ALL)
-        print(task["task_id"] + ": " + task["task_name"])
+        print(str(task["task_id"]) + ": " + task["task_name"])
         result = Execution_Agent(OBJECTIVE, task["task_name"])
         this_task_id = int(task["task_id"])
         print(
@@ -219,7 +224,7 @@ while True:
         print(Style.RESET_ALL)
         print(result)
         enriched_result = {"data": result}
-        result_id = "result_" + task["task_id"]
+        result_id = "result_" + str(task["task_id"])
         vector = Ada_Embedding(enriched_result["data"])
         print(
             Fore.CYAN + Style.BRIGHT + "\n============[ UPDATING INDEX ]============\n"
@@ -237,5 +242,31 @@ while True:
             new_task.update({"task_id": task_id_counter})
             Add_Task(new_task)
         Prioritization_Agent(this_task_id)
-
+        output_list = []
+        output_list.append({"title": "TASK LIST", "data": []})
+        for t in Task_List:
+            output_list[-1]["data"].append(str(t["task_id"]) + ": " + t["task_name"])
+        output_list.append(
+            {
+                "title": "NEXT TASK",
+                "data": str(task["task_id"]) + ": " + task["task_name"],
+            }
+        )
+        output_list.append({"title": "TASK RESULT", "data": result})
+        output_list.append(
+            {
+                "title": "UPDATING INDEX",
+                "data": "Updating index with result_id: " + result_id,
+            }
+        )
+        file_name = f"views/AutoMator/output_{result_id}.json"
+        with open(file_name, "w") as f:
+            json.dump(output_list, f)
+            print(
+                Fore.GREEN
+                + Style.BRIGHT
+                + "File updated: "
+                + os.path.abspath(f.name)
+                + Style.RESET_ALL
+            )
     time.sleep(1)
