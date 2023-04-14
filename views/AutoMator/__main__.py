@@ -11,22 +11,11 @@ load_dotenv()
 # Get environment variables
 INITIAL_TASK = os.getenv("INITIAL_TASK", os.getenv("FIRST_TASK", ""))
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-3.5-turbo")
+TABLE_NAME = os.getenv("TABLE_NAME", "auto-test-table")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 PINECONE_API = os.getenv("PINECONE_API", "")
 PINECONE_ENV = os.getenv("PINECONE_ENV", "")
-TABLE_NAME = os.getenv("TABLE_NAME", "")
 OBJECTIVE = os.getenv("OBJECTIVE", "")
-
-# Check if environment variables are present
-if not (
-    OPENAI_API_KEY and TABLE_NAME and PINECONE_ENV and PINECONE_API and OPENAI_MODEL
-):
-    print(
-        f"{Fore.RED}Error:{Style.RESET_ALL} One or more environment variables are missing from .env"
-    )
-    exit(1)
-else:
-    print(f"{Fore.GREEN}Environment variables are present.{Style.RESET_ALL}")
 
 
 if "gpt-4" in OPENAI_MODEL.lower():
