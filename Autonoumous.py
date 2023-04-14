@@ -3,14 +3,14 @@ import json
 import time
 import openai
 import random
-import Agents
+from Agents import Agents
 from dotenv import load_dotenv
 from colorama import Fore, Style
 
 load_dotenv()
 
 openai.api_key = os.getenv("OPENAI_API_KEY", "")
-objective = "As the BabyAGI Designer, my goal is to Create a Python code that implements a vector database using numpy for the BabyAGI system, enabling efficient storage and retrieval of vector representations for data processing and inference."
+objective = "Create a Python code that implements a vector database using numpy for the BabyAGI system, enabling efficient storage and retrieval of vector representations for data processing and inference."
 num_iterations = 8
 max_tokens = 2048
 temperature = 1
