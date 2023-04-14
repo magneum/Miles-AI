@@ -17,16 +17,31 @@ temperature = 1
 wait_time = 30
 
 
-def generate_response(agent, objective):
-    agent_name = agent["name"]
-    prompt = f"As the {agent_name}, my goal is to {agent['motive']}.\n\nTask: {agent_name}: {agent['prompt']}{objective}"
-    response = openai.Completion.create(
-        engine="text-davinci-002",
-        prompt=prompt,
-        max_tokens=max_tokens,
-        temperature=temperature,
-    )
-    return response.choices[0].text.strip()
+class AgentTask:
+    def __init__(self, agent):
+        self.agent = agent
+        self.status = "ongoing"
+        self.response_text = None
+        self.response_embedding = None
+
+    def generate_response(self, objective):
+        agent_name = self.agent["name"]
+        prompt = f"As the {agent_name}, my goal is to {self.agent['motive']}.\n\nTask: {agent_name}: {self.agent['prompt']}{objective}"
+        response = openai.Completion.create(
+            engine="text-davinci-002",
+            prompt=prompt,
+            max_tokens=max_tokens,
+            temperature=temperature,
+        )
+        self.response_text = response.choices[0].text.strip()
+        self.response_embedding = ada_embedding(self.response_text)
+        return self.response_text
+
+    def mark_task_as_finished(self):
+        self.status = "finished"
+
+    def mark_task_as_ended(self):
+        self.status = "ended"
 
 
 def ada_embedding(text):
@@ -36,26 +51,35 @@ def ada_embedding(text):
     return embedding
 
 
+# Create task objects for each agent
+task_list = []
+for agent in Agents:
+    task = AgentTask(agent)
+    task_list.append(task)
+
 data = []
 for i in range(num_iterations):
     print(f"Iteration {i+1} of agent communication")
-    for agent in Agents:
-        try:
-            response_text = generate_response(agent, objective)
-            response_embedding = ada_embedding(response_text)
-        except Exception as e:
-            response_text = str(e)
-            response_embedding = None
-        agent_name = agent["name"]
-        print(f"{Fore.CYAN}{agent_name}:{Style.RESET_ALL} {response_text}")
-        data.append(
-            {
-                "agent": agent_name,
-                "text": response_text,
-                "embedding": response_embedding,
-            }
-        )
-        time.sleep(random.uniform(0.5, 1.5))
+    for task in task_list:
+        if task.status == "ongoing":
+            try:
+                response_text = task.generate_response(objective)
+            except Exception as e:
+                response_text = str(e)
+                task.mark_task_as_ended()
+            agent_name = task.agent["name"]
+            print(f"{Fore.CYAN}{agent_name}:{Style.RESET_ALL} {response_text}")
+            data.append(
+                {
+                    "agent": agent_name,
+                    "text": response_text,
+                    "embedding": task.response_embedding,
+                }
+            )
+            if i == num_iterations - 1:
+                task.mark_task_as_finished()
+            time.sleep(random.uniform(0.5, 1.5))
+
     if i < num_iterations - 1:
         print(f"Waiting for {wait_time} seconds before next iteration...")
         time.sleep(wait_time)
