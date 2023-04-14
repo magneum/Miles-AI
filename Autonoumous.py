@@ -14,12 +14,12 @@ objective = "As the BabyAGI Designer, my goal is to Create a Python code that im
 num_iterations = 8
 max_tokens = 2048
 temperature = 1
-wait_time = 10
+wait_time = 30
 
 
 def generate_response(agent, objective):
     agent_name = agent["name"]
-    prompt = f'{agent_name}: {agent["prompt"]}{objective}'
+    prompt = f"As the {agent_name}, my goal is to {agent['motive']}.\n\nTask: {agent_name}: {agent['prompt']}{objective}"
     response = openai.Completion.create(
         engine="text-davinci-002",
         prompt=prompt,
