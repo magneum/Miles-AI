@@ -3,19 +3,17 @@ import json
 import time
 import openai
 import random
-import spacy
 from Agents import Agents
 from dotenv import load_dotenv
 from colorama import Fore, Style
 
 load_dotenv()
-objective = "Create a Python code that implements a vector database using numpy for the BabyAGI system, enabling efficient storage and retrieval of vector representations for data processing and inference."
 
 openai.api_key = os.getenv("OPENAI_API_KEY", "")
-nlp = spacy.load("en_core_web_sm")  # !python -m spacy download en_core_web_sm
-num_iterations = 4
+objective = "Create a Python code that implements a vector database using numpy for the BabyAGI system, enabling efficient storage and retrieval of vector representations for data processing and inference. Refactor the existing implementation by replacing the usage of Pinecone with numpy for the vector database to improve data processing and inference capabilities. Provide guidance on how to implement this custom Python code using numpy for the vector database in the BabyAGI system, and ensure efficient storage and retrieval of vector representations for data processing and inference."
+num_iterations = 8
 max_tokens = 2048
-temperature = 0.5
+temperature = 1
 wait_time = 30
 
 
@@ -31,22 +29,11 @@ def generate_response(agent, objective):
     return response.choices[0].text.strip()
 
 
-def get_sentiment_score(text):
-    doc = nlp(text)
-    sentiment_score = {"compound": 0, "pos": 0, "neu": 0, "neg": 0}
-    for sentence in doc.sents:
-        sentiment = sentence.sentiment
-        sentiment_score["compound"] += sentiment.compound
-        sentiment_score["pos"] += sentiment.pos
-        sentiment_score["neu"] += sentiment.neu
-        sentiment_score["neg"] += sentiment.neg
-    return sentiment_score
-
-
-def get_named_entities(text):
-    doc = nlp(text)
-    named_entities = [(ent.label_, ent.text) for ent in doc.ents]
-    return named_entities
+def ada_embedding(text):
+    text = text.replace("\n", " ")
+    response = openai.Embedding.create(input=[text], model="text-embedding-ada-002")
+    embedding = response["data"][0]["embedding"]
+    return embedding
 
 
 data = []
@@ -55,20 +42,17 @@ for i in range(num_iterations):
     for agent in Agents:
         try:
             response_text = generate_response(agent, objective)
-            sentiment_score = get_sentiment_score(response_text)
-            named_entities = get_named_entities(response_text)
+            response_embedding = ada_embedding(response_text)
         except Exception as e:
             response_text = str(e)
-            sentiment_score = None
-            named_entities = None
+            response_embedding = None
         agent_name = agent["name"]
         print(f"{Fore.CYAN}{agent_name}:{Style.RESET_ALL} {response_text}")
         data.append(
             {
                 "agent": agent_name,
                 "text": response_text,
-                "sentiment_score": sentiment_score,
-                "named_entities": named_entities,
+                "embedding": response_embedding,
             }
         )
         time.sleep(random.uniform(0.5, 1.5))
