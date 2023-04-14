@@ -7,18 +7,20 @@ from colorama import Fore, Style
 
 load_dotenv()
 
-# ======================================================================================================================== [ CREATED BY MAGNEUM ]
+
 # Get environment variables
 INITIAL_TASK = os.getenv("INITIAL_TASK", os.getenv("FIRST_TASK", ""))
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-3.5-turbo")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 PINECONE_API = os.getenv("PINECONE_API", "")
 PINECONE_ENV = os.getenv("PINECONE_ENV", "")
-OPENAI_API = os.getenv("OPENAI_API", "")
 TABLE_NAME = os.getenv("TABLE_NAME", "")
 OBJECTIVE = os.getenv("OBJECTIVE", "")
 
 # Check if environment variables are present
-if not (OPENAI_API and TABLE_NAME and PINECONE_ENV and PINECONE_API and OPENAI_MODEL):
+if not (
+    OPENAI_API_KEY and TABLE_NAME and PINECONE_ENV and PINECONE_API and OPENAI_MODEL
+):
     print(
         f"{Fore.RED}Error:{Style.RESET_ALL} One or more environment variables are missing from .env"
     )
@@ -27,7 +29,6 @@ else:
     print(f"{Fore.GREEN}Environment variables are present.{Style.RESET_ALL}")
 
 
-# ======================================================================================================================== [ CREATED BY MAGNEUM ]
 if "gpt-4" in OPENAI_MODEL.lower():
     print(
         f"{Fore.RED}{Style.BRIGHT}"
@@ -48,8 +49,8 @@ print(
     + f" {INITIAL_TASK}"
 )
 
-# ======================================================================================================================== [ CREATED BY MAGNEUM ]
-openai.api_key = OPENAI_API
+
+openai.api_key = OPENAI_API_KEY
 pinecone.init(api_key=PINECONE_API, environment=PINECONE_ENV)
 Table_Name = TABLE_NAME.lower()
 dimension = 1536
@@ -67,7 +68,6 @@ index = pinecone.Index(Table_Name)
 Task_List = deque([])
 
 
-# ======================================================================================================================== [ CREATED BY MAGNEUM ]
 def Add_Task(task: Dict):
     Task_List.append(task)
 
@@ -79,7 +79,6 @@ def Ada_Embedding(text):
     return embedding
 
 
-# ======================================================================================================================== [ CREATED BY MAGNEUM ]
 def Openai_Response(
     prompt: str,
     model: str = "gpt-3.5-turbo",
@@ -130,7 +129,6 @@ def Openai_Response(
             return None
 
 
-# ======================================================================================================================== [ CREATED BY MAGNEUM ]
 def Agent_TaskCreate(
     objective: str, result: Dict, task_description: str, Task_List: List[str]
 ):
@@ -158,7 +156,6 @@ def Agent_TaskCreate(
     return new_tasks
 
 
-# ======================================================================================================================== [ CREATED BY MAGNEUM ]
 def Prioritization_Agent(this_task_id: int):
     global Task_List
     task_names = [t["task_name"] for t in Task_List]
@@ -190,7 +187,6 @@ def Prioritization_Agent(this_task_id: int):
             print(Style.RESET_ALL)
 
 
-# ======================================================================================================================== [ CREATED BY MAGNEUM ]
 def Context_Agent(query: str, n: int):
     query_embedding = Ada_Embedding(query)
     results = index.query(
@@ -211,7 +207,6 @@ def Execution_Agent(objective: str, task: str) -> str:
     return response
 
 
-# ======================================================================================================================== [ CREATED BY MAGNEUM ]
 First_Task = {"task_id": 1, "task_name": INITIAL_TASK}
 Add_Task(First_Task)
 task_id_counter = 1
