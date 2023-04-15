@@ -104,15 +104,12 @@ for i, layer in enumerate(Hyper_Builder(hp).layers):
     if "filters" in layer.get_config():
         print(F.YELLOW + f"Filters_{i}: {layer.get_config()['filters']}")
 
+
 file_path = os.path.abspath(__file__)
 file_name = os.path.basename(file_path)
-print(S.RESET_ALL)
 _path = "models/FaceEmo"
 if not os.path.exists(_path):
     os.makedirs(_path)
-    print(f"{F.GREEN}{S.BRIGHT}Folder created: {_path}{S.RESET_ALL}")
-else:
-    print(f"{F.YELLOW}{S.BRIGHT}Folder already exists: {_path}{S.RESET_ALL}")
 
 
 Train_Datagen = ImageDataGenerator(

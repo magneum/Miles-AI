@@ -19,12 +19,10 @@ from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
 # print(f"\n{Fore.CYAN}{Style.BRIGHT}After tuning is completed, the best hyperparameters and their corresponding model performance metrics (such as accuracy, loss) are printed. The best model is then trained with the optimal hyperparameters and evaluated on the validation set. Finally, the model is saved to disk for future use.")
 # print(f"{Style.RESET_ALL}")
 
-X_Index = []
-Y_Index = []
-file_path = os.path.abspath(__file__)
-file_name = os.path.basename(file_path)
 
 # Hyper Variables
+X_Index = []
+Y_Index = []
 nSeed = 22
 verbose = 1
 nEpochs = 200
@@ -35,14 +33,11 @@ dataset_path = "corpdata/csv/fer2013/fer2013.csv"
 model_save_path = "models/Face_Emo/Face_Emo_Model.h5"
 
 
-print(Style.RESET_ALL)
-_path = "models/Face_Emo"
+file_path = os.path.abspath(__file__)
+file_name = os.path.basename(file_path)
+_path = "models/FaceEmo"
 if not os.path.exists(_path):
     os.makedirs(_path)
-    print(f"{Fore.GREEN}{Style.BRIGHT}Folder created: {_path}{Style.RESET_ALL}")
-else:
-    print(f"{Fore.YELLOW}{Style.BRIGHT}Folder already exists: {_path}{Style.RESET_ALL}")
-
 
 Fer2013 = pandas.read_csv(dataset_path)
 for index, row in Fer2013.iterrows():
