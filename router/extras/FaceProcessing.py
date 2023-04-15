@@ -25,6 +25,7 @@ X_Index = []
 Y_Index = []
 nSeed = 22
 verbose = 1
+patience = 10
 nEpochs = 200
 nValsplit = 0.2
 batch_size = 12
@@ -85,7 +86,7 @@ def Hyper_Builder(hp):
         loss="sparse_categorical_crossentropy",
         metrics=["accuracy"],
     )
-    EarlyStopping(monitor="val_loss", patience=5, restore_best_weights=True)
+    EarlyStopping(monitor="val_loss", patience=patience, restore_best_weights=True)
     return model
 
 
@@ -107,7 +108,7 @@ Hyper_Tuner.search(
     batch_size=batch_size,
     validation_split=nValsplit,
     callbacks=[
-        EarlyStopping(monitor="val_loss", patience=5, restore_best_weights=True)
+        EarlyStopping(monitor="val_loss", patience=patience, restore_best_weights=True)
     ],
 )
 

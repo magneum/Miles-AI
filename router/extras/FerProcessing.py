@@ -1,8 +1,9 @@
 import os
 import keras_tuner
+from colorama import Fore, Style
 from keras.models import Sequential
-from colorama import Fore as F, Style as S
 from keras.optimizers import Adam, RMSprop
+from keras.callbacks import EarlyStopping
 from keras.preprocessing.image import ImageDataGenerator
 from keras.layers import (
     BatchNormalization,
@@ -18,6 +19,7 @@ from keras.layers import (
 nSeed = 22
 verbose = 1
 nEpoch = 100
+patience = 10
 batch_size = 32
 target_size = (64, 64)
 Test_dir = "corpdata/Fer2013-img/Test_Images"
@@ -95,14 +97,8 @@ def Hyper_Builder(hp):
         loss="categorical_crossentropy",
         metrics=["accuracy"],
     )
-
+    EarlyStopping(monitor="val_loss", patience=patience, restore_best_weights=True)
     return model
-
-
-hp = keras_tuner.HyperParameters()
-for i, layer in enumerate(Hyper_Builder(hp).layers):
-    if "filters" in layer.get_config():
-        print(F.YELLOW + f"Filters_{i}: {layer.get_config()['filters']}")
 
 
 file_path = os.path.abspath(__file__)
