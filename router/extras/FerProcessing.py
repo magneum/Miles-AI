@@ -7,6 +7,15 @@ from keras.optimizers import Adam, RMSprop
 from keras.preprocessing.image import ImageDataGenerator
 
 
+# Hyper Variables
+nSeed = 22
+nEpoch = 100
+batch_size = 32
+target_size = (64, 64)
+Test_dir = "corpdata/Fer2013-img/Test_Images"
+Train_dir = "corpdata/Fer2013-img/Train_Images"
+
+
 def Hyper_Builder(hp):
     model = Sequential()
     model.add(
@@ -102,11 +111,6 @@ else:
     print(f"{F.YELLOW}{S.BRIGHT}Folder already exists: {_path}{S.RESET_ALL}")
 
 
-batch_size = 32
-num_epochs = 100
-target_size = (64, 64)
-Test_dir = "corpdata/Fer2013-img/Test_Images"
-Train_dir = "corpdata/Fer2013-img/Train_Images"
 Train_Datagen = ImageDataGenerator(
     rescale=1.0 / 255, shear_range=0.2, zoom_range=0.2, horizontal_flip=True
 )
@@ -155,19 +159,19 @@ print(f"{F.YELLOW}{S.BRIGHT}Class Mode: categorical{S.RESET_ALL}")
 # Define Hyper_Tuner with Hyperband configuration
 Hyper_Tuner = keras_tuner.tuners.Hyperband(
     Hyper_Builder,
-    max_epochs=100,
-    seed=44,
+    seed=nSeed,
+    max_epochs=nSeed,
     objective="val_accuracy",
     project_name="Fer_Emotion",
     directory="models/FaceEmo",
 )
 
 print(f"{F.YELLOW}Starting hyperparameter search...{S.RESET_ALL}")
-Hyper_Tuner.search(Train_Generator, epochs=num_epochs, validation_data=Test_Generator)
+Hyper_Tuner.search(Train_Generator, epochs=nSeed, validation_data=Test_Generator)
 print(f"{F.GREEN}Hyperparameter search completed successfully!{S.RESET_ALL}")
 
 Hyper_Best = Hyper_Tuner.get_best_models(num_models=1)[0]
-Hyper_Best.fit(Train_Generator, epochs=num_epochs, validation_data=Test_Generator)
+Hyper_Best.fit(Train_Generator, epochs=nSeed, validation_data=Test_Generator)
 Evaluation = Hyper_Best.evaluate(Test_Generator)
 Test_Loss, Test_Acc = Evaluation[0], Evaluation[1]
 print(F.GREEN + f"Test Loss: {Test_Loss:.4f}" + S.RESET_ALL)

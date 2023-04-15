@@ -66,6 +66,9 @@ file_path = os.path.abspath(__file__)
 file_name = os.path.basename(file_path)
 X_Index = []
 Y_Index = []
+
+# Hyper Variables
+nSeed = 22
 nEpochs = 200
 nValsplit = 0.2
 hyper_directory = "models/FaceEmo/Emotion"
@@ -182,7 +185,7 @@ CodeSeparator("# Create Hyperband tuner")
 print(Style.RESET_ALL)
 Hyper_Tuner = Hyperband(
     Hyper_Builder,
-    seed=44,
+    seed=nSeed,
     max_epochs=nEpochs,
     objective="val_accuracy",
     directory=hyper_directory,
