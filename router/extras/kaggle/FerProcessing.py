@@ -148,12 +148,12 @@ print(f"{F.YELLOW}{S.BRIGHT}Target Size: {target_size}{S.RESET_ALL}")
 print(f"{F.YELLOW}{S.BRIGHT}Batch Size: {batch_size}{S.RESET_ALL}")
 print(f"{F.YELLOW}{S.BRIGHT}Class Mode: categorical{S.RESET_ALL}")
 
-# Define Hyper_Tuner with RandomSearch configuration
-Hyper_Tuner = keras_tuner.tuners.RandomSearch(
+# Define Hyper_Tuner with Hyperband configuration
+Hyper_Tuner = keras_tuner.tuners.Hyperband(
     Hyper_Builder,
+    max_epochs=50,  # set the maximum number of epochs
     seed=44,
     directory=directory,
-    max_trials=max_trials,
     objective="val_accuracy",
     project_name="Fer_Emotion",
 )

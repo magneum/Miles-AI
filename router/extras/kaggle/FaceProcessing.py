@@ -5,7 +5,7 @@ import random
 import pandas
 from colorama import Fore, Style
 from keras.callbacks import EarlyStopping
-from keras_tuner.tuners import RandomSearch
+from keras_tuner import Hyperband, HyperParameters
 
 
 # ============================================================ [ CREATED BY MAGNEUM ] ============================================================
@@ -55,7 +55,7 @@ print(
     f"\n{Fore.CYAN}{Style.BRIGHT}The Early_Stopping() function defines early stopping as a callback for the model during training, which prevents overfitting. The patience for early stopping is also hyperparameterized using the hp object."
 )
 print(
-    f"\n{Fore.CYAN}{Style.BRIGHT}The RandomSearch tuner is then created with the Hyper_Builder() function as the model-building function, and the maximum number of trials, project name, and objective for tuning (in this case, 'val_accuracy') are specified. The tuner searches for the best hyperparameters using the search() function, which takes the input data (X_Index and Y_Index), number of epochs, batch size, and other parameters."
+    f"\n{Fore.CYAN}{Style.BRIGHT}The HyperBand tuner is then created with the Hyper_Builder() function as the model-building function, and the maximum number of trials, project name, and objective for tuning (in this case, 'val_accuracy') are specified. The tuner searches for the best hyperparameters using the search() function, which takes the input data (X_Index and Y_Index), number of epochs, batch size, and other parameters."
 )
 print(
     f"\n{Fore.CYAN}{Style.BRIGHT}After tuning is completed, the best hyperparameters and their corresponding model performance metrics (such as accuracy, loss) are printed. The best model is then trained with the optimal hyperparameters and evaluated on the validation set. Finally, the model is saved to disk for future use."
@@ -165,14 +165,16 @@ def Hyper_Builder(hp):
 
 # ============================================================ [ CREATED BY MAGNEUM ] ============================================================
 
-CodeSeparator("# Create RandomSearch tuner")
+CodeSeparator("# Create HyperBand tuner")
 print(Style.RESET_ALL)
-Hyper_Tuner = RandomSearch(
+hyperparameters = HyperParameters()
+Hyper_Tuner = Hyperband(
     Hyper_Builder,
-    max_trials=20,
-    project_name="Emotion",
     objective="val_accuracy",
+    max_epochs=20,
+    hyperparameters=hyperparameters,
     directory=hyper_directory,
+    project_name="Emotion",
 )
 
 CodeSeparator("# Start hyperparameter search")

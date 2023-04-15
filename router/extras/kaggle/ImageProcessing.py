@@ -1,8 +1,8 @@
 from keras.layers import Conv2D, MaxPooling2D, Dense, Dropout, Flatten
 from keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from sklearn.utils.class_weight import compute_class_weight
-from keras_tuner import HyperModel, Hyperband, RandomSearch
 from sklearn.model_selection import train_test_split
+from keras_tuner import HyperModel, Hyperband
 from keras.datasets import fashion_mnist
 from keras.regularizers import l1, l2
 from keras.models import Sequential
@@ -127,10 +127,11 @@ tuner = Hyperband(
     project_name="fashion_mnist",
 )
 
-tuner = RandomSearch(
+tuner = Hyperband(
     hypermodel,
     objective="val_accuracy",
-    max_trials=10,
+    max_epochs=10,  # maximum number of epochs for HyperBand
+    factor=3,  # downsampling factor for successive halving
     directory="fashion_mnist_hyperopt",
     project_name="fashion_mnist",
 )

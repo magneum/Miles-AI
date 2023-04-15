@@ -127,13 +127,15 @@ tuner = Hyperband(
     project_name="fashion_mnist",
 )
 
-tuner = RandomSearch(
+tuner = Hyperband(
     hypermodel,
     objective="val_accuracy",
-    max_trials=10,
+    max_epochs=30,  # Maximum number of epochs for each trial
+    factor=3,  # Reduction factor for the number of models at each stage
     directory="fashion_mnist_hyperopt",
     project_name="fashion_mnist",
 )
+
 
 tuner.search(
     X_train,

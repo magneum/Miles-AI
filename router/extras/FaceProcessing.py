@@ -4,8 +4,8 @@ import numpy
 import keras
 import pandas
 from colorama import Fore, Style
+from keras_tuner.tuners import Hyperband
 from keras.callbacks import EarlyStopping
-from keras_tuner.tuners import RandomSearch
 
 
 def CodeSeparator(section_name):
@@ -180,13 +180,13 @@ def Hyper_Builder(hp):
 # ============================================================ [ CREATED BY MAGNEUM ] ============================================================
 CodeSeparator("# Create RandomSearch tuner")
 print(Style.RESET_ALL)
-Hyper_Tuner = RandomSearch(
+Hyper_Tuner = Hyperband(
     Hyper_Builder,
     seed=44,
-    max_trials=20,
-    project_name="Emotion",
+    max_epochs=nEpochs,
     objective="val_accuracy",
     directory=hyper_directory,
+    project_name="Emotion",
 )
 
 CodeSeparator("# Start hyperparameter search")

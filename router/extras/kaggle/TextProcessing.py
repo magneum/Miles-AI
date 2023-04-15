@@ -1,8 +1,8 @@
 from keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from sklearn.utils.class_weight import compute_class_weight
-from keras_tuner import HyperModel, Hyperband, RandomSearch
 from keras.layers import Embedding, LSTM, Dense, Dropout
 from sklearn.model_selection import train_test_split
+from keras_tuner import HyperModel, Hyperband
 from keras.callbacks import ModelCheckpoint
 from keras.regularizers import l1, l2
 from keras.models import Sequential
@@ -132,12 +132,13 @@ tuner = Hyperband(
     project_name="mnist_small_talk",
 )
 
-tuner = RandomSearch(
+tuner = Hyperband(
     hypermodel,
     objective="val_accuracy",
-    max_trials=10,
-    directory="random_search",
-    project_name="mnist_small_talk",
+    max_epochs=10,  # maximum number of epochs to run in each trial
+    factor=3,  # reduction factor for number of epochs and trials
+    directory="hyperband_search",  # directory to store results
+    project_name="mnist_small_talk",  # name of the tuning project
 )
 
 
