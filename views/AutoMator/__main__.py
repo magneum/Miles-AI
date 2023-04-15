@@ -1,4 +1,4 @@
-import os, json, time, openai, pinecone, subprocess
+import os, time, openai, pinecone
 from typing import Dict, List
 from collections import deque
 from dotenv import load_dotenv
