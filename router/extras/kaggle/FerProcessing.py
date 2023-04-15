@@ -14,6 +14,8 @@ directory = "/kaggle/working/FaceEmo"
 Test_dir = "/kaggle/input/fer2013/test"
 Train_dir = "/kaggle/input/fer2013/train"
 save_dir = "/kaggle/working/Fer_model.h5"
+face_detection_model = "/kaggle/input/face-detection/tfjs/full/1"
+face_landmarks_model = "/kaggle/input/face-landmarks-detection/tfjs/face-mesh/1"
 
 
 def Hyper_Builder(hp):
