@@ -86,7 +86,6 @@ def Hyper_Builder(hp):
     return model
 
 
-# Define hp
 hp = keras_tuner.HyperParameters()
 for i, layer in enumerate(Hyper_Builder(hp).layers):
     if "filters" in layer.get_config():
