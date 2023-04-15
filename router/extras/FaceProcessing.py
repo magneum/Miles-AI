@@ -38,7 +38,6 @@ def CodeSeparator(section_name):
     print(separator_line)
 
 
-# ============================================================ [ CREATED BY MAGNEUM ] ============================================================
 print(f"{Fore.YELLOW}{Style.BRIGHT}Code Description: FaceProcessing.py")
 print(f"{Fore.WHITE}{Style.BRIGHT}------------------")
 print(
@@ -61,7 +60,6 @@ print(
 )
 print(f"{Style.RESET_ALL}")
 
-# ============================================================ [ CREATED BY MAGNEUM ] ============================================================
 file_path = os.path.abspath(__file__)
 file_name = os.path.basename(file_path)
 X_Index = []
@@ -69,13 +67,14 @@ Y_Index = []
 
 # Hyper Variables
 nSeed = 22
+verbose = 1
 nEpochs = 200
 nValsplit = 0.2
+batch_size = 12
 hyper_directory = "models/FaceEmo/Emotion"
 dataset_path = "corpdata/csv/fer2013/fer2013.csv"
 model_save_path = "models/FaceEmo/Face_Emotion_Model.h5"
 
-# ============================================================ [ CREATED BY MAGNEUM ] ============================================================
 CodeSeparator("# Check if folder exists")
 print(Style.RESET_ALL)
 _path = "models/FaceEmo"
@@ -85,18 +84,8 @@ if not os.path.exists(_path):
 else:
     print(f"{Fore.YELLOW}{Style.BRIGHT}Folder already exists: {_path}{Style.RESET_ALL}")
 
-# ============================================================ [ CREATED BY MAGNEUM ] ============================================================
 CodeSeparator("# Print loaded data information")
-print(f"{Style.RESET_ALL}")
 Fer2013 = pandas.read_csv(dataset_path)
-print(f"{Fore.GREEN}{Style.BRIGHT}Loaded Data Information:")
-print(f"{Fore.YELLOW}{Style.BRIGHT}• Data shape: {str(Fer2013.shape)}")
-print(f"{Fore.YELLOW}{Style.BRIGHT}• Columns: {', '.join(Fer2013.columns)}")
-print(f"File Path: {Fore.CYAN}{Style.BRIGHT}{file_path}{Style.RESET_ALL}")
-print(f"File Name: {Fore.CYAN}{Style.BRIGHT}{file_name}{Style.RESET_ALL}")
-print(f"{Style.RESET_ALL}")
-
-# ============================================================ [ CREATED BY MAGNEUM ] ============================================================
 for index, row in Fer2013.iterrows():
     pixels = numpy.fromstring(row["pixels"], dtype="uint8", sep=" ")
     image = pixels.reshape((48, 48, 1)).astype("float32") / 255.0
@@ -106,18 +95,7 @@ for index, row in Fer2013.iterrows():
 X_Index = numpy.array(X_Index)
 Y_Index = numpy.array(Y_Index)
 
-CodeSeparator("# Print each statement using colorama with reset to default text color")
-print(f"{Style.RESET_ALL}")
-print(f"{Fore.GREEN}{Style.BRIGHT}Data loaded successfully.")
-print(f"{Fore.YELLOW}{Style.BRIGHT}• Total number of samples: {X_Index.shape[0]}")
-print(f"{Fore.YELLOW}{Style.BRIGHT}• Total number of features: {X_Index.shape[1]}")
-print(f"{Fore.YELLOW}{Style.BRIGHT}• Total number of labels: {Y_Index.shape[0]}")
-print(f"{Fore.CYAN}{Style.BRIGHT}• Number of epochs: {nEpochs}")
-print(f"{Fore.CYAN}{Style.BRIGHT}• Validation split: {nValsplit}")
-print(f"{Style.RESET_ALL}")
 
-
-# ============================================================ [ CREATED BY MAGNEUM ] ============================================================
 def Hyper_Builder(hp):
     model = keras.Sequential()
     model.add(
@@ -160,27 +138,9 @@ def Hyper_Builder(hp):
         metrics=["accuracy"],
     )
     EarlyStopping(monitor="val_loss", patience=5, restore_best_weights=True)
-    for i in range(1, hp.get("nblocks") + 1):
-        print(
-            f"{Fore.CYAN}{Style.BRIGHT}• filters_{i + 1}: {hp.get('filters_' + str(i + 1))}"
-        )
-        print(
-            f"{Fore.CYAN}{Style.BRIGHT}• kernel_size_{i + 1}: {hp.get('kernel_size_' + str(i + 1))}"
-        )
-        print(
-            f"{Fore.CYAN}{Style.BRIGHT}• pool_size_{i + 1}: {hp.get('pool_size_' + str(i + 1))}"
-        )
-    print(f"{Fore.BLUE}{Style.BRIGHT}Hyperparameters:")
-    print(f"{Fore.CYAN}{Style.BRIGHT}• filters_1: {hp.get('filters_1')}")
-    print(f"{Fore.CYAN}{Style.BRIGHT}• kernel_size_1: {hp.get('kernel_size_1')}")
-    print(f"{Fore.CYAN}{Style.BRIGHT}• pool_size_1: {hp.get('pool_size_1')}")
-    print(Fore.CYAN + Style.BRIGHT + "• units: " + str(hp.get("units")))
-    print(Fore.CYAN + Style.BRIGHT + "• learning_rate: " + str(hp.get("learning_rate")))
-    print(Style.RESET_ALL)
     return model
 
 
-# ============================================================ [ CREATED BY MAGNEUM ] ============================================================
 CodeSeparator("# Create Hyperband tuner")
 print(Style.RESET_ALL)
 Hyper_Tuner = Hyperband(
@@ -197,38 +157,16 @@ print(Style.RESET_ALL)
 Hyper_Tuner.search(
     x=X_Index,
     y=Y_Index,
-    verbose=1,
-    batch_size=12,
     epochs=nEpochs,
+    verbose=verbose,
+    batch_size=batch_size,
     validation_split=nValsplit,
     callbacks=[
         EarlyStopping(monitor="val_loss", patience=5, restore_best_weights=True)
     ],
 )
-# ============================================================ [ CREATED BY MAGNEUM ] ============================================================
 
 BestHP = Hyper_Tuner.get_best_hyperparameters(1)[0]
 Hyper_Model = Hyper_Builder(BestHP)
 Hyper_Model.fit(X_Index, Y_Index, epochs=nEpochs, validation_split=0.2)
 Hyper_Model.save(model_save_path)
-# ============================================================ [ CREATED BY MAGNEUM ] ============================================================
-CodeSeparator("# Print best hyperparameters")
-print(Style.RESET_ALL)
-print(f"{Fore.GREEN}{Style.BRIGHT}Best Hyperparameters:")
-print(f"{Fore.YELLOW}{Style.BRIGHT}• filters_1: {BestHP.get('filters_1')}")
-print(f"{Fore.YELLOW}{Style.BRIGHT}• kernel_size_1: {BestHP.get('kernel_size_1')}")
-print(f"{Fore.YELLOW}{Style.BRIGHT}• pool_size_1: {BestHP.get('pool_size_1')}")
-print(f"{Fore.YELLOW}{Style.BRIGHT}• nblocks: {BestHP.get('nblocks')}")
-for i in range(BestHP.get("nblocks")):
-    print(
-        f"{Fore.YELLOW}{Style.BRIGHT}• filters_{i+2}: {BestHP.get('filters_'+str(i+2))}"
-    )
-    print(
-        f"{Fore.YELLOW}{Style.BRIGHT}• kernel_size_{i+2}: {BestHP.get('kernel_size_'+str(i+2))}"
-    )
-    print(
-        f"{Fore.YELLOW}{Style.BRIGHT}• pool_size_{i+2}: {BestHP.get('pool_size_'+str(i+2))}"
-    )
-    print(f"{Fore.YELLOW}{Style.BRIGHT}• units: {BestHP.get('units')}")
-    print(f"{Fore.YELLOW}{Style.BRIGHT}• learning_rate: {BestHP.get('learning_rate')}")
-print(Style.RESET_ALL)

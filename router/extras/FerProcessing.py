@@ -9,6 +9,7 @@ from keras.preprocessing.image import ImageDataGenerator
 
 # Hyper Variables
 nSeed = 22
+verbose = 1
 nEpoch = 100
 batch_size = 32
 target_size = (64, 64)
@@ -116,47 +117,22 @@ Train_Datagen = ImageDataGenerator(
 )
 Test_Datagen = ImageDataGenerator(rescale=1.0 / 255)
 
-print(f"{F.YELLOW}{S.BRIGHT}Batch Size:{S.RESET_ALL} {batch_size}")
-print(f"{F.YELLOW}{S.BRIGHT}Target Size:{S.RESET_ALL} {target_size}")
-print(f"{F.YELLOW}{S.BRIGHT}Test Directory:{S.RESET_ALL} {Test_dir}")
-print(f"{F.YELLOW}{S.BRIGHT}Train Directory:{S.RESET_ALL} {Train_dir}")
-print(f"{F.YELLOW}{S.BRIGHT}Training Data Generator Settings:{S.RESET_ALL}")
-print(f"{F.CYAN}{S.BRIGHT}Rescale:{S.RESET_ALL} {Train_Datagen.rescale}")
-print(f"{F.CYAN}{S.BRIGHT}Shear Range:{S.RESET_ALL} {Train_Datagen.shear_range}")
-print(f"{F.CYAN}{S.BRIGHT}Zoom Range:{S.RESET_ALL} {Train_Datagen.zoom_range}")
-print(
-    f"{F.CYAN}{S.BRIGHT}Horizontal Flip:{S.RESET_ALL} {Train_Datagen.horizontal_flip}"
-)
-print(f"{F.YELLOW}{S.BRIGHT}Test Data Generator Settings:{S.RESET_ALL}")
-print(f"{F.CYAN}{S.BRIGHT}Rescale:{S.RESET_ALL} {Test_Datagen.rescale}")
 
-# Define Train Data Generator
 Train_Generator = ImageDataGenerator().flow_from_directory(
     Train_dir,
     target_size=target_size,
     batch_size=batch_size,
     class_mode="categorical",
 )
-print(f"{F.GREEN}{S.BRIGHT}Train Data Generator created successfully!{S.RESET_ALL}")
-print(f"{F.CYAN}{S.BRIGHT}Train Directory: {Train_dir}{S.RESET_ALL}")
-print(f"{F.CYAN}{S.BRIGHT}Target Size: {target_size}{S.RESET_ALL}")
-print(f"{F.CYAN}{S.BRIGHT}Batch Size: {batch_size}{S.RESET_ALL}")
-print(f"{F.CYAN}{S.BRIGHT}Class Mode: categorical{S.RESET_ALL}")
 
-# Define Test Data Generator
+
 Test_Generator = ImageDataGenerator().flow_from_directory(
     Test_dir,
     target_size=target_size,
     batch_size=batch_size,
     class_mode="categorical",
 )
-print(f"{F.GREEN}{S.BRIGHT}Test Data Generator created successfully!{S.RESET_ALL}")
-print(f"{F.YELLOW}{S.BRIGHT}Test Directory: {Test_dir}{S.RESET_ALL}")
-print(f"{F.YELLOW}{S.BRIGHT}Target Size: {target_size}{S.RESET_ALL}")
-print(f"{F.YELLOW}{S.BRIGHT}Batch Size: {batch_size}{S.RESET_ALL}")
-print(f"{F.YELLOW}{S.BRIGHT}Class Mode: categorical{S.RESET_ALL}")
 
-# Define Hyper_Tuner with Hyperband configuration
 Hyper_Tuner = keras_tuner.tuners.Hyperband(
     Hyper_Builder,
     seed=nSeed,
@@ -166,14 +142,9 @@ Hyper_Tuner = keras_tuner.tuners.Hyperband(
     directory="models/FaceEmo",
 )
 
-print(f"{F.YELLOW}Starting hyperparameter search...{S.RESET_ALL}")
 Hyper_Tuner.search(Train_Generator, epochs=nSeed, validation_data=Test_Generator)
-print(f"{F.GREEN}Hyperparameter search completed successfully!{S.RESET_ALL}")
-
 Hyper_Best = Hyper_Tuner.get_best_models(num_models=1)[0]
 Hyper_Best.fit(Train_Generator, epochs=nSeed, validation_data=Test_Generator)
 Evaluation = Hyper_Best.evaluate(Test_Generator)
 Test_Loss, Test_Acc = Evaluation[0], Evaluation[1]
-print(F.GREEN + f"Test Loss: {Test_Loss:.4f}" + S.RESET_ALL)
-print(F.GREEN + f"Test Accuracy: {Test_Acc:.4f}" + S.RESET_ALL)
 Hyper_Best.save("models/FaceEmo/Fer_model.h5")
