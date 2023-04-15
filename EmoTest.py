@@ -2,8 +2,8 @@ import os
 import cv2
 import numpy as np
 import urllib.request
-from keras.models import load_model
 from colorama import Fore, Style
+from keras.models import load_model
 
 cascade_file_path = "corpdata/Fer2013-img/haarcascade_frontalface_default.xml"
 if not os.path.exists(cascade_file_path):
