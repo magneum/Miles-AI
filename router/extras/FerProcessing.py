@@ -1,11 +1,9 @@
 import os
+import keras_tuner
 from tensorflow import keras
-from keras.optimizers import Adam
 from keras.models import Sequential
-from keras.models import Sequential
-from keras_tuner import HyperParameters
 from colorama import Fore as F, Style as S
-from keras_tuner.tuners import RandomSearch
+from keras.optimizers import Adam, RMSprop
 from keras.preprocessing.image import ImageDataGenerator
 
 
@@ -20,7 +18,11 @@ def Hyper_Builder(hp):
         )
     )
     model.add(keras.layers.BatchNormalization())
-    model.add(keras.layers.Dropout(rate=0.25))
+    model.add(
+        keras.layers.Dropout(
+            rate=hp.Float("dropout_1", min_value=0.1, max_value=0.5, default=0.25)
+        )
+    )
     for i in range(hp.Int("num_blocks", 1, 4, default=2)):
         model.add(
             keras.layers.Conv2D(
@@ -30,28 +32,53 @@ def Hyper_Builder(hp):
             )
         )
         model.add(keras.layers.BatchNormalization())
-        model.add(keras.layers.Dropout(rate=0.25))
+        model.add(
+            keras.layers.Dropout(
+                rate=hp.Float(
+                    f"dropout_{i+2}", min_value=0.1, max_value=0.5, default=0.25
+                )
+            )
+        )
         model.add(keras.layers.MaxPooling2D(pool_size=(2, 2)))
     model.add(keras.layers.GlobalAveragePooling2D())
     model.add(
         keras.layers.Dense(
             units=hp.Int("units", min_value=128, max_value=512, step=64, default=256),
-            activation="relu",
+            activation=hp.Choice(
+                "dense_activation", values=["relu", "sigmoid"], default="relu"
+            ),
         )
     )
     model.add(keras.layers.BatchNormalization())
-    model.add(keras.layers.Dropout(rate=0.5))
+    model.add(
+        keras.layers.Dropout(
+            rate=hp.Float("dropout_6", min_value=0.1, max_value=0.5, default=0.5)
+        )
+    )
     model.add(keras.layers.Dense(units=7, activation="softmax"))
-    model.compile(
-        optimizer=Adam(
+    optimizer = hp.Choice("optimizer", values=["adam", "rmsprop"], default="adam")
+    if optimizer == "adam":
+        model_optimizer = Adam(
             learning_rate=hp.Float(
                 "learning_rate",
-                min_value=1e-4,
-                max_value=1e-2,
-                default=1e-3,
+                min_value=1e-5,
+                max_value=1e-3,
+                default=1e-4,
                 sampling="log",
             )
-        ),
+        )
+    else:
+        model_optimizer = RMSprop(
+            learning_rate=hp.Float(
+                "learning_rate",
+                min_value=1e-5,
+                max_value=1e-3,
+                default=1e-4,
+                sampling="log",
+            )
+        )
+    model.compile(
+        optimizer=model_optimizer,
         loss="categorical_crossentropy",
         metrics=["accuracy"],
     )
@@ -60,7 +87,7 @@ def Hyper_Builder(hp):
 
 
 # Define hp
-hp = HyperParameters()
+hp = keras_tuner.HyperParameters()
 for i, layer in enumerate(Hyper_Builder(hp).layers):
     if "filters" in layer.get_config():
         print(F.YELLOW + f"Filters_{i}: {layer.get_config()['filters']}")
@@ -127,7 +154,7 @@ print(f"{F.YELLOW}{S.BRIGHT}Batch Size: {batch_size}{S.RESET_ALL}")
 print(f"{F.YELLOW}{S.BRIGHT}Class Mode: categorical{S.RESET_ALL}")
 
 # Define Hyper_Tuner with RandomSearch configuration
-Hyper_Tuner = RandomSearch(
+Hyper_Tuner = keras_tuner.tuners.RandomSearch(
     Hyper_Builder,
     seed=44,
     max_trials=22,
