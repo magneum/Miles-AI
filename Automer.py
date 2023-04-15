@@ -60,11 +60,9 @@ for i in range(num_iterations):
         print(f"Waiting for {wait_time} seconds before next iteration...")
         time.sleep(wait_time)
 
-with open(f"{objective}_responses.json", "w") as f:
+with open(f"Automer.json", "w") as f:
     json.dump(data, f)
-print(
-    f"Agent responses have been generated and saved to {objective}_responses.json file."
-)
+print(f"Agent responses have been generated and saved to Automer.json file.")
 
 with open("final.txt", "w") as f:
     for agent in data:
