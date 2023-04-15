@@ -66,7 +66,7 @@ file_path = os.path.abspath(__file__)
 file_name = os.path.basename(file_path)
 X_Index = []
 Y_Index = []
-nEpochs = 100
+nEpochs = 200
 nValsplit = 0.2
 hyper_directory = "models/FaceEmo/Emotion"
 dataset_path = "corpdata/csv/fer2013/fer2013.csv"
@@ -195,7 +195,7 @@ Hyper_Tuner.search(
     x=X_Index,
     y=Y_Index,
     verbose=1,
-    batch_size=8,
+    batch_size=12,
     epochs=nEpochs,
     validation_split=nValsplit,
     callbacks=[
