@@ -9,7 +9,7 @@ from keras.callbacks import EarlyStopping
 from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
 
 
-# ========================================================= Magneum =========================================================
+# ========================================================= Magneum
 X_Index = []
 Y_Index = []
 nSeed = 22
@@ -23,7 +23,7 @@ dataset_path = "corpdata/csv/fer2013/fer2013.csv"
 model_save_path = "models/Face_Emo/Face_Emo_Model.h5"
 
 
-# ========================================================= Magneum =========================================================
+# ========================================================= Magneum
 file_path = os.path.abspath(__file__)
 file_name = os.path.basename(file_path)
 _path = "models/FaceEmo"
@@ -31,7 +31,7 @@ if not os.path.exists(_path):
     os.makedirs(_path)
 
 
-# ========================================================= Magneum =========================================================
+# ========================================================= Magneum
 Fer2013 = pandas.read_csv(dataset_path)
 for index, row in Fer2013.iterrows():
     pixels = numpy.fromstring(row["pixels"], dtype="uint8", sep=" ")
@@ -43,7 +43,7 @@ X_Index = numpy.array(X_Index)
 Y_Index = numpy.array(Y_Index)
 
 
-# ========================================================= Magneum =========================================================
+# ========================================================= Magneum
 def Hyper_Builder(hp):
     model = Sequential()
     model.add(
@@ -83,7 +83,7 @@ def Hyper_Builder(hp):
     return model
 
 
-# ========================================================= Magneum =========================================================
+# ========================================================= Magneum
 
 
 Hyper_Tuner = Hyperband(
@@ -107,7 +107,7 @@ Hyper_Tuner.search(
 )
 
 
-# ========================================================= Magneum =========================================================
+# ========================================================= Magneum
 BestHP = Hyper_Tuner.get_best_hyperparameters(1)[0]
 Hyper_Model = Hyper_Builder(BestHP)
 Hyper_Model.fit(X_Index, Y_Index, epochs=nEpochs, validation_split=0.2)

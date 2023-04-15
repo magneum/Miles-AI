@@ -14,7 +14,7 @@ from keras.layers import (
     Dense,
 )
 
-# ========================================================= Magneum =========================================================
+# ========================================================= Magneum
 nSeed = 22
 verbose = 1
 patience = 10
@@ -39,7 +39,7 @@ print("Train_dir =", Train_dir)
 print(Style.RESET_ALL)
 
 
-# ========================================================= Magneum =========================================================
+# ========================================================= Magneum
 def Hyper_Builder(hp):
     model = Sequential()
     model.add(
@@ -115,7 +115,7 @@ def Hyper_Builder(hp):
     return model
 
 
-# ========================================================= Magneum =========================================================
+# ========================================================= Magneum
 File_path = os.path.abspath(__file__)
 File_name = os.path.basename(File_path)
 _path = "models/FaceEmo"
@@ -126,7 +126,7 @@ print(f"{Fore.YELLOW}File Name: {File_name}{Style.RESET_ALL}")
 print(f"{Fore.CYAN}Path: {_path}{Style.RESET_ALL}")
 
 
-# ========================================================= Magneum =========================================================
+# ========================================================= Magneum
 Train_Datagen = ImageDataGenerator(
     rescale=1.0 / 255, shear_range=0.2, zoom_range=0.2, horizontal_flip=True
 )
@@ -140,7 +140,7 @@ print(Style.RESET_ALL)
 print(Test_Datagen)
 
 
-# ========================================================= Magneum =========================================================
+# ========================================================= Magneum
 Train_Generator = ImageDataGenerator().flow_from_directory(
     Train_dir,
     target_size=target_size,
@@ -168,7 +168,7 @@ print(f"Class Mode: categorical")
 print(Style.RESET_ALL)
 
 
-# ========================================================= Magneum =========================================================
+# ========================================================= Magneum
 print(Fore.GREEN + "Starting Hyperparameter Tuning..." + Style.RESET_ALL)
 print(
     Fore.YELLOW + "Using Hyper_Builder with seed =",
@@ -203,7 +203,7 @@ print(Fore.YELLOW + "Best hyperparameters found:" + Style.RESET_ALL)
 print(Hyper_Tuner.get_best_hyperparameters()[0].values)
 
 
-# ========================================================= Magneum =========================================================
+# ========================================================= Magneum
 Hyper_Best = Hyper_Tuner.get_best_models(num_models=1)[0]
 Hyper_Best.fit(Train_Generator, epochs=nSeed, validation_data=Test_Generator)
 Evaluation = Hyper_Best.evaluate(Test_Generator)
