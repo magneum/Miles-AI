@@ -1,10 +1,17 @@
 import os
 import keras_tuner
-from tensorflow import keras
 from keras.models import Sequential
 from colorama import Fore as F, Style as S
 from keras.optimizers import Adam, RMSprop
 from keras.preprocessing.image import ImageDataGenerator
+from keras.layers import (
+    BatchNormalization,
+    MaxPooling2D,
+    GlobalAveragePooling2D,
+    Dense,
+    Dropout,
+    Conv2D,
+)
 
 
 # Hyper Variables
@@ -20,52 +27,48 @@ Train_dir = "corpdata/Fer2013-img/Train_Images"
 def Hyper_Builder(hp):
     model = Sequential()
     model.add(
-        keras.layers.Conv2D(
+        Conv2D(
             filters=hp.Choice("filters", values=[32, 64], default=32),
             kernel_size=(3, 3),
             activation="relu",
             input_shape=(64, 64, 3),
         )
     )
-    model.add(keras.layers.BatchNormalization())
+    model.add(BatchNormalization())
     model.add(
-        keras.layers.Dropout(
-            rate=hp.Float("dropout_1", min_value=0.1, max_value=0.5, default=0.25)
-        )
+        Dropout(rate=hp.Float("dropout_1", min_value=0.1, max_value=0.5, default=0.25))
     )
     for i in range(hp.Int("num_blocks", 1, 4, default=2)):
         model.add(
-            keras.layers.Conv2D(
+            Conv2D(
                 filters=hp.Choice(f"filters_{i}", values=[32, 64, 128], default=32),
                 kernel_size=(3, 3),
                 activation="relu",
             )
         )
-        model.add(keras.layers.BatchNormalization())
+        model.add(BatchNormalization())
         model.add(
-            keras.layers.Dropout(
+            Dropout(
                 rate=hp.Float(
                     f"dropout_{i+2}", min_value=0.1, max_value=0.5, default=0.25
                 )
             )
         )
-        model.add(keras.layers.MaxPooling2D(pool_size=(2, 2)))
-    model.add(keras.layers.GlobalAveragePooling2D())
+        model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(GlobalAveragePooling2D())
     model.add(
-        keras.layers.Dense(
+        Dense(
             units=hp.Int("units", min_value=128, max_value=512, step=64, default=256),
             activation=hp.Choice(
                 "dense_activation", values=["relu", "sigmoid"], default="relu"
             ),
         )
     )
-    model.add(keras.layers.BatchNormalization())
+    model.add(BatchNormalization())
     model.add(
-        keras.layers.Dropout(
-            rate=hp.Float("dropout_6", min_value=0.1, max_value=0.5, default=0.5)
-        )
+        Dropout(rate=hp.Float("dropout_6", min_value=0.1, max_value=0.5, default=0.5))
     )
-    model.add(keras.layers.Dense(units=7, activation="softmax"))
+    model.add(Dense(units=7, activation="softmax"))
     optimizer = hp.Choice("optimizer", values=["adam", "rmsprop"], default="adam")
     if optimizer == "adam":
         model_optimizer = Adam(

@@ -1,10 +1,12 @@
 import os
 import numpy
-import keras
 import pandas
+from keras import Sequential
 from colorama import Fore, Style
+from keras.optimizers import Adam
 from keras_tuner.tuners import Hyperband
 from keras.callbacks import EarlyStopping
+from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
 
 
 # print(f"{Fore.YELLOW}{Style.BRIGHT}Code Description: FaceProcessing.py")
@@ -17,10 +19,10 @@ from keras.callbacks import EarlyStopping
 # print(f"\n{Fore.CYAN}{Style.BRIGHT}After tuning is completed, the best hyperparameters and their corresponding model performance metrics (such as accuracy, loss) are printed. The best model is then trained with the optimal hyperparameters and evaluated on the validation set. Finally, the model is saved to disk for future use.")
 # print(f"{Style.RESET_ALL}")
 
-file_path = os.path.abspath(__file__)
-file_name = os.path.basename(file_path)
 X_Index = []
 Y_Index = []
+file_path = os.path.abspath(__file__)
+file_name = os.path.basename(file_path)
 
 # Hyper Variables
 nSeed = 22
@@ -28,13 +30,13 @@ verbose = 1
 nEpochs = 200
 nValsplit = 0.2
 batch_size = 12
-hyper_directory = "models/FaceEmo/Emotion"
+hyper_directory = "models/Face_Emo/Emotion"
 dataset_path = "corpdata/csv/fer2013/fer2013.csv"
-model_save_path = "models/FaceEmo/Face_Emotion_Model.h5"
+model_save_path = "models/Face_Emo/Face_Emo_Model.h5"
 
 
 print(Style.RESET_ALL)
-_path = "models/FaceEmo"
+_path = "models/Face_Emo"
 if not os.path.exists(_path):
     os.makedirs(_path)
     print(f"{Fore.GREEN}{Style.BRIGHT}Folder created: {_path}{Style.RESET_ALL}")
@@ -54,21 +56,19 @@ Y_Index = numpy.array(Y_Index)
 
 
 def Hyper_Builder(hp):
-    model = keras.Sequential()
+    model = Sequential()
     model.add(
-        keras.layers.Conv2D(
+        Conv2D(
             filters=hp.Int("filters_1", 32, 128, step=32),
             kernel_size=hp.Choice("kernel_size_1", values=[3, 5]),
             activation="relu",
             input_shape=(48, 48, 1),
         )
     )
-    model.add(
-        keras.layers.MaxPooling2D(pool_size=hp.Choice("pool_size_1", values=[4, 5]))
-    )
+    model.add(MaxPooling2D(pool_size=hp.Choice("pool_size_1", values=[4, 5])))
     for i in range(hp.Int("nblocks", 1, 4)):
         model.add(
-            keras.layers.Conv2D(
+            Conv2D(
                 filters=hp.Int("filters_" + str(i + 2), 32, 128, step=32),
                 kernel_size=hp.Choice("kernel_size_" + str(i + 2), values=[3, 5]),
                 activation="relu",
@@ -76,21 +76,17 @@ def Hyper_Builder(hp):
             )
         )
         model.add(
-            keras.layers.MaxPooling2D(
+            MaxPooling2D(
                 pool_size=hp.Choice("pool_size_" + str(i + 2), values=[4, 5]),
                 padding="same",
             )
         )
 
-    model.add(keras.layers.Flatten())
-    model.add(
-        keras.layers.Dense(units=hp.Int("units", 128, 512, step=32), activation="relu")
-    )
-    model.add(keras.layers.Dense(7, activation="softmax"))
+    model.add(Flatten())
+    model.add(Dense(units=hp.Int("units", 128, 512, step=32), activation="relu"))
+    model.add(Dense(7, activation="softmax"))
     model.compile(
-        optimizer=keras.optimizers.Adam(
-            hp.Choice("learning_rate", values=[1e-2, 1e-3, 1e-4])
-        ),
+        optimizer=Adam(hp.Choice("learning_rate", values=[1e-2, 1e-3, 1e-4])),
         loss="sparse_categorical_crossentropy",
         metrics=["accuracy"],
     )
@@ -98,18 +94,16 @@ def Hyper_Builder(hp):
     return model
 
 
-print(Style.RESET_ALL)
 Hyper_Tuner = Hyperband(
     Hyper_Builder,
     seed=nSeed,
     max_epochs=nEpochs,
+    project_name="Emotion",
     objective="val_accuracy",
     directory=hyper_directory,
-    project_name="Emotion",
 )
 
 
-print(Style.RESET_ALL)
 Hyper_Tuner.search(
     x=X_Index,
     y=Y_Index,
