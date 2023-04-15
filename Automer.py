@@ -11,9 +11,8 @@ load_dotenv()
 
 openai.api_key = os.getenv("OPENAI_API_KEY", "")
 objective = "Create a Python code that implements a vector database using numpy for the BabyAGI system, enabling efficient storage and retrieval of vector representations for data processing and inference. Refactor the existing implementation by replacing the usage of Pinecone with numpy for the vector database to improve data processing and inference capabilities. Provide guidance on how to implement this custom Python code using numpy for the vector database in the BabyAGI system, and ensure efficient storage and retrieval of vector representations for data processing and inference."
-num_iterations = 8
+num_iterations = 4
 max_tokens = 2048
-temperature = 1
 wait_time = 30
 
 
@@ -24,7 +23,7 @@ def generate_response(agent, objective):
         engine="text-davinci-002",
         prompt=prompt,
         max_tokens=max_tokens,
-        temperature=temperature,
+        temperature=random.uniform(0.5, 1),
     )
     return response.choices[0].text.strip()
 
