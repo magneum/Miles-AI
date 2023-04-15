@@ -2,6 +2,7 @@ import os
 import keras_tuner
 from colorama import Fore, Style
 from keras.models import Sequential
+from keras_tuner.tuners import Hyperband
 from keras.optimizers import Adam, RMSprop
 from keras.callbacks import EarlyStopping
 from keras.preprocessing.image import ImageDataGenerator
@@ -18,10 +19,12 @@ from keras.layers import (
 # Hyper Variables
 nSeed = 22
 verbose = 1
-nEpoch = 100
 patience = 10
-batch_size = 32
+nEpochs = 200
+nValsplit = 0.2
+batch_size = 12
 target_size = (64, 64)
+hyper_directory = "models/Face_Emo/Emotion"
 Test_dir = "corpdata/Fer2013-img/Test_Images"
 Train_dir = "corpdata/Fer2013-img/Train_Images"
 
@@ -129,16 +132,26 @@ Test_Generator = ImageDataGenerator().flow_from_directory(
     class_mode="categorical",
 )
 
-Hyper_Tuner = keras_tuner.tuners.Hyperband(
+Hyper_Tuner = Hyperband(
     Hyper_Builder,
     seed=nSeed,
-    max_epochs=nSeed,
+    max_epochs=nEpochs,
     objective="val_accuracy",
     project_name="Fer_Emotion",
-    directory="models/FaceEmo",
+    directory=hyper_directory,
 )
 
-Hyper_Tuner.search(Train_Generator, epochs=nSeed, validation_data=Test_Generator)
+Hyper_Tuner.search(
+    Train_Generator,
+    seed=nSeed,
+    epochs=nEpochs,
+    verbose=verbose,
+    batch_size=batch_size,
+    validation_data=Test_Generator,
+    callbacks=[
+        EarlyStopping(monitor="val_loss", patience=patience, restore_best_weights=True)
+    ],
+)
 Hyper_Best = Hyper_Tuner.get_best_models(num_models=1)[0]
 Hyper_Best.fit(Train_Generator, epochs=nSeed, validation_data=Test_Generator)
 Evaluation = Hyper_Best.evaluate(Test_Generator)
