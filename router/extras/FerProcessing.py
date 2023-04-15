@@ -143,7 +143,6 @@ Hyper_Tuner = Hyperband(
 
 Hyper_Tuner.search(
     Train_Generator,
-    seed=nSeed,
     epochs=nEpochs,
     verbose=verbose,
     batch_size=batch_size,
