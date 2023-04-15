@@ -18,18 +18,18 @@ face_cascade = cv2.CascadeClassifier(cascade_file_path)
 
 
 def main():
-    Capture = cv2.VideoCapture(0)
+    capture = cv2.VideoCapture(0)
     while True:
-        ret, frame = Capture.read()
-        if not ret:
+        success, frame = capture.read()
+        if not success:
             break
         print("Captured frame")
-        Grayscale = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        Faces = face_cascade.detectMultiScale(
-            Grayscale, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30)
+        grayscale = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        faces = face_cascade.detectMultiScale(
+            grayscale, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30)
         )
-        for x, y, w, h in Faces:
-            face_roi = Grayscale[y : y + h, x : x + w]
+        for x, y, w, h in faces:
+            face_roi = grayscale[y : y + h, x : x + w]
             face_roi = cv2.resize(face_roi, (48, 48))
             face_roi = face_roi.astype("float32") / 255.0
             face_roi = np.expand_dims(face_roi, axis=0)
@@ -47,8 +47,8 @@ def main():
             print("Predicted emotion from captured face: ", predicted_emotion)
 
         username = None
-        for File in os.listdir("userNamedfaces"):
-            img = cv2.imread(os.path.join("userNamedfaces", File), cv2.IMREAD_GRAYSCALE)
+        for file in os.listdir("userNamedfaces"):
+            img = cv2.imread(os.path.join("userNamedfaces", file), cv2.IMREAD_GRAYSCALE)
             img = cv2.resize(img, (48, 48))
             img = img.astype("float32") / 255.0
             img = np.expand_dims(img, axis=0)
@@ -56,7 +56,7 @@ def main():
             img_predicted_emotion = emotion_labels[np.argmax(img_emotions)]
             print("Predicted emotion from stored face: ", img_predicted_emotion)
             if img_predicted_emotion == predicted_emotion:
-                username = File.split(".")[0]
+                username = file.split(".")[0]
                 break
         if username:
             print(Fore.CYAN + "Detected username: " + Fore.YELLOW + f"{username}")
@@ -68,7 +68,7 @@ def main():
         cv2.imshow("Emotion Detection", frame)
         if cv2.waitKey(1) & 0xFF == ord("q"):
             break
-    Capture.release()
+    capture.release()
     cv2.destroyAllWindows()
 
 
