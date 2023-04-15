@@ -1,5 +1,4 @@
 import os
-import random
 import numpy
 import keras
 import pandas
@@ -8,57 +7,15 @@ from keras_tuner.tuners import Hyperband
 from keras.callbacks import EarlyStopping
 
 
-def CodeSeparator(section_name):
-    separator_width = 50
-    separator_char = "*"
-    section_label = f" {section_name} "
-    section_label_width = separator_width - 2
-    section_label_padding = (section_label_width - len(section_label)) // 2
-    separator_line = separator_char * separator_width
-    available_colors = [
-        Fore.RED,
-        Fore.GREEN,
-        Fore.YELLOW,
-        Fore.BLUE,
-        Fore.MAGENTA,
-        Fore.CYAN,
-        Fore.WHITE,
-    ]
-    random_color = random.choice(available_colors)
-    section_label_line = (
-        separator_char
-        + " " * section_label_padding
-        + f"{random_color}{Style.BRIGHT}{section_name}{Style.RESET_ALL}"
-        + " " * section_label_padding
-        + separator_char
-    )
-
-    print(separator_line)
-    print(section_label_line)
-    print(separator_line)
-
-
-print(f"{Fore.YELLOW}{Style.BRIGHT}Code Description: FaceProcessing.py")
-print(f"{Fore.WHITE}{Style.BRIGHT}------------------")
-print(
-    f"{Fore.CYAN}{Style.BRIGHT}The code is a Python script that uses Keras and TensorFlow libraries to perform hyperparameter tuning for a convolutional neural network (CNN) model for facial emotion recognition."
-)
-print(
-    f"{Fore.CYAN}{Style.BRIGHT}The dataset used is Fer2013, which is loaded from a CSV file."
-)
-print(
-    f"\n{Fore.CYAN}{Style.BRIGHT}The script uses the keras_tuner library to perform random search hyperparameter tuning. The Hyper_Builder() function defines the architecture of the CNN model and compiles it with hyperparameters such as filters, kernel size, pool size, units, and learning rate. The hyperparameters are sampled from defined ranges using the hp object, which is passed as an argument to the function."
-)
-print(
-    f"\n{Fore.CYAN}{Style.BRIGHT}The Early_Stopping() function defines early stopping as a callback for the model during training, which prevents overfitting. The patience for early stopping is also hyperparameterized using the hp object."
-)
-print(
-    f"\n{Fore.CYAN}{Style.BRIGHT}The Hyperband tuner is then created with the Hyper_Builder() function as the model-building function, and the maximum number of trials, project name, and objective for tuning (in this case, 'val_accuracy') are specified. The tuner searches for the best hyperparameters using the search() function, which takes the input data (X_Index and Y_Index), number of epochs, batch size, and other parameters."
-)
-print(
-    f"\n{Fore.CYAN}{Style.BRIGHT}After tuning is completed, the best hyperparameters and their corresponding model performance metrics (such as accuracy, loss) are printed. The best model is then trained with the optimal hyperparameters and evaluated on the validation set. Finally, the model is saved to disk for future use."
-)
-print(f"{Style.RESET_ALL}")
+# print(f"{Fore.YELLOW}{Style.BRIGHT}Code Description: FaceProcessing.py")
+# print(f"{Fore.WHITE}{Style.BRIGHT}------------------")
+# print(f"{Fore.CYAN}{Style.BRIGHT}The code is a Python script that uses Keras and TensorFlow libraries to perform hyperparameter tuning for a convolutional neural network (CNN) model for facial emotion recognition.")
+# print(f"{Fore.CYAN}{Style.BRIGHT}The dataset used is Fer2013, which is loaded from a CSV file.")
+# print(f"\n{Fore.CYAN}{Style.BRIGHT}The script uses the keras_tuner library to perform random search hyperparameter tuning. The Hyper_Builder() function defines the architecture of the CNN model and compiles it with hyperparameters such as filters, kernel size, pool size, units, and learning rate. The hyperparameters are sampled from defined ranges using the hp object, which is passed as an argument to the function.")
+# print(f"\n{Fore.CYAN}{Style.BRIGHT}The Early_Stopping() function defines early stopping as a callback for the model during training, which prevents overfitting. The patience for early stopping is also hyperparameterized using the hp object.")
+# print(f"\n{Fore.CYAN}{Style.BRIGHT}The Hyperband tuner is then created with the Hyper_Builder() function as the model-building function, and the maximum number of trials, project name, and objective for tuning (in this case, 'val_accuracy') are specified. The tuner searches for the best hyperparameters using the search() function, which takes the input data (X_Index and Y_Index), number of epochs, batch size, and other parameters.")
+# print(f"\n{Fore.CYAN}{Style.BRIGHT}After tuning is completed, the best hyperparameters and their corresponding model performance metrics (such as accuracy, loss) are printed. The best model is then trained with the optimal hyperparameters and evaluated on the validation set. Finally, the model is saved to disk for future use.")
+# print(f"{Style.RESET_ALL}")
 
 file_path = os.path.abspath(__file__)
 file_name = os.path.basename(file_path)
@@ -75,7 +32,7 @@ hyper_directory = "models/FaceEmo/Emotion"
 dataset_path = "corpdata/csv/fer2013/fer2013.csv"
 model_save_path = "models/FaceEmo/Face_Emotion_Model.h5"
 
-CodeSeparator("# Check if folder exists")
+
 print(Style.RESET_ALL)
 _path = "models/FaceEmo"
 if not os.path.exists(_path):
@@ -84,7 +41,7 @@ if not os.path.exists(_path):
 else:
     print(f"{Fore.YELLOW}{Style.BRIGHT}Folder already exists: {_path}{Style.RESET_ALL}")
 
-CodeSeparator("# Print loaded data information")
+
 Fer2013 = pandas.read_csv(dataset_path)
 for index, row in Fer2013.iterrows():
     pixels = numpy.fromstring(row["pixels"], dtype="uint8", sep=" ")
@@ -141,7 +98,6 @@ def Hyper_Builder(hp):
     return model
 
 
-CodeSeparator("# Create Hyperband tuner")
 print(Style.RESET_ALL)
 Hyper_Tuner = Hyperband(
     Hyper_Builder,
@@ -152,7 +108,7 @@ Hyper_Tuner = Hyperband(
     project_name="Emotion",
 )
 
-CodeSeparator("# Start hyperparameter search")
+
 print(Style.RESET_ALL)
 Hyper_Tuner.search(
     x=X_Index,
