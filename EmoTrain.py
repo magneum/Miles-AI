@@ -9,9 +9,9 @@ X_Index = []
 Y_Index = []
 nEpochs = 100
 nValsplit = 0.2
-hyper_directory = "Emotion"
-dataset_path = "fer2013/fer2013.csv"
-model_save_path = "face_emotion_model.h5"
+hyper_directory = "models/Face_Emo/Emotion"
+dataset_path = "/kaggle/input/fer2013/fer2013.csv"
+model_save_path = "models/Face_Emo/Face_Emotion_Model.h5"
 
 Fer2013 = pandas.read_csv(dataset_path)
 for index, row in Fer2013.iterrows():
