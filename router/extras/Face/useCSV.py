@@ -24,17 +24,12 @@ num_seeds = 22
 batch_size = 12
 max_epochs = 200
 num_valsplit = 0.2
-Hyperband_factor = 2
-allow_new_entries = True
-executions_per_trial = 1
-hyperband_iterations = 1
-Hyperband_overwrite = True
 dir_path = "models/Face_Emotion"
 Hyperband_project_name = "Trails"
 Hyperband_objective = "val_accuracy"
 hyper_directory = "models/Face_Emotion/"
+model_save_path = "models/Face_Emotion/models"
 dataset_path = "corpdata/csv/fer2013/fer2013.csv"
-best_model_save_path = "models/Face_Emotion/models"
 
 if not os.path.exists(dir_path):
     os.makedirs(dir_path)
@@ -113,15 +108,15 @@ def Hyper_Builder(hp):
 
 print(Fore.GREEN + "Create Hyperband tuner Completed!" + Style.RESET_ALL)
 Hyper_Tuner = Hyperband(
-    allow_new_entries=allow_new_entries,
+    allow_new_entries=True,
     directory=hyper_directory,
-    executions_per_trial=executions_per_trial,
-    factor=Hyperband_factor,
-    hyperband_iterations=hyperband_iterations,
+    executions_per_trial=1,
+    factor=2,
+    hyperband_iterations=1,
     hypermodel=Hyper_Builder,
     max_epochs=max_epochs,
     objective=Hyperband_objective,
-    overwrite=Hyperband_overwrite,
+    overwrite=True,
     project_name=Hyperband_project_name,
     seed=num_seeds,
 )
@@ -165,8 +160,8 @@ Hyper_Model = Hyper_Builder(BestHP)
 print(Fore.GREEN + "Best Hyperparameters: " + str(BestHP) + Style.RESET_ALL)
 
 # Save best model
-Hyper_Model.save(best_model_save_path)
-print(Fore.YELLOW + "Best Model saved at: " + best_model_save_path + Style.RESET_ALL)
+Hyper_Model.save(model_save_path)
+print(Fore.YELLOW + "Best Model saved at: " + model_save_path + Style.RESET_ALL)
 
 # Train and save all models
 for i, hyperparams in enumerate(Hyper_Tuner.get_best_hyperparameters()):
@@ -180,7 +175,7 @@ for i, hyperparams in enumerate(Hyper_Tuner.get_best_hyperparameters()):
         + Style.RESET_ALL
     )
     model.fit(X_Index, Y_Index, epochs=max_epochs, validation_split=num_valsplit)
-    model_save_path_i = best_model_save_path + "_model_" + str(i + 1)
+    model_save_path_i = model_save_path + "_model_" + str(i + 1)
     model.save(model_save_path_i)
     print(
         Fore.YELLOW
