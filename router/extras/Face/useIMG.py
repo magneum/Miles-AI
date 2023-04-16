@@ -22,7 +22,7 @@ nEpochs = 200
 nValsplit = 0.2
 batch_size = 12
 target_size = (64, 64)
-hyper_directory = "models/Face_Emo/Emotion"
+hyper_directory = "models/FacialEmotion/Emotion"
 Test_dir = "corpdata/Fer2013-img/Test_Images"
 Train_dir = "corpdata/Fer2013-img/Train_Images"
 print(Fore.GREEN + "Hyperparameters:")
@@ -117,7 +117,7 @@ def Hyper_Builder(hp):
 # ========================================================= Magneum
 File_path = os.path.abspath(__file__)
 File_name = os.path.basename(File_path)
-_path = "models/FaceEmo"
+_path = "models/FacialEmotion"
 if not os.path.exists(_path):
     os.makedirs(_path)
 print(f"{Fore.GREEN}File Path: {File_path}")
@@ -210,8 +210,8 @@ Hyper_Best = Hyper_Tuner.get_best_models(num_models=1)[0]
 Hyper_Best.fit(Train_Generator, epochs=nSeed, validation_data=Test_Generator)
 Evaluation = Hyper_Best.evaluate(Test_Generator)
 Test_Loss, Test_Acc = Evaluation[0], Evaluation[1]
-Hyper_Best.save("models/FaceEmo/Fer_model.h5")
+Hyper_Best.save("models/FacialEmotion/Fer_model.h5")
 print(Fore.GREEN + "Training completed successfully!")
 print(Fore.CYAN + f"Test Loss: {Test_Loss:.4f}, Test Accuracy: {Test_Acc:.4f}")
-print(Fore.YELLOW + "Best model saved as 'models/FaceEmo/Fer_model.h5'")
+print(Fore.YELLOW + "Best model saved as 'models/FacialEmotion/Fer_model.h5'")
 print(Style.RESET_ALL)

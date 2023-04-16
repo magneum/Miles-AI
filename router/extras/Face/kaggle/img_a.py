@@ -18,7 +18,7 @@ num_Epochs = 200
 target_size = (64, 64)
 Test_dir = "/kaggle/input/fer2013/test"
 Train_dir = "/kaggle/input/fer2013/train"
-hyper_directory = "models/Face_Emo/Emotion"
+hyper_directory = "models/FacialEmotion/Emotion"
 print(Fore.GREEN + "Hyperparameters:")
 print(Fore.BLUE + "num_Seeds: ", num_Seeds)
 print(Fore.BLUE + "num_Epochs: ", num_Epochs)
@@ -109,7 +109,7 @@ def Hyper_Builder(hp):
 
 
 # ========================================================= Magneum =========================================================
-_path = "models/FaceEmo"
+_path = "models/FacialEmotion"
 if not os.path.exists(_path):
     os.makedirs(_path)
 
@@ -198,8 +198,8 @@ Hyper_Best = Hyper_Tuner.get_best_models(num_models=1)[0]
 Hyper_Best.fit(Train_Generator, epochs=num_Seeds, validation_data=Test_Generator)
 Evaluation = Hyper_Best.evaluate(Test_Generator)
 Test_Loss, Test_Acc = Evaluation[0], Evaluation[1]
-Hyper_Best.save("models/FaceEmo/Fer_model.h5")
+Hyper_Best.save("models/FacialEmotion/Fer_model.h5")
 print(Fore.GREEN + "Training completed successfully!")
 print(Fore.CYAN + f"Test Loss: {Test_Loss:.4f}, Test Accuracy: {Test_Acc:.4f}")
-print(Fore.YELLOW + "Best model saved as 'models/FaceEmo/Fer_model.h5'")
+print(Fore.YELLOW + "Best model saved as 'models/FacialEmotion/Fer_model.h5'")
 print(Style.RESET_ALL)

@@ -25,24 +25,24 @@ patience = 10
 nEpochs = 200
 nValsplit = 0.2
 batch_size = 12
-hyper_directory = "models/Face_Emo/Emotion"
-model_save_path = "models/Face_Emo/Face_Emo_Model.h5"
+hyper_directory = "models/FacialEmotion/Emotion"
+model_save_path = "models/FacialEmotion/FacialEmotion_Model.h5"
 dataset_path = "/kaggle/input/d/deadskull7/fer2013/fer2013.csv"
 
-_path = "models/FaceEmo"
+_path = "models/FacialEmotion"
 if not os.path.exists(_path):
     os.makedirs(_path)
 
-print(f"{Fore.BLUE}Hyperparameters:{Style.RESET_ALL}")
-print(f"nSeed: {Fore.GREEN}{nSeed}{Style.RESET_ALL}")
-print(f"verbose: {Fore.GREEN}{verbose}{Style.RESET_ALL}")
-print(f"patience: {Fore.GREEN}{patience}{Style.RESET_ALL}")
-print(f"nEpochs: {Fore.GREEN}{nEpochs}{Style.RESET_ALL}")
-print(f"nValsplit: {Fore.GREEN}{nValsplit}{Style.RESET_ALL}")
-print(f"batch_size: {Fore.GREEN}{batch_size}{Style.RESET_ALL}")
-print(f"hyper_directory: {Fore.GREEN}{hyper_directory}{Style.RESET_ALL}")
-print(f"dataset_path: {Fore.GREEN}{dataset_path}{Style.RESET_ALL}")
-print(f"model_save_path: {Fore.GREEN}{model_save_path}{Style.RESET_ALL}")
+print(Fore.BLUE + "Hyperparameters:" + Style.RESET_ALL)
+print("nSeed: " + Fore.GREEN + str(nSeed) + Style.RESET_ALL)
+print("verbose: " + Fore.GREEN + str(verbose) + Style.RESET_ALL)
+print("patience: " + Fore.GREEN + str(patience) + Style.RESET_ALL)
+print("nEpochs: " + Fore.GREEN + str(nEpochs) + Style.RESET_ALL)
+print("nValsplit: " + Fore.GREEN + str(nValsplit) + Style.RESET_ALL)
+print("batch_size: " + Fore.GREEN + str(batch_size) + Style.RESET_ALL)
+print("hyper_directory: " + Fore.GREEN + hyper_directory + Style.RESET_ALL)
+print("dataset_path: " + Fore.GREEN + dataset_path + Style.RESET_ALL)
+print("model_save_path: " + Fore.GREEN + model_save_path + Style.RESET_ALL)
 
 # ========================================================= Magneum =========================================================
 Fer2013 = pandas.read_csv(dataset_path)
@@ -114,7 +114,7 @@ def Hyper_Builder(hp):
 
 
 # ========================================================= Magneum =========================================================
-print(f"{Fore.GREEN}Create Hyperband tuner Completed!{Style.RESET_ALL}")
+print(Fore.GREEN + "Create Hyperband tuner Completed!" + Style.RESET_ALL)
 Hyper_Tuner = Hyperband(
     Hyper_Builder,
     seed=nSeed,
@@ -124,7 +124,7 @@ Hyper_Tuner = Hyperband(
     directory=hyper_directory,
 )
 # ========================================================= Magneum =========================================================
-print(f"{Fore.GREEN}Define Hyperband search parameters Completed!{Style.RESET_ALL}")
+print(Fore.GREEN + "Define Hyperband search parameters Completed!" + Style.RESET_ALL)
 Hyper_Tuner.search(
     x=X_Index,
     y=Y_Index,
@@ -138,22 +138,31 @@ Hyper_Tuner.search(
 )
 
 # ========================================================= Magneum =========================================================
-print(f"{Fore.GREEN}Hyperband Search Completed!{Style.RESET_ALL}")
+print(Fore.GREEN + "Hyperband Search Completed!" + Style.RESET_ALL)
 print(
-    f"{Fore.CYAN}Best Hyperparameters: {Style.RESET_ALL}{Hyper_Tuner.get_best_hyperparameters()[0].values}"
+    Fore.CYAN
+    + "Best Hyperparameters: "
+    + Style.RESET_ALL
+    + str(Hyper_Tuner.get_best_hyperparameters()[0].values)
 )
 print(
-    f"{Fore.YELLOW}Best Model Architecture: {Style.RESET_ALL}{Hyper_Tuner.get_best_models()[0].summary()}"
+    Fore.YELLOW
+    + "Best Model Architecture: "
+    + Style.RESET_ALL
+    + Hyper_Tuner.get_best_models()[0].summary()
 )
 print(
-    f"{Fore.MAGENTA}Best Validation Accuracy: {Style.RESET_ALL}{Hyper_Tuner.get_best_models()[0].evaluate(X_Index, Y_Index)[1]}"
+    Fore.MAGENTA
+    + "Best Validation Accuracy: "
+    + Style.RESET_ALL
+    + str(Hyper_Tuner.get_best_models()[0].evaluate(X_Index, Y_Index)[1])
 )
 
 # ========================================================= Magneum =========================================================
 BestHP = Hyper_Tuner.get_best_hyperparameters(1)[0]
 Hyper_Model = Hyper_Builder(BestHP)
-print(f"{Fore.GREEN}Best Hyperparameters: {BestHP}{Style.RESET_ALL}")
+print(Fore.GREEN + "Best Hyperparameters: " + str(BestHP) + Style.RESET_ALL)
 Hyper_Model.fit(X_Index, Y_Index, epochs=nEpochs, validation_split=0.2)
-print(f"{Fore.BLUE}Training in progress...{Style.RESET_ALL}")
+print(Fore.BLUE + "Training in progress..." + Style.RESET_ALL)
 Hyper_Model.save(model_save_path)
-print(f"{Fore.YELLOW}Model saved at: {model_save_path}{Style.RESET_ALL}")
+print(Fore.YELLOW + "Model saved at: " + model_save_path + Style.RESET_ALL)
