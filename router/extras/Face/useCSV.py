@@ -4,8 +4,8 @@ import pandas
 from keras import Sequential
 from colorama import Fore, Style
 from keras.optimizers import Adam
-from keras_tuner.tuners import Hyperband
 from keras.callbacks import EarlyStopping
+from keras_tuner.tuners import Hyperband, RandomSearch
 from keras.layers import (
     Conv2D,
     MaxPooling2D,
@@ -106,20 +106,32 @@ def Hyper_Builder(hp):
 # ========================================================= Magneum =========================================================
 
 
-print(Fore.GREEN + "Create Hyperband tuner Completed!" + Style.RESET_ALL)
-Hyper_Tuner = Hyperband(
+print(Fore.GREEN + "Create RandomSearch tuner Completed!" + Style.RESET_ALL)
+Hyper_Tuner = RandomSearch(
     allow_new_entries=True,
     directory=hyper_directory,
-    executions_per_trial=1,
-    factor=2,
-    hyperband_iterations=1,
+    objective=Hyperband_objective,
     hypermodel=Hyper_Builder,
     max_epochs=max_epochs,
-    objective=Hyperband_objective,
     overwrite=True,
     project_name=Hyperband_project_name,
     seed=num_seeds,
 )
+# print(Fore.GREEN + "Create Hyperband tuner Completed!" + Style.RESET_ALL)
+# Hyper_Tuner = Hyperband(
+#     allow_new_entries=True,
+#     directory=hyper_directory,
+#     executions_per_trial=1,
+#     factor=2,
+#     hyperband_iterations=1,
+#     hypermodel=Hyper_Builder,
+#     max_epochs=max_epochs,
+#     objective=Hyperband_objective,
+#     overwrite=True,
+#     project_name=Hyperband_project_name,
+#     seed=num_seeds,
+# )
+print(Fore.GREEN + "Defining Hyperband search parameters Completed!" + Style.RESET_ALL)
 Hyper_Tuner.search(
     x=X_Index,
     y=Y_Index,
@@ -130,7 +142,6 @@ Hyper_Tuner.search(
         EarlyStopping(monitor="val_loss", patience=patience, restore_best_weights=True)
     ],
 )
-print(Fore.GREEN + "Defining Hyperband search parameters Completed!" + Style.RESET_ALL)
 
 
 # ========================================================= Magneum =========================================================
