@@ -128,7 +128,6 @@ print(Fore.GREEN + "Define Hyperband search parameters Completed!" + Style.RESET
 Hyper_Tuner.search(
     x=X_Index,
     y=Y_Index,
-    epochs=nEpochs,
     verbose=verbose,
     batch_size=batch_size,
     validation_split=nValsplit,

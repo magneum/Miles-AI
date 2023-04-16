@@ -171,7 +171,6 @@ Hyper_Tuner = Hyperband(
 # ========================================================= Magneum =========================================================
 Hyper_Tuner.search(
     Train_Generator,
-    epochs=num_Epochs,
     verbose=verbose,
     batch_size=batch_size,
     validation_data=Test_Generator,
