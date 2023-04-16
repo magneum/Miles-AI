@@ -41,29 +41,29 @@ else:
     print(f"{Fore.YELLOW}Directory already exists: {dir_path}{Fore.RESET}")
 
 print(Fore.BLUE + "Hyperparameters:" + Style.RESET_ALL)
-print(Fore.GREEN + "num_seeds: " + str(num_seeds) + Style.RESET_ALL)
-print(Fore.GREEN + "verbose: " + str(verbose) + Style.RESET_ALL)
-print(Fore.GREEN + "patience: " + str(patience) + Style.RESET_ALL)
-print(Fore.GREEN + "num_epochs: " + str(num_epochs) + Style.RESET_ALL)
-print(Fore.GREEN + "num_valsplit: " + str(num_valsplit) + Style.RESET_ALL)
-print(Fore.GREEN + "batch_size: " + str(batch_size) + Style.RESET_ALL)
-print(Fore.GREEN + "hyper_directory: " + str(hyper_directory) + Style.RESET_ALL)
-print(Fore.GREEN + "dataset_path: " + str(dataset_path) + Style.RESET_ALL)
-print(Fore.GREEN + "best_model_save_path: " + str(best_model_save_path) + Style.RESET_ALL)
-print(Fore.GREEN + "Hyperband_factor: " + str(Hyperband_factor) + Style.RESET_ALL)
-print(Fore.GREEN + "executions_per_trial: " + str(executions_per_trial) + Style.RESET_ALL)
-print(Fore.GREEN + "Hyperband_overwrite: " + str(Hyperband_overwrite) + Style.RESET_ALL)
-print(Fore.GREEN + "dir_path: " + str(dir_path) + Style.RESET_ALL)
+print(Fore.MAGENTA + "num_seeds: " + str(num_seeds) + Style.RESET_ALL)
+print(Fore.MAGENTA + "verbose: " + str(verbose) + Style.RESET_ALL)
+print(Fore.MAGENTA + "patience: " + str(patience) + Style.RESET_ALL)
+print(Fore.MAGENTA + "num_epochs: " + str(num_epochs) + Style.RESET_ALL)
+print(Fore.MAGENTA + "num_valsplit: " + str(num_valsplit) + Style.RESET_ALL)
+print(Fore.MAGENTA + "batch_size: " + str(batch_size) + Style.RESET_ALL)
+print(Fore.MAGENTA + "hyper_directory: " + str(hyper_directory) + Style.RESET_ALL)
+print(Fore.MAGENTA + "dataset_path: " + str(dataset_path) + Style.RESET_ALL)
+print(Fore.MAGENTA + "best_model_save_path: " + str(best_model_save_path) + Style.RESET_ALL)
+print(Fore.MAGENTA + "Hyperband_factor: " + str(Hyperband_factor) + Style.RESET_ALL)
+print(Fore.MAGENTA + "executions_per_trial: " + str(executions_per_trial) + Style.RESET_ALL)
+print(Fore.MAGENTA + "Hyperband_overwrite: " + str(Hyperband_overwrite) + Style.RESET_ALL)
+print(Fore.MAGENTA + "dir_path: " + str(dir_path) + Style.RESET_ALL)
 print(
-    Fore.GREEN
+    Fore.MAGENTA
     + "Hyperband_project_name: "
     + str(Hyperband_project_name)
     + Style.RESET_ALL
 )
-print(Fore.GREEN + "Hyperband_objective: " + str(Hyperband_objective) + Style.RESET_ALL)
-print(Fore.GREEN + "hyper_directory: " + str(hyper_directory) + Style.RESET_ALL)
-print(Fore.GREEN + "dataset_path: " + str(dataset_path) + Style.RESET_ALL)
-print(Fore.GREEN + "best_model_save_path: " + str(best_model_save_path) + Style.RESET_ALL)
+print(Fore.MAGENTA + "Hyperband_objective: " + str(Hyperband_objective) + Style.RESET_ALL)
+print(Fore.MAGENTA + "hyper_directory: " + str(hyper_directory) + Style.RESET_ALL)
+print(Fore.MAGENTA + "dataset_path: " + str(dataset_path) + Style.RESET_ALL)
+print(Fore.MAGENTA + "best_model_save_path: " + str(best_model_save_path) + Style.RESET_ALL)
 print(Style.RESET_ALL)
 
 # ========================================================= Magneum =========================================================
