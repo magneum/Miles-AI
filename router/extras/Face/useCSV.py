@@ -24,8 +24,8 @@ num_seeds = 22
 batch_size = 12
 num_epochs = 200
 num_valsplit = 0.2
-Hyperband_factor=2
-executions_per_trial=1
+Hyperband_factor = 2
+executions_per_trial = 1
 Hyperband_overwrite = True
 dir_path = "models/FacialEmotion"
 Hyperband_project_name = "Emotion"
@@ -41,24 +41,29 @@ else:
     print(f"{Fore.YELLOW}Directory already exists: {dir_path}{Fore.RESET}")
 
 print(Fore.BLUE + "Hyperparameters:" + Style.RESET_ALL)
-print("num_seeds: " + Fore.GREEN + str(num_seeds) + Style.RESET_ALL)
-print("verbose: " + Fore.GREEN + str(verbose) + Style.RESET_ALL)
-print("patience: " + Fore.GREEN + str(patience) + Style.RESET_ALL)
-print("num_epochs: " + Fore.GREEN + str(num_epochs) + Style.RESET_ALL)
-print("num_valsplit: " + Fore.GREEN + str(num_valsplit) + Style.RESET_ALL)
-print("batch_size: " + Fore.GREEN + str(batch_size) + Style.RESET_ALL)
-print("hyper_directory: " + Fore.GREEN + hyper_directory + Style.RESET_ALL)
-print("dataset_path: " + Fore.GREEN + dataset_path + Style.RESET_ALL)
-print("best_model_save_path: " + Fore.GREEN + best_model_save_path + Style.RESET_ALL)
-print("Hyperband_factor: " + Fore.GREEN + str(Hyperband_factor) + Style.RESET_ALL)
-print("executions_per_trial: " + Fore.GREEN + str(executions_per_trial) + Style.RESET_ALL)
-print("Hyperband_overwrite: " + Fore.GREEN + str(Hyperband_overwrite) + Style.RESET_ALL)
-print("dir_path: " + Fore.GREEN + dir_path + Style.RESET_ALL)
-print("Hyperband_project_name: " + Fore.GREEN + Hyperband_project_name + Style.RESET_ALL)
-print("Hyperband_objective: " + Fore.GREEN + Hyperband_objective + Style.RESET_ALL)
-print("hyper_directory: " + Fore.GREEN + hyper_directory + Style.RESET_ALL)
-print("dataset_path: " + Fore.GREEN + dataset_path + Style.RESET_ALL)
-print("best_model_save_path: " + Fore.GREEN + best_model_save_path + Style.RESET_ALL)
+print(Fore.GREEN + "num_seeds: " + str(num_seeds) + Style.RESET_ALL)
+print(Fore.GREEN + "verbose: " + str(verbose) + Style.RESET_ALL)
+print(Fore.GREEN + "patience: " + str(patience) + Style.RESET_ALL)
+print(Fore.GREEN + "num_epochs: " + str(num_epochs) + Style.RESET_ALL)
+print(Fore.GREEN + "num_valsplit: " + str(num_valsplit) + Style.RESET_ALL)
+print(Fore.GREEN + "batch_size: " + str(batch_size) + Style.RESET_ALL)
+print(Fore.GREEN + "hyper_directory: " + str(hyper_directory) + Style.RESET_ALL)
+print(Fore.GREEN + "dataset_path: " + str(dataset_path) + Style.RESET_ALL)
+print(Fore.GREEN + "best_model_save_path: " + str(best_model_save_path) + Style.RESET_ALL)
+print(Fore.GREEN + "Hyperband_factor: " + str(Hyperband_factor) + Style.RESET_ALL)
+print(Fore.GREEN + "executions_per_trial: " + str(executions_per_trial) + Style.RESET_ALL)
+print(Fore.GREEN + "Hyperband_overwrite: " + str(Hyperband_overwrite) + Style.RESET_ALL)
+print(Fore.GREEN + "dir_path: " + str(dir_path) + Style.RESET_ALL)
+print(
+    Fore.GREEN
+    + "Hyperband_project_name: "
+    + str(Hyperband_project_name)
+    + Style.RESET_ALL
+)
+print(Fore.GREEN + "Hyperband_objective: " + str(Hyperband_objective) + Style.RESET_ALL)
+print(Fore.GREEN + "hyper_directory: " + str(hyper_directory) + Style.RESET_ALL)
+print(Fore.GREEN + "dataset_path: " + str(dataset_path) + Style.RESET_ALL)
+print(Fore.GREEN + "best_model_save_path: " + str(best_model_save_path) + Style.RESET_ALL)
 print(Style.RESET_ALL)
 
 # ========================================================= Magneum =========================================================
@@ -77,7 +82,6 @@ print(Fore.YELLOW + "Information from Fer2013 dataset:")
 print(Fore.CYAN + "Total number of rows: " + Style.RESET_ALL + f"{Fer2013.shape[0]}")
 print(Fore.CYAN + "Number of columns: " + Style.RESET_ALL + f"{Fer2013.shape[1]}")
 print(Style.RESET_ALL)
-
 
 # ========================================================= Magneum =========================================================
 def Hyper_Builder(hp):
@@ -99,8 +103,6 @@ def Hyper_Builder(hp):
     model.add(Dense(7, activation="softmax"))
     model.compile(optimizer=Adam(hp.Choice("learning_rate", values=[1e-2, 1e-3, 1e-4])), loss="sparse_categorical_crossentropy", metrics=["accuracy"])
     return model
-
-
 
 # ========================================================= Magneum =========================================================
 
@@ -167,10 +169,24 @@ print(Fore.YELLOW + "Best Model saved at: " + best_model_save_path + Style.RESET
 # Train and save all models
 for i, hyperparams in enumerate(Hyper_Tuner.get_best_hyperparameters()):
     model = Hyper_Builder(hyperparams)
-    print(Fore.GREEN + "Hyperparameters for Model " + str(i+1) + ": " + str(hyperparams) + Style.RESET_ALL)
+    print(
+        Fore.GREEN
+        + "Hyperparameters for Model "
+        + str(i + 1)
+        + ": "
+        + str(hyperparams)
+        + Style.RESET_ALL
+    )
     model.fit(X_Index, Y_Index, epochs=num_epochs, validation_split=0.2)
-    model_save_path_i = best_model_save_path + "_model_" + str(i+1)
+    model_save_path_i = best_model_save_path + "_model_" + str(i + 1)
     model.save(model_save_path_i)
-    print(Fore.YELLOW + "Model " + str(i+1) + " saved at: " + model_save_path_i + Style.RESET_ALL)
+    print(
+        Fore.YELLOW
+        + "Model "
+        + str(i + 1)
+        + " saved at: "
+        + model_save_path_i
+        + Style.RESET_ALL
+    )
 
 print(Fore.BLUE + "Training in progress..." + Style.RESET_ALL)
