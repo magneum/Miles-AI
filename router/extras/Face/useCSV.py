@@ -22,20 +22,23 @@ verbose = 1
 patience = 10
 num_seeds = 22
 batch_size = 12
-num_epochs = 200
+max_epochs = 200
 num_valsplit = 0.2
 Hyperband_factor = 2
+allow_new_entries = True
 executions_per_trial = 1
+hyperband_iterations = 1
 Hyperband_overwrite = True
-dir_path = "models/FacialEmotion"
+dir_path = "models/Face_Emotion"
 Hyperband_project_name = "Emotion"
 Hyperband_objective = "val_accuracy"
-hyper_directory = "models/FacialEmotion/Emotion"
+hyper_directory = "models/Face_Emotion/trails"
 dataset_path = "corpdata/csv/fer2013/fer2013.csv"
-best_model_save_path = "models/FacialEmotion/models"
+best_model_save_path = "models/Face_Emotion/models"
 
 if not os.path.exists(dir_path):
     os.makedirs(dir_path)
+    os.makedirs(dir_path + "/models")
     print(f"{Fore.GREEN}Directory created: {dir_path}{Fore.RESET}")
 else:
     print(f"{Fore.YELLOW}Directory already exists: {dir_path}{Fore.RESET}")
@@ -110,28 +113,26 @@ def Hyper_Builder(hp):
 
 print(Fore.GREEN + "Create Hyperband tuner Completed!" + Style.RESET_ALL)
 Hyper_Tuner = Hyperband(
-    allow_new_entries=True,  # Whether to allow new entries in hyperparameters dictionary
-    directory=hyper_directory,  # Directory to store Hyperband results
-    executions_per_trial=executions_per_trial,  # Number of times to train a model with the same hyperparameters
-    factor=Hyperband_factor,  # Reduction factor for the number of configurations
-    hyperband_iterations=1,  # Number of brackets for Successive Halving
-    hypermodel=Hyper_Builder,  # Hypermodel to be tuned
-    max_epochs=num_epochs,  # Maximum number of epochs to run
-    objective=Hyperband_objective,  # Objective to optimize
-    overwrite=Hyperband_overwrite,  # Whether to overwrite existing Hyperband results
-    project_name=Hyperband_project_name,  # Name of the project
-    seed=num_seeds,  # Seed for random number generation
+    allow_new_entries=allow_new_entries,
+    directory=hyper_directory,
+    executions_per_trial=executions_per_trial,
+    factor=Hyperband_factor,
+    hyperband_iterations=hyperband_iterations,
+    hypermodel=Hyper_Builder,
+    max_epochs=max_epochs,
+    objective=Hyperband_objective,
+    overwrite=Hyperband_overwrite,
+    project_name=Hyperband_project_name,
+    seed=num_seeds,
 )
 Hyper_Tuner.search(
-    x=X_Index,  # Input data (X) for tuning
-    y=Y_Index,  # Target data (y) for tuning
-    verbose=verbose,  # Verbosity level for logging (0: silent, 1: progress bar, 2: one line per epoch)
-    batch_size=batch_size,  # Batch size for training
-    validation_split=num_valsplit,  # Fraction of data to use for validation during training
-    callbacks=[  # List of callbacks to use during training
-        EarlyStopping(
-            monitor="val_loss", patience=patience, restore_best_weights=True
-        )  # Early stopping callback to stop training early if validation loss does not improve for a certain number of epochs (patience) and restore the best weights of the model
+    x=X_Index,
+    y=Y_Index,
+    verbose=verbose,
+    batch_size=batch_size,
+    validation_split=num_valsplit,
+    callbacks=[
+        EarlyStopping(monitor="val_loss", patience=patience, restore_best_weights=True)
     ],
 )
 print(Fore.GREEN + "Defining Hyperband search parameters Completed!" + Style.RESET_ALL)
@@ -178,7 +179,7 @@ for i, hyperparams in enumerate(Hyper_Tuner.get_best_hyperparameters()):
         + str(hyperparams)
         + Style.RESET_ALL
     )
-    model.fit(X_Index, Y_Index, epochs=num_epochs, validation_split=0.2)
+    model.fit(X_Index, Y_Index, epochs=max_epochs, validation_split=0.2)
     model_save_path_i = best_model_save_path + "_model_" + str(i + 1)
     model.save(model_save_path_i)
     print(
