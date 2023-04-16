@@ -1,12 +1,12 @@
 import os
 import numpy
 import pandas
+from keras import Sequential
 from colorama import Fore, Style
-from tensorflow.keras import Sequential
+from keras.optimizers import Adam
 from keras_tuner.tuners import Hyperband
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.callbacks import EarlyStopping
-from tensorflow.keras.layers import (
+from keras.callbacks import EarlyStopping
+from keras.layers import (
     Conv2D,
     MaxPooling2D,
     Flatten,
