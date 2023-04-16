@@ -111,7 +111,7 @@ def Hyper_Builder(hp):
         loss="categorical_crossentropy",
         metrics=["accuracy"],
     )
-    EarlyStopping(monitor="val_loss", patience=patience, restore_best_weights=True)
+    model.add(EarlyStopping(monitor="val_loss", patience=patience, restore_best_weights=True))
     return model
 
 

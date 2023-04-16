@@ -101,7 +101,7 @@ def Hyper_Builder(hp, input_shape, num_classes, patience):
     model.compile(
         optimizer=model_optimizer, loss="categorical_crossentropy", metrics=["accuracy"]
     )
-    EarlyStopping(monitor="val_loss", patience=patience, restore_best_weights=True)
+    model.add(EarlyStopping(monitor="val_loss", patience=patience, restore_best_weights=True))
     return model
 
 

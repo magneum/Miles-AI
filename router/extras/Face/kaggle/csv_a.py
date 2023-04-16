@@ -61,40 +61,23 @@ print(Y_Index[0])
 # ========================================================= Magneum ========================================================= 
 def Hyper_Builder(hp):
     model = Sequential()
-    model.add(Conv2D(filters=hp.Choice("filters_1", values=[32, 64, 128]), kernel_size=hp.Choice("kernel_size_1", values=[3, 5]), activation="relu", input_shape=(48, 48, 1)))
-    model.add(BatchNormalization()) 
+    model.add(Conv2D(filters=hp.Int("filters_1", 32, 128, step=32), kernel_size=hp.Choice("kernel_size_1", values=[3, 5]), activation="relu", input_shape=(48, 48, 1)))
     model.add(MaxPooling2D(pool_size=hp.Choice("pool_size_1", values=[4, 5])))
-    model.add(Dropout(hp.Float("dropout_1", 0, 0.5, step=0.1))) 
-    
-    for i in range(hp.Int("nblocks", 1, 4)):
-        filters = hp.Choice("filters_" + str(i + 2), values=[32, 64, 128])
-        kernel_size = hp.Choice("kernel_size_" + str(i + 2), values=[3, 5])
-        pool_size = hp.Choice("pool_size_" + str(i + 2), values=[4, 5])
-        model.add(Conv2D(filters=filters, kernel_size=kernel_size, activation="relu", padding="same"))
-        model.add(BatchNormalization())  
-        model.add(MaxPooling2D(pool_size=pool_size, padding="same"))
-        model.add(Dropout(hp.Float("dropout_" + str(i + 2), 0, 0.5, step=0.1)))  
-    
-    model.add(Conv2D(filters=hp.Choice("filters_5", values=[64, 128]), kernel_size=hp.Choice("kernel_size_5", values=[3, 5]), activation="relu", padding="same"))
-    model.add(BatchNormalization()) 
-    model.add(MaxPooling2D(pool_size=hp.Choice("pool_size_5", values=[3, 4])))
-    model.add(Dropout(hp.Float("dropout_5", 0, 0.5, step=0.1)))  
-
-    model.add(Conv2D(filters=hp.Choice("filters_6", values=[64, 128]), kernel_size=hp.Choice("kernel_size_6", values=[3, 5]), activation="relu", padding="same"))
-    model.add(BatchNormalization())  
-    model.add(MaxPooling2D(pool_size=hp.Choice("pool_size_6", values=[3, 4])))
-    model.add(Dropout(hp.Float("dropout_6", 0, 0.5, step=0.1)))
-
-    model.add(Conv2D(filters=hp.Choice("filters_7", values=[64, 128]), kernel_size=hp.Choice("kernel_size_7", values=[3, 5]), activation="relu", padding="same"))
-    model.add(BatchNormalization())  
-    model.add(MaxPooling2D(pool_size=hp.Choice("pool_size_7", values=[3, 4])))
-    model.add(Dropout(hp.Float("dropout_7", 0, 0.5, step=0.1))) 
+    nblocks = hp.Int("nblocks", 1, 8)
+    for i in range(nblocks):
+        model.add(Conv2D(filters=hp.Int("filters_" + str(i + 2), 32, 128, step=32), kernel_size=hp.Choice("kernel_size_" + str(i + 2), values=[3, 5]), activation="relu", padding="same"))
+        model.add(MaxPooling2D(pool_size=hp.Choice("pool_size_" + str(i + 2), values=[4, 5]), padding="same"))
     model.add(Flatten())
     model.add(Dense(units=hp.Int("units", 128, 512, step=32), activation="relu"))
+    model.add(Dropout(hp.Float("dropout", 0.1, 0.5, step=0.1)))
+    nlayers = hp.Int("nlayers", 0, 6)
+    for j in range(nlayers):
+        model.add(Dense(units=hp.Int(f"units_{j + 2}", 64, 256, step=32), activation="relu"))
     model.add(Dense(7, activation="softmax"))
-    model.compile(optimizer=Adam(hp.Choice("learning_rate", values=[1e-2, 1e-3, 1e-4])), loss="sparse_categorical_crossentropy", metrics=["accuracy"])
-    early_stopping = EarlyStopping(monitor="val_loss", patience=hp.Int("patience", 3, 10), restore_best_weights=True)
-    model.callbacks.append(early_stopping)
+    model.compile(optimizer=Adam(hp.Choice("learning_rate", values=[1e-2, 1e-3, 1e-4])),
+                  loss="sparse_categorical_crossentropy",
+                  metrics=["accuracy"])
+    model.add(EarlyStopping(monitor="val_loss", patience=patience, restore_best_weights=True))
     return model
 
 # ========================================================= Magneum ========================================================= 
