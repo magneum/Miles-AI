@@ -41,29 +41,100 @@ else:
     print(f"{Fore.YELLOW}Directory already exists: {dir_path}{Fore.RESET}")
 
 print(Fore.BLUE + "Hyperparameters:" + Style.RESET_ALL)
-print(Fore.MAGENTA + "num_seeds: " + str(num_seeds) + Style.RESET_ALL)
-print(Fore.MAGENTA + "verbose: " + str(verbose) + Style.RESET_ALL)
-print(Fore.MAGENTA + "patience: " + str(patience) + Style.RESET_ALL)
-print(Fore.MAGENTA + "num_epochs: " + str(num_epochs) + Style.RESET_ALL)
-print(Fore.MAGENTA + "num_valsplit: " + str(num_valsplit) + Style.RESET_ALL)
-print(Fore.MAGENTA + "batch_size: " + str(batch_size) + Style.RESET_ALL)
-print(Fore.MAGENTA + "hyper_directory: " + str(hyper_directory) + Style.RESET_ALL)
-print(Fore.MAGENTA + "dataset_path: " + str(dataset_path) + Style.RESET_ALL)
-print(Fore.MAGENTA + "best_model_save_path: " + str(best_model_save_path) + Style.RESET_ALL)
-print(Fore.MAGENTA + "Hyperband_factor: " + str(Hyperband_factor) + Style.RESET_ALL)
-print(Fore.MAGENTA + "executions_per_trial: " + str(executions_per_trial) + Style.RESET_ALL)
-print(Fore.MAGENTA + "Hyperband_overwrite: " + str(Hyperband_overwrite) + Style.RESET_ALL)
-print(Fore.MAGENTA + "dir_path: " + str(dir_path) + Style.RESET_ALL)
+print(Fore.MAGENTA + "num_seeds: " + Style.RESET_ALL + str(num_seeds) + Style.RESET_ALL)
+print(Fore.MAGENTA + "verbose: " + Style.RESET_ALL + str(verbose) + Style.RESET_ALL)
+print(Fore.MAGENTA + "patience: " + Style.RESET_ALL + str(patience) + Style.RESET_ALL)
+print(
+    Fore.MAGENTA + "num_epochs: " + Style.RESET_ALL + str(num_epochs) + Style.RESET_ALL
+)
+print(
+    Fore.MAGENTA
+    + "num_valsplit: "
+    + Style.RESET_ALL
+    + str(num_valsplit)
+    + Style.RESET_ALL
+)
+print(
+    Fore.MAGENTA + "batch_size: " + Style.RESET_ALL + str(batch_size) + Style.RESET_ALL
+)
+print(
+    Fore.MAGENTA
+    + "hyper_directory: "
+    + Style.RESET_ALL
+    + str(hyper_directory)
+    + Style.RESET_ALL
+)
+print(
+    Fore.MAGENTA
+    + "dataset_path: "
+    + Style.RESET_ALL
+    + str(dataset_path)
+    + Style.RESET_ALL
+)
+print(
+    Fore.MAGENTA
+    + "best_model_save_path: "
+    + Style.RESET_ALL
+    + str(best_model_save_path)
+    + Style.RESET_ALL
+)
+print(
+    Fore.MAGENTA
+    + "Hyperband_factor: "
+    + Style.RESET_ALL
+    + str(Hyperband_factor)
+    + Style.RESET_ALL
+)
+print(
+    Fore.MAGENTA
+    + "executions_per_trial: "
+    + Style.RESET_ALL
+    + str(executions_per_trial)
+    + Style.RESET_ALL
+)
+print(
+    Fore.MAGENTA
+    + "Hyperband_overwrite: "
+    + Style.RESET_ALL
+    + str(Hyperband_overwrite)
+    + Style.RESET_ALL
+)
+print(Fore.MAGENTA + "dir_path: " + Style.RESET_ALL + str(dir_path) + Style.RESET_ALL)
 print(
     Fore.MAGENTA
     + "Hyperband_project_name: "
+    + Style.RESET_ALL
     + str(Hyperband_project_name)
     + Style.RESET_ALL
 )
-print(Fore.MAGENTA + "Hyperband_objective: " + str(Hyperband_objective) + Style.RESET_ALL)
-print(Fore.MAGENTA + "hyper_directory: " + str(hyper_directory) + Style.RESET_ALL)
-print(Fore.MAGENTA + "dataset_path: " + str(dataset_path) + Style.RESET_ALL)
-print(Fore.MAGENTA + "best_model_save_path: " + str(best_model_save_path) + Style.RESET_ALL)
+print(
+    Fore.MAGENTA
+    + "Hyperband_objective: "
+    + Style.RESET_ALL
+    + str(Hyperband_objective)
+    + Style.RESET_ALL
+)
+print(
+    Fore.MAGENTA
+    + "hyper_directory: "
+    + Style.RESET_ALL
+    + str(hyper_directory)
+    + Style.RESET_ALL
+)
+print(
+    Fore.MAGENTA
+    + "dataset_path: "
+    + Style.RESET_ALL
+    + str(dataset_path)
+    + Style.RESET_ALL
+)
+print(
+    Fore.MAGENTA
+    + "best_model_save_path: "
+    + Style.RESET_ALL
+    + str(best_model_save_path)
+    + Style.RESET_ALL
+)
 print(Style.RESET_ALL)
 
 # ========================================================= Magneum =========================================================
@@ -83,26 +154,53 @@ print(Fore.CYAN + "Total number of rows: " + Style.RESET_ALL + f"{Fer2013.shape[
 print(Fore.CYAN + "Number of columns: " + Style.RESET_ALL + f"{Fer2013.shape[1]}")
 print(Style.RESET_ALL)
 
+
 # ========================================================= Magneum =========================================================
 def Hyper_Builder(hp):
     model = Sequential()
-    model.add(Conv2D(filters=hp.Int("filters_1", 32, 128, step=32), kernel_size=hp.Choice("kernel_size_1", values=[3, 5]), activation="relu", input_shape=(48, 48, 1)))
+    model.add(
+        Conv2D(
+            filters=hp.Int("filters_1", 32, 128, step=32),
+            kernel_size=hp.Choice("kernel_size_1", values=[3, 5]),
+            activation="relu",
+            input_shape=(48, 48, 1),
+        )
+    )
     model.add(BatchNormalization())
     model.add(MaxPooling2D(pool_size=hp.Choice("pool_size_1", values=[4, 5])))
     nblocks = hp.Int("nblocks", 1, 8)
     for i in range(nblocks):
-        model.add(Conv2D(filters=hp.Int("filters_" + str(i + 2), 32, 128, step=32), kernel_size=hp.Choice("kernel_size_" + str(i + 2), values=[3, 5]), activation="relu", padding="same"))
+        model.add(
+            Conv2D(
+                filters=hp.Int("filters_" + str(i + 2), 32, 128, step=32),
+                kernel_size=hp.Choice("kernel_size_" + str(i + 2), values=[3, 5]),
+                activation="relu",
+                padding="same",
+            )
+        )
         model.add(BatchNormalization())
-        model.add(MaxPooling2D(pool_size=hp.Choice("pool_size_" + str(i + 2), values=[4, 5]), padding="same"))
+        model.add(
+            MaxPooling2D(
+                pool_size=hp.Choice("pool_size_" + str(i + 2), values=[4, 5]),
+                padding="same",
+            )
+        )
     model.add(Flatten())
     model.add(Dense(units=hp.Int("units", 128, 512, step=32), activation="relu"))
     model.add(Dropout(hp.Float("dropout", 0.1, 0.5, step=0.1)))
     nlayers = hp.Int("nlayers", 0, 6)
     for j in range(nlayers):
-        model.add(Dense(units=hp.Int(f"units_{j + 2}", 64, 256, step=32), activation="relu"))
+        model.add(
+            Dense(units=hp.Int(f"units_{j + 2}", 64, 256, step=32), activation="relu")
+        )
     model.add(Dense(7, activation="softmax"))
-    model.compile(optimizer=Adam(hp.Choice("learning_rate", values=[1e-2, 1e-3, 1e-4])), loss="sparse_categorical_crossentropy", metrics=["accuracy"])
+    model.compile(
+        optimizer=Adam(hp.Choice("learning_rate", values=[1e-2, 1e-3, 1e-4])),
+        loss="sparse_categorical_crossentropy",
+        metrics=["accuracy"],
+    )
     return model
+
 
 # ========================================================= Magneum =========================================================
 
