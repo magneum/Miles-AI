@@ -93,7 +93,7 @@ def Hyper_Builder(hp):
         )
     model.add(Flatten())
     model.add(Dense(units=hp.Int("units", 128, 512, step=32), activation="relu"))
-    model.add(Dropout(hp.Float("dropout", 0.1, 0.5, step=0.1)))
+    model.add(Dropout(hp.Float("dropout", 0.1, 0.4, step=0.1)))
     nlayers = hp.Int("nlayers", 0, 6)
     for j in range(nlayers):
         model.add(
