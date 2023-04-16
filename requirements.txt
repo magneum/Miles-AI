@@ -1,7 +1,6 @@
 beautifulsoup4
 chardet
 colorama
-faiss-gpu
 html2text
 keras
 keras_tuner
