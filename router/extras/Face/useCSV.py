@@ -179,7 +179,7 @@ for i, hyperparams in enumerate(Hyper_Tuner.get_best_hyperparameters()):
         + str(hyperparams)
         + Style.RESET_ALL
     )
-    model.fit(X_Index, Y_Index, epochs=max_epochs, validation_split=0.2)
+    model.fit(X_Index, Y_Index, epochs=max_epochs, validation_split=num_valsplit)
     model_save_path_i = best_model_save_path + "_model_" + str(i + 1)
     model.save(model_save_path_i)
     print(
