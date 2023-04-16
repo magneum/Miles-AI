@@ -6,9 +6,16 @@ from colorama import Fore, Style
 from keras.optimizers import Adam
 from keras_tuner.tuners import Hyperband
 from keras.callbacks import EarlyStopping
-from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout, BatchNormalization
+from keras.layers import (
+    Conv2D,
+    MaxPooling2D,
+    Flatten,
+    Dense,
+    Dropout,
+    BatchNormalization,
+)
 
-# ========================================================= Magneum ========================================================= 
+# ========================================================= Magneum =========================================================
 X_Index = []
 Y_Index = []
 
@@ -37,7 +44,7 @@ print(f"hyper_directory: {Fore.GREEN}{hyper_directory}{Style.RESET_ALL}")
 print(f"dataset_path: {Fore.GREEN}{dataset_path}{Style.RESET_ALL}")
 print(f"model_save_path: {Fore.GREEN}{model_save_path}{Style.RESET_ALL}")
 
-# ========================================================= Magneum ========================================================= 
+# ========================================================= Magneum =========================================================
 Fer2013 = pandas.read_csv(dataset_path)
 for index, row in Fer2013.iterrows():
     pixels = numpy.fromstring(row["pixels"], dtype="uint8", sep=" ")
@@ -54,36 +61,59 @@ print(Style.RESET_ALL)
 print(Fore.CYAN + "Total number of rows: " + Style.RESET_ALL + f"{Fer2013.shape[0]}")
 print(Fore.CYAN + "Number of columns: " + Style.RESET_ALL + f"{Fer2013.shape[1]}")
 print(Fore.CYAN + "Example of image data: " + Style.RESET_ALL)
-print(X_Index[0]) 
+print(X_Index[0])
 print(Fore.CYAN + "Example of label: " + Style.RESET_ALL)
-print(Y_Index[0]) 
+print(Y_Index[0])
 
-# ========================================================= Magneum ========================================================= 
+
+# ========================================================= Magneum =========================================================
 def Hyper_Builder(hp):
     model = Sequential()
-    model.add(Conv2D(filters=hp.Int("filters_1", 32, 128, step=32), kernel_size=hp.Choice("kernel_size_1", values=[3, 5]), activation="relu", input_shape=(48, 48, 1)))
+    model.add(
+        Conv2D(
+            filters=hp.Int("filters_1", 32, 128, step=32),
+            kernel_size=hp.Choice("kernel_size_1", values=[3, 5]),
+            activation="relu",
+            input_shape=(48, 48, 1),
+        )
+    )
     model.add(BatchNormalization())
     model.add(MaxPooling2D(pool_size=hp.Choice("pool_size_1", values=[4, 5])))
     nblocks = hp.Int("nblocks", 1, 8)
     for i in range(nblocks):
-        model.add(Conv2D(filters=hp.Int("filters_" + str(i + 2), 32, 128, step=32), kernel_size=hp.Choice("kernel_size_" + str(i + 2), values=[3, 5]), activation="relu", padding="same"))
+        model.add(
+            Conv2D(
+                filters=hp.Int("filters_" + str(i + 2), 32, 128, step=32),
+                kernel_size=hp.Choice("kernel_size_" + str(i + 2), values=[3, 5]),
+                activation="relu",
+                padding="same",
+            )
+        )
         model.add(BatchNormalization())
-        model.add(MaxPooling2D(pool_size=hp.Choice("pool_size_" + str(i + 2), values=[4, 5]), padding="same"))
+        model.add(
+            MaxPooling2D(
+                pool_size=hp.Choice("pool_size_" + str(i + 2), values=[4, 5]),
+                padding="same",
+            )
+        )
     model.add(Flatten())
     model.add(Dense(units=hp.Int("units", 128, 512, step=32), activation="relu"))
     model.add(Dropout(hp.Float("dropout", 0.1, 0.5, step=0.1)))
     nlayers = hp.Int("nlayers", 0, 6)
     for j in range(nlayers):
-        model.add(Dense(units=hp.Int(f"units_{j + 2}", 64, 256, step=32), activation="relu"))
+        model.add(
+            Dense(units=hp.Int(f"units_{j + 2}", 64, 256, step=32), activation="relu")
+        )
     model.add(Dense(7, activation="softmax"))
-    model.compile(optimizer=Adam(hp.Choice("learning_rate", values=[1e-2, 1e-3, 1e-4])),
-                  loss="sparse_categorical_crossentropy",
-                  metrics=["accuracy"])
-    model.add(EarlyStopping(monitor="val_loss", patience=patience, restore_best_weights=True))
+    model.compile(
+        optimizer=Adam(hp.Choice("learning_rate", values=[1e-2, 1e-3, 1e-4])),
+        loss="sparse_categorical_crossentropy",
+        metrics=["accuracy"],
+    )
     return model
 
 
-# ========================================================= Magneum ========================================================= 
+# ========================================================= Magneum =========================================================
 print(f"{Fore.GREEN}Create Hyperband tuner Completed!{Style.RESET_ALL}")
 Hyper_Tuner = Hyperband(
     Hyper_Builder,
@@ -93,7 +123,7 @@ Hyper_Tuner = Hyperband(
     objective="val_accuracy",
     directory=hyper_directory,
 )
-# ========================================================= Magneum ========================================================= 
+# ========================================================= Magneum =========================================================
 print(f"{Fore.GREEN}Define Hyperband search parameters Completed!{Style.RESET_ALL}")
 Hyper_Tuner.search(
     x=X_Index,
@@ -102,9 +132,12 @@ Hyper_Tuner.search(
     verbose=verbose,
     batch_size=batch_size,
     validation_split=nValsplit,
+    callbacks=[
+        EarlyStopping(monitor="val_loss", patience=patience, restore_best_weights=True)
+    ],
 )
 
-# ========================================================= Magneum ========================================================= 
+# ========================================================= Magneum =========================================================
 print(f"{Fore.GREEN}Hyperband Search Completed!{Style.RESET_ALL}")
 print(
     f"{Fore.CYAN}Best Hyperparameters: {Style.RESET_ALL}{Hyper_Tuner.get_best_hyperparameters()[0].values}"
@@ -116,7 +149,7 @@ print(
     f"{Fore.MAGENTA}Best Validation Accuracy: {Style.RESET_ALL}{Hyper_Tuner.get_best_models()[0].evaluate(X_Index, Y_Index)[1]}"
 )
 
-# ========================================================= Magneum ========================================================= 
+# ========================================================= Magneum =========================================================
 BestHP = Hyper_Tuner.get_best_hyperparameters(1)[0]
 Hyper_Model = Hyper_Builder(BestHP)
 print(f"{Fore.GREEN}Best Hyperparameters: {BestHP}{Style.RESET_ALL}")
