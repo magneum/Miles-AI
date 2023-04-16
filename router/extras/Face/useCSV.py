@@ -101,7 +101,7 @@ def Hyper_Builder(hp):
         )
     model.add(Dense(7, activation="softmax"))
     model.compile(
-        optimizer=Adam(hp.Choice("learning_rate", values=[1e-2, 1e-3, 1e-4])),
+        optimizer=Adam(hp.Choice("learning_rate", values=[1e-1, 1e-2, 1e-3])),
         loss="sparse_categorical_crossentropy",
         metrics=["accuracy"],
     )
