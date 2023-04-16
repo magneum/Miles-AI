@@ -111,7 +111,9 @@ def Hyper_Builder(hp):
         loss="categorical_crossentropy",
         metrics=["accuracy"],
     )
-    model.add(EarlyStopping(monitor="val_loss", patience=patience, restore_best_weights=True))
+    model.add(
+        EarlyStopping(monitor="val_loss", patience=patience, restore_best_weights=True)
+    )
     return model
 
 
@@ -170,16 +172,16 @@ print(Style.RESET_ALL)
 
 
 # ========================================================= Magneum
-print(Fore.GREEN + "Starting Hyperparameter Tuning..." )
+print(Fore.GREEN + "Starting Hyperparameter Tuning...")
 print(
     Fore.YELLOW + "Using Hyper_Builder with seed =",
     nSeed,
     "and max_epochs =",
-    nEpochs ,
+    nEpochs,
 )
-print(Fore.CYAN + "Objective: val_accuracy" )
-print(Fore.MAGENTA + "Project Name: Fer_Emotion" )
-print(Fore.BLUE + "Directory: " + hyper_directory )
+print(Fore.CYAN + "Objective: val_accuracy")
+print(Fore.MAGENTA + "Project Name: Fer_Emotion")
+print(Fore.BLUE + "Directory: " + hyper_directory)
 print(Style.RESET_ALL)
 Hyper_Tuner = Hyperband(
     Hyper_Builder,
@@ -196,12 +198,9 @@ Hyper_Tuner.search(
     verbose=verbose,
     batch_size=batch_size,
     validation_data=Test_Generator,
-    callbacks=[
-        EarlyStopping(monitor="val_loss", patience=patience, restore_best_weights=True)
-    ],
 )
-print(Fore.GREEN + "Hyperparameter tuning completed successfully!" )
-print(Fore.YELLOW + "Best hyperparameters found:" )
+print(Fore.GREEN + "Hyperparameter tuning completed successfully!")
+print(Fore.YELLOW + "Best hyperparameters found:")
 print(Style.RESET_ALL)
 print(Hyper_Tuner.get_best_hyperparameters()[0].values)
 
@@ -212,13 +211,7 @@ Hyper_Best.fit(Train_Generator, epochs=nSeed, validation_data=Test_Generator)
 Evaluation = Hyper_Best.evaluate(Test_Generator)
 Test_Loss, Test_Acc = Evaluation[0], Evaluation[1]
 Hyper_Best.save("models/FaceEmo/Fer_model.h5")
-print(Fore.GREEN + "Training completed successfully!" )
-print(
-    Fore.CYAN
-    + f"Test Loss: {Test_Loss:.4f}, Test Accuracy: {Test_Acc:.4f}"
-    
-)
-print(
-    Fore.YELLOW + "Best model saved as 'models/FaceEmo/Fer_model.h5'" 
-)
+print(Fore.GREEN + "Training completed successfully!")
+print(Fore.CYAN + f"Test Loss: {Test_Loss:.4f}, Test Accuracy: {Test_Acc:.4f}")
+print(Fore.YELLOW + "Best model saved as 'models/FaceEmo/Fer_model.h5'")
 print(Style.RESET_ALL)

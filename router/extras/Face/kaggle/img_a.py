@@ -105,7 +105,9 @@ def Hyper_Builder(hp):
         loss="categorical_crossentropy",
         metrics=["accuracy"],
     )
-    model.add(EarlyStopping(monitor="val_loss", patience=patience, restore_best_weights=True))
+    model.add(
+        EarlyStopping(monitor="val_loss", patience=patience, restore_best_weights=True)
+    )
     return model
 
 
@@ -184,9 +186,6 @@ Hyper_Tuner.search(
     verbose=verbose,
     batch_size=batch_size,
     validation_data=Test_Generator,
-    callbacks=[
-        EarlyStopping(monitor="val_loss", patience=patience, restore_best_weights=True)
-    ],
 )
 print(Fore.GREEN + "Hyperparameter tuning completed successfully!")
 print(Fore.YELLOW + "Best hyperparameters found:")
