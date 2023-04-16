@@ -1,0 +1,6 @@
+https://wandb.ai/wandb_fc/tips/reports/Setting-Up-TensorFlow-And-PyTorch-Using-GPU-On-Docker--VmlldzoxNjU5Mzky\
+
+
+$ docker pull tensorflow/tensorflow 
+$ docker pull tensorflow/tensorflow:latest-gpu
+$ docker run --gpus all -v $PWD:/tmp -w /tmp -it tensorflow/tensorflow:latest-gpu python train.py
