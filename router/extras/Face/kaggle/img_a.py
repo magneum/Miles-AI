@@ -2,44 +2,38 @@ import os
 from colorama import Fore, Style
 from keras.models import Sequential
 from keras_tuner.tuners import Hyperband
-from keras.optimizers import Adam, RMSprop
 from keras.callbacks import EarlyStopping
+from keras.optimizers import Adam, RMSprop
 from keras.preprocessing.image import ImageDataGenerator
-from keras.layers import (
-    GlobalAveragePooling2D,
-    BatchNormalization,
-    MaxPooling2D,
-    Dropout,
-    Conv2D,
-    Dense,
-)
+from keras.layers import MaxPooling2D, Dropout, Conv2D, Dense
+from keras.layers import GlobalAveragePooling2D, BatchNormalization
 
-# ========================================================= Magneum
-nSeed = 22
+# ========================================================= Magneum =========================================================
 verbose = 1
 patience = 10
-nEpochs = 200
+num_Seeds = 22
 nValsplit = 0.2
 batch_size = 12
+num_Epochs = 200
 target_size = (64, 64)
+Test_dir = "/kaggle/input/fer2013/test"
+Train_dir = "/kaggle/input/fer2013/train"
 hyper_directory = "models/Face_Emo/Emotion"
-Test_dir = "corpdata/Fer2013-img/Test_Images"
-Train_dir = "corpdata/Fer2013-img/Train_Images"
 print(Fore.GREEN + "Hyperparameters:")
-print("nSeed =", nSeed)
-print("verbose =", verbose)
-print("patience =", patience)
-print("nEpochs =", nEpochs)
-print("nValsplit =", nValsplit)
-print("batch_size =", batch_size)
-print("target_size =", target_size)
-print("hyper_directory =", hyper_directory)
-print("Test_dir =", Test_dir)
-print("Train_dir =", Train_dir)
+print(Fore.BLUE + "num_Seeds: ", num_Seeds)
+print(Fore.BLUE + "num_Epochs: ", num_Epochs)
+print(Fore.BLUE + "verbose: ", verbose)
+print(Fore.BLUE + "Test_dir: ", Test_dir)
+print(Fore.BLUE + "patience: ", patience)
+print(Fore.BLUE + "Train_dir: ", Train_dir)
+print(Fore.BLUE + "nValsplit: ", nValsplit)
+print(Fore.BLUE + "batch_size: ", batch_size)
+print(Fore.BLUE + "target_size: ", target_size)
+print(Fore.BLUE + "hyper_directory: ", hyper_directory)
 print(Style.RESET_ALL)
 
 
-# ========================================================= Magneum
+# ========================================================= Magneum =========================================================
 def Hyper_Builder(hp):
     model = Sequential()
     model.add(
@@ -115,19 +109,13 @@ def Hyper_Builder(hp):
     return model
 
 
-# ========================================================= Magneum
-File_path = os.path.abspath(__file__)
-File_name = os.path.basename(File_path)
+# ========================================================= Magneum =========================================================
 _path = "models/FaceEmo"
 if not os.path.exists(_path):
     os.makedirs(_path)
-print(f"{Fore.GREEN}File Path: {File_path}")
-print(f"{Fore.YELLOW}File Name: {File_name}")
-print(f"{Fore.CYAN}Path: {_path}")
-print(Style.RESET_ALL)
 
 
-# ========================================================= Magneum
+# ========================================================= Magneum =========================================================
 Train_Datagen = ImageDataGenerator(
     rescale=1.0 / 255, shear_range=0.2, zoom_range=0.2, horizontal_flip=True
 )
@@ -141,7 +129,7 @@ print(Style.RESET_ALL)
 print(Test_Datagen)
 
 
-# ========================================================= Magneum
+# ========================================================= Magneum =========================================================
 Train_Generator = ImageDataGenerator().flow_from_directory(
     Train_dir,
     target_size=target_size,
@@ -169,22 +157,22 @@ print(f"Class Mode: categorical")
 print(Style.RESET_ALL)
 
 
-# ========================================================= Magneum
-print(Fore.GREEN + "Starting Hyperparameter Tuning..." )
+# ========================================================= Magneum =========================================================
+print(Fore.GREEN + "Starting Hyperparameter Tuning...")
 print(
     Fore.YELLOW + "Using Hyper_Builder with seed =",
-    nSeed,
+    num_Seeds,
     "and max_epochs =",
-    nEpochs ,
+    num_Epochs,
 )
-print(Fore.CYAN + "Objective: val_accuracy" )
-print(Fore.MAGENTA + "Project Name: Fer_Emotion" )
-print(Fore.BLUE + "Directory: " + hyper_directory )
+print(Fore.CYAN + "Objective: val_accuracy")
+print(Fore.MAGENTA + "Project Name: Fer_Emotion")
+print(Fore.BLUE + "Directory: " + hyper_directory)
 print(Style.RESET_ALL)
 Hyper_Tuner = Hyperband(
     Hyper_Builder,
-    seed=nSeed,
-    max_epochs=nEpochs,
+    seed=num_Seeds,
+    max_epochs=num_Epochs,
     objective="val_accuracy",
     project_name="Fer_Emotion",
     directory=hyper_directory,
@@ -192,7 +180,7 @@ Hyper_Tuner = Hyperband(
 
 Hyper_Tuner.search(
     Train_Generator,
-    epochs=nEpochs,
+    epochs=num_Epochs,
     verbose=verbose,
     batch_size=batch_size,
     validation_data=Test_Generator,
@@ -200,25 +188,19 @@ Hyper_Tuner.search(
         EarlyStopping(monitor="val_loss", patience=patience, restore_best_weights=True)
     ],
 )
-print(Fore.GREEN + "Hyperparameter tuning completed successfully!" )
-print(Fore.YELLOW + "Best hyperparameters found:" )
+print(Fore.GREEN + "Hyperparameter tuning completed successfully!")
+print(Fore.YELLOW + "Best hyperparameters found:")
 print(Style.RESET_ALL)
 print(Hyper_Tuner.get_best_hyperparameters()[0].values)
 
 
-# ========================================================= Magneum
+# ========================================================= Magneum =========================================================
 Hyper_Best = Hyper_Tuner.get_best_models(num_models=1)[0]
-Hyper_Best.fit(Train_Generator, epochs=nSeed, validation_data=Test_Generator)
+Hyper_Best.fit(Train_Generator, epochs=num_Seeds, validation_data=Test_Generator)
 Evaluation = Hyper_Best.evaluate(Test_Generator)
 Test_Loss, Test_Acc = Evaluation[0], Evaluation[1]
 Hyper_Best.save("models/FaceEmo/Fer_model.h5")
-print(Fore.GREEN + "Training completed successfully!" )
-print(
-    Fore.CYAN
-    + f"Test Loss: {Test_Loss:.4f}, Test Accuracy: {Test_Acc:.4f}"
-    
-)
-print(
-    Fore.YELLOW + "Best model saved as 'models/FaceEmo/Fer_model.h5'" 
-)
+print(Fore.GREEN + "Training completed successfully!")
+print(Fore.CYAN + f"Test Loss: {Test_Loss:.4f}, Test Accuracy: {Test_Acc:.4f}")
+print(Fore.YELLOW + "Best model saved as 'models/FaceEmo/Fer_model.h5'")
 print(Style.RESET_ALL)
