@@ -30,9 +30,9 @@ executions_per_trial = 1
 hyperband_iterations = 1
 Hyperband_overwrite = True
 dir_path = "models/Face_Emotion"
-Hyperband_project_name = "Emotion"
+Hyperband_project_name = "Trails"
 Hyperband_objective = "val_accuracy"
-hyper_directory = "models/Face_Emotion/trails"
+hyper_directory = "models/Face_Emotion/"
 dataset_path = "corpdata/csv/fer2013/fer2013.csv"
 best_model_save_path = "models/Face_Emotion/models"
 
